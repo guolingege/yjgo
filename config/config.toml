@@ -1,0 +1,49 @@
+# HTTP Server
+[server]
+	Address     = ":8199"
+	ServerRoot  = "public"
+	ServerAgent = "yj-app"
+	LogPath     = "/tmp/log/yj-app/server"
+
+# Logger.
+[logger]
+    Path        = "/tmp/log/yj-app"
+    Level       = "all"
+    Stdout      = true
+
+# Template.
+[viewer]
+    Path        = "template"
+    DefaultFile = "index.html"
+    Delimiters  =  ["${", "}"]
+
+# Database.
+[database]
+    link  = "mysql:zyroot:xCHT42zC20A=@tcp(127.0.0.1:3306)/yjgo"
+    debug = true
+    # Database logger.
+    [database.logger]
+        Path   = "/tmp/log/yj-app/sql"
+        Level  = "all"
+        Stdout = true
+
+# Gen
+[gen]
+    author        = "yunjie"
+    moduleName    = "module"
+    packageName   = "yj-app"
+    autoRemovePre = true
+    tablePrefix   = "t_,sys_"
+
+[compiler]
+    name     = "yj-app"
+    version  = "1.0.0"
+    arch     = "i386,amd64"
+    system   = "linux,darwin"
+    output   = ""
+    path     = "./bin"
+    extra    = "-ldflags \"-s -w\""
+    # 自定义编译时内置变量
+    [compiler.VarMap]
+        author = "john"
+        email  = "john@goframe.org"

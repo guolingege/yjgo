@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <title>云捷GO业务快速开发框架 - 登录</title>
+    <meta name="keywords" content="云捷GO业务快速开发框架">
+    <meta name="description" content="yunfan">
+    <link href="{{.Cookie.OssUrl}}/resource/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="{{.Cookie.OssUrl}}/resource/css/font-awesome.css" rel="stylesheet"/>
+    <link href="{{.Cookie.OssUrl}}/resource/css/style.css" rel="stylesheet"/>
+    <link href="{{.Cookie.OssUrl}}/resource/css/login.min.css" rel="stylesheet"/>
+    <link href="{{.Cookie.OssUrl}}/resource/ajax/libs/iCheck/custom.css" rel="stylesheet"/>
+    <link href="{{.Cookie.OssUrl}}/resource/yunfan/css/yf-ui.css?v=2.1.0" rel="stylesheet"/>
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html"/>
+    <![endif]-->
+    <link rel="shortcut icon" href="/resource/favicon.ico"/>
+    <style>
+        label.error {
+            position: absolute;
+            right: 48px;
+            top: -2px;
+            color: #ef392b;
+            font-size: 12px
+        }
+
+        .row {
+            margin-right: 5px
+        }
+    </style>
+    <script>
+        if (window.top !== window.self) {
+            window.top.location = window.location
+        }
+        ;
+    </script>
+</head>
+
+<body class="signin">
+
+<div class="signinpanel">
+    <div class="col-md-12 col-md-offset-2">
+
+        <div class="col-sm-8">
+            <form id="signupForm">
+                <h4 class="no-margins" style="color: #415266;font-size:18pt;text-align:center">云捷GO业务快速开发框架</h4>
+                <p class="m-t-md" style="color: #2d456b85;">&nbsp;</p>
+                <div class="row">
+                    <div class="col-md-3 yonghutext">
+                        用户名:
+                    </div>
+                    <div class="col-md-9 yonghu">
+                        <input type="text" name="username" class="form-control uname" placeholder="用户名" value="admin"/>
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-md-3 yonghutext">
+                        密&nbsp;&nbsp;&nbsp;码:
+                    </div>
+                    <div class="col-md-9 yonghu">
+                        <input type="password" name="password" class="form-control pword m-b" placeholder="密码"
+                               value="admin123"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3 yonghutext">
+                        验证码:
+                    </div>
+                    <div class="col-xs-5">
+                        <input type="text" name="validateCode" class="form-control code" placeholder="验证码"
+                               maxlength="6">
+                    </div>
+                    <div class="col-xs-4">
+                        <a href="javascript:void(0);" title="点击更换验证码">
+                            <img src="" id="imgcode" class="imgcode" width="100%" height="30px"/>
+                        </a>
+                    </div>
+                </div>
+                <div class="row " style="text-align: right">
+                    <input class="checks" type="checkbox" name="rememberme"/>&nbsp;&nbsp;<font
+                            style="font-size: 12px;color:rgb(102, 102, 102)">记住我</font>
+                    <input type="hidden" id="idkey"/>
+                </div>
+
+                <button class="btn btn-success btn-block" id="btnSubmit" style="height:41px;background-color: #2D456B"
+                        data-loading="正在验证登录，请稍后...">登录
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>
+<script type="application/javascript"> var ctx = "\/";</script>
+<!-- 全局js -->
+<script src="{{.Cookie.OssUrl}}/resource/js/jquery.min.js"></script>
+<script src="{{.Cookie.OssUrl}}/resource/js/bootstrap.min.js"></script>
+<!-- 验证插件 -->
+<script src="{{.Cookie.OssUrl}}/resource/ajax/libs/validate/jquery.validate.min.js"></script>
+<script src="{{.Cookie.OssUrl}}/resource/ajax/libs/validate/messages_zh.min.js"></script>
+<script src="{{.Cookie.OssUrl}}/resource/ajax/libs/layer/layer.min.js"></script>
+<script src="{{.Cookie.OssUrl}}/resource/ajax/libs/iCheck/icheck.min.js"></script>
+<script src="{{.Cookie.OssUrl}}/resource/ajax/libs/blockUI/jquery.blockUI.js"></script>
+<script src="{{.Cookie.OssUrl}}/resource/yunfan/js/yf-ui.js?v=2.1.0"></script>
+<script src="{{.Cookie.OssUrl}}/resource/yunfan/login.js"></script>
+</body>
+</html>
