@@ -174,7 +174,7 @@
         </div>
     </div>
     {{template "footer" .Cookie.OssUrl}}
-    <th:block th:include="include :: sparkline-js" />
+    <script src="/resource/ajax/libs/report/sparkline/jquery.sparkline.min.js"></script>
     <script type="text/javascript">
 	    $(function () {
 	        $("#sparkline1").sparkline([34, 43, 43, 35, 44, 32, 44, 52, 25], {

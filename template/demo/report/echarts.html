@@ -267,7 +267,7 @@
         </div>
     </div>
     {{template "footer" .Cookie.OssUrl}}
-    <th:block th:include="include :: echarts-js" />
+    <script src="/resource/ajax/libs/report/echarts/echarts-all.js"></script>
     <script type="text/javascript">
 	    $(function () {
 	        var lineChart = echarts.init(document.getElementById("echarts-line-chart"));

@@ -46,9 +46,9 @@ func LoadRounter(s *ghttp.Server) {
 		group.ALL("/form", modal.Form)
 		group.ALL("/layer", modal.Layer)
 		group.ALL("/table", modal.Table)
-		group.ALL("/table/check", modal.Check)
-		group.ALL("/table/parent", modal.Parent)
-		group.ALL("/table/radio", modal.Radio)
+		group.ALL("/check", modal.Check)
+		group.ALL("/parent", modal.Parent)
+		group.ALL("/radio", modal.Radio)
 	})
 
 	s.Group("/demo/operate", func(group *ghttp.RouterGroup) {
@@ -74,6 +74,7 @@ func LoadRounter(s *ghttp.Server) {
 		group.ALL("/child", table.Child)
 		group.ALL("/curd", table.Curd)
 		group.ALL("/detail", table.Detail)
+		group.ALL("list", table.List)
 
 		group.ALL("/editable", table.Editable)
 		group.ALL("/event", table.Event)
