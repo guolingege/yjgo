@@ -52,10 +52,11 @@ func LoadRounter(s *ghttp.Server) {
 	})
 
 	s.Group("/demo/operate", func(group *ghttp.RouterGroup) {
-
+		group.ALL("/list", operate.List)
 		group.ALL("/add", operate.Add)
 		group.ALL("/detail", operate.Detail)
-		group.ALL("/edit", operate.Edit)
+		group.GET("/edit", operate.Edit)
+		group.POST("/edit", operate.EditSave)
 		group.ALL("/other", operate.Other)
 		group.ALL("/table", operate.Table)
 	})
