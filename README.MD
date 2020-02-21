@@ -88,7 +88,6 @@
 
 > 也可以请作者喝一杯咖啡:)
 
-<img alt="" height="390" src="https://images.gitee.com/uploads/images/2020/0221/075218_2e68c13e_779478.jpeg" width="300" class="zoom-in-cursor">
 
 
 ## 微信交流群
