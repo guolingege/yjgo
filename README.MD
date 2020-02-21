@@ -79,7 +79,10 @@
 
 ## 感谢
 1. gf框架 [https://github.com/gogf/gf](https://github.com/gogf/gf) 
-2. 若依框架 [https://github.com/yangzongzhuan/RuoYi](https://github.com/yangzongzhuan/RuoYi)
+2. RuoYi框架 [https://github.com/yangzongzhuan/RuoYi](https://github.com/yangzongzhuan/RuoYi)
+3. tealeg [https://github.com/tealeg/xlsx](https://github.com/tealeg/xlsx)
+4. swaggo [https://github.com/swaggo/swag](https://github.com/swaggo/swag)
+
 ## 项目支持
 
 > 阿里云通用云产品1888优惠券 ：[点我领取](https://www.aliyun.com/minisite/goods?userCode=vxqr4qh3)    
