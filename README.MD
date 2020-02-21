@@ -79,7 +79,7 @@
 
 ## 感谢
 1. gf框架 [https://github.com/gogf/gf](https://github.com/gogf/gf) 
-
+2. 若依框架 [https://github.com/yangzongzhuan/RuoYi](https://github.com/yangzongzhuan/RuoYi)
 ## 项目支持
 
 > 阿里云通用云产品1888优惠券 ：[点我领取](https://www.aliyun.com/minisite/goods?userCode=vxqr4qh3)    
