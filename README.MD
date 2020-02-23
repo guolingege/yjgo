@@ -4,7 +4,21 @@
 
 受之开源，回馈社区，本框架以GoFrame为web服务框架，继续沿用MIT开源协议，架构思路沿袭着若依的以辅助生成重复代码为主，不过度封装，生成的代码可以快速修改适应不同的需求，适应每个开发者自己的习惯和风格。所以命名为"云捷GO"（寓意：GO云原生业务快捷开发）
 
+## 核心技术及组件
+> web服务框架    GoFrame        v1.11.4  
+>
+> 导出excel文件  tealeg/xlsx    v1.0.5   
+>
+> api文档生成    swaggo/swag    v1.6.5   
+>
+> 图形验证码     base64Captcha  v1.2.2  
+>
+> 服务器监控     gopsutil       v2.19.12+incompatible   
+>
+> 若依前端组件   RuoYi           v4.1.0（做了部分适配GoFrame修改，命名为yf.js，不要跟原项目ry.js混用，文档可以通用）
 
+> 文档地址：正在编写,目前已完成：项目说明，项目结构，前端组件3块内容
+>[http://www.yunjie.info](http://www.yunjie.info)
 
 ## 内置功能
 
@@ -20,7 +34,7 @@
 10.  登录日志：系统登录日志记录查询包含登录异常。
 11.  在线用户：当前系统中活跃用户状态监控。
 12.  定时任务：在线（添加、修改、删除)任务调度包含执行结果日志。
-13.  代码生成：前后端代码的生成（Go、html、xml、sql） 。
+13.  代码生成：前后端代码的生成（Go、html、json、sql） 。
 14.  系统接口：根据业务代码自动生成相关的api接口文档。
 15.  服务监控：监视当前系统CPU、内存、磁盘、堆栈等相关信息。
 16.  在线构建器：拖动表单元素生成相应的HTML代码。
@@ -32,56 +46,61 @@
 
 演示地址：[http://www.yunjie.info:8199/login](http://www.yunjie.info:8199/login)
 
-文档地址：正在编写[http://www.yunjie.info](http://www.yunjie.info)
+
 
 ## 演示图
 
 <table>
-	<tbody>
-		<tr>
-			<td><img alt="" src="https://images.gitee.com/uploads/images/2020/0221/075216_b6e05db0_779478.png" /></td>
-			<td><img alt="" src="https://images.gitee.com/uploads/images/2020/0221/075216_86e787b5_779478.png" /></td>
-		</tr>
-		<tr>
-			<td><img alt="" src="https://images.gitee.com/uploads/images/2020/0221/075216_168d55c8_779478.png" /></td>
-			<td><img alt="" src="https://images.gitee.com/uploads/images/2020/0221/075216_14f443a1_779478.png" /></td>
-		</tr>
-		<tr>
-			<td><img alt="" src="https://images.gitee.com/uploads/images/2020/0221/075216_10acfb8a_779478.png" /></td>
-			<td><img alt="" src="https://images.gitee.com/uploads/images/2020/0221/075217_8381993d_779478.png" /></td>
-		</tr>
-		<tr>
-			<td><img alt="" src="https://images.gitee.com/uploads/images/2020/0221/075217_1bc1bb34_779478.png" /></td>
-			<td><img alt="" src="https://images.gitee.com/uploads/images/2020/0221/075217_0a269a55_779478.png" /></td>
-		</tr>
-		<tr>
-			<td><img alt="" src="https://images.gitee.com/uploads/images/2020/0221/075217_31384ef1_779478.png" /></td>
-			<td><img alt="" src="https://images.gitee.com/uploads/images/2020/0221/075217_aa7f375b_779478.png" /></td>
-		</tr>
-		<tr>
-			<td><img alt="" src="https://images.gitee.com/uploads/images/2020/0221/075217_74b541a0_779478.png" /></td>
-			<td><img alt="" src="https://images.gitee.com/uploads/images/2020/0221/075217_97556567_779478.png" /></td>
-		</tr>
-		<tr>
-			<td><img alt="" src="https://images.gitee.com/uploads/images/2020/0221/075217_e8f10ec9_779478.png" /></td>
-			<td><img alt="" src="https://images.gitee.com/uploads/images/2020/0221/075217_ff915e4a_779478.png" /></td>
-		</tr>
-		<tr>
-			<td><img alt="" src="https://images.gitee.com/uploads/images/2020/0221/075217_9527bcd4_779478.png" /></td>
-			<td><img alt="" src="https://images.gitee.com/uploads/images/2020/0221/075217_41e24951_779478.png" /></td>
-		</tr>
-		<tr>
-			<td><img alt="" src="https://images.gitee.com/uploads/images/2020/0221/075217_c0897638_779478.png" /></td>
-			<td><img alt="" src="https://images.gitee.com/uploads/images/2020/0221/075218_8888e0e9_779478.png" /></td>
-		</tr>
-	</tbody>
-</table>
+              <tbody>
+                <tr>
+                  <td><img alt="" width="460px" src="https://oscimg.oschina.net/oscnet/up-80920b74c9c2dcbe02650f7c127b445373a.png" /></td>
+                  <td><img alt="" width="460px" src="https://oscimg.oschina.net/oscnet/up-8fcd14be9bb673dc3d80e2acc23fd962e20.png" /></td>
+                </tr>
+                <tr>
+                  <td><img alt="" width="460px" src="https://oscimg.oschina.net/oscnet/up-90c964378cafc0aac0340b2a0d9951de820.png" /></td>
+                  <td><img alt="" width="460px" src="https://oscimg.oschina.net/oscnet/up-454c053ee1d75c0d67b0d87a47925a2c6e4.png" /></td>
+                </tr>
+                <tr>
+                  <td><img alt="" width="460px" src="https://oscimg.oschina.net/oscnet/up-bad8bfe2ae30a939dc4b45c8575791d4952.png" /></td>
+                  <td><img alt="" width="460px" src="https://oscimg.oschina.net/oscnet/up-3278734c643a09b630bb8e4020c04584ab3.png" /></td>
+                </tr>
+                <tr>
+                  <td><img alt="" width="460px" src="https://oscimg.oschina.net/oscnet/up-295a93f887b221acd2ccb66f40c40c9c202.png" /></td>
+                  <td><img alt="" width="460px" src="https://oscimg.oschina.net/oscnet/up-9127f2c19ef7125bdad5f6f55b0a040371f.png" /></td>
+                </tr>
+                <tr>
+                  <td><img alt="" width="460px" src="https://oscimg.oschina.net/oscnet/up-8cac96fe235b930b32eda064b5a707e3227.png" /></td>
+                  <td><img alt="" width="460px" src="https://oscimg.oschina.net/oscnet/up-d9b2704523edcb32cdd4e5d2ba32238ae43.png" /></td>
+                </tr>
+                <tr>
+                  <td><img alt="" width="460px" src="https://oscimg.oschina.net/oscnet/up-6c31e3d5d85136ddc2cc0e6143bad8ef39a.png" /></td>
+                  <td><img alt="" width="460px" src="https://oscimg.oschina.net/oscnet/up-1d534c91e26375ceb5a9af20c5a0ebaa484.png" /></td>
+                </tr>
+                <tr>
+                  <td><img alt="" width="460px" src="https://oscimg.oschina.net/oscnet/up-17c94cc7f2710158fd3495f03caeb17b33e.png" /></td>
+                  <td><img alt="" width="460px" src="https://oscimg.oschina.net/oscnet/up-c59a5cec71dfe5b57b78c15229fd800faa3.png" /></td>
+                </tr>
+                <tr>
+                  <td><img alt="" width="460px" src="https://oscimg.oschina.net/oscnet/up-5f69aa236d6cff05ed626479e636565ee9c.png" /></td>
+                  <td><img alt="" width="460px" src="https://oscimg.oschina.net/oscnet/up-b272e09917b75d9e0d14372049a291aecfa.png" /></td>
+                </tr>
+                <tr>
+                  <td><img alt="" width="460px" src="https://oscimg.oschina.net/oscnet/up-002f836244ca3b1971e8c67eaa972cf1d7b.png" /></td>
+                  <td><img alt="" width="460px" src="https://oscimg.oschina.net/oscnet/up-ae81782cebfac71945f5301eabb96631089.png" /></td>
+                </tr>
+              </tbody>
+            </table>
 
-## 感谢
-1. gf框架 [https://github.com/gogf/gf](https://github.com/gogf/gf) 
-2. RuoYi框架 [https://github.com/yangzongzhuan/RuoYi](https://github.com/yangzongzhuan/RuoYi)
-3. tealeg [https://github.com/tealeg/xlsx](https://github.com/tealeg/xlsx)
-4. swaggo [https://github.com/swaggo/swag](https://github.com/swaggo/swag)
+## 感谢(排名不分先后)
+> gf框架 [https://github.com/gogf/gf](https://github.com/gogf/gf) 
+>
+> RuoYi框架 [https://github.com/yangzongzhuan/RuoYi](https://github.com/yangzongzhuan/RuoYi)
+>
+> tealeg [https://github.com/tealeg/xlsx](https://github.com/tealeg/xlsx)
+>
+> swaggo [https://github.com/swaggo/swag](https://github.com/swaggo/swag)
+>
+>
 
 ## 项目支持
 
