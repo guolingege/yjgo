@@ -59,7 +59,7 @@
 {{template "footer" .Cookie.OssUrl}}
 <script src="/resource/ajax/libs/bootstrap-select/bootstrap-select.js"></script>
 <script type="text/javascript">
-    var detailFlag = {{hasPermi .Session.uid "monitor:operlog:detail"}};
+    var detailFlag = '{{hasPermi .Session.uid "monitor:operlog:detail"}}';
     var datas = {{getDictTypeData "sys_oper_type"}};
     var prefix = ctx + "monitor/operlog";
 

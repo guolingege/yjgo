@@ -36,7 +36,7 @@
 	</div>
 	{{template "footer" .Cookie.OssUrl}}
 	<script type="text/javascript">
-		var forceFlag = {{hasPermi .Session.uid "monitor:online:forceLogout"}};
+		var forceFlag = '{{hasPermi .Session.uid "monitor:online:forceLogout"}}';
 		var prefix = ctx + "monitor/online";
 
 		$(function() {

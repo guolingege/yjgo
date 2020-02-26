@@ -48,9 +48,9 @@
 </div>
 {{template "footer" .Cookie.OssUrl}}
 <script type="text/javascript">
-    var detailFlag = {{hasPermi .Session.uid "monitor:job:detail"}};
-    var statusDatas = {{getDictTypeData "sys_common_status"}};
-    var groupDatas = {{getDictTypeData "sys_job_group"}};
+    var detailFlag = '{{hasPermi .Session.uid "monitor:job:detail"}}';
+    var statusDatas = '{{getDictTypeData "sys_common_status"}}';
+    var groupDatas = '{{getDictTypeData "sys_job_group"}}';
     var prefix = ctx + "monitor/jobLog";
 
     $(function () {

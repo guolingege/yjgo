@@ -42,9 +42,9 @@
 
 {{template "footer" .Cookie.OssUrl}}
 <script type="text/javascript">
-    var addFlag ={{hasPermi .Session.uid "system:menu:add"}};
-    var editFlag ={{hasPermi .Session.uid "system:menu:edit"}};
-    var removeFlag ={{hasPermi .Session.uid "system:menu:remove"}};
+    var addFlag ='{{hasPermi .Session.uid "system:menu:add"}}';
+    var editFlag ='{{hasPermi .Session.uid "system:menu:edit"}}';
+    var removeFlag ='{{hasPermi .Session.uid "system:menu:remove"}}';
     var datas = {{getDictTypeData "sys_show_hide"}};
     var prefix = ctx + "system/menu";
 

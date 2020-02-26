@@ -50,8 +50,8 @@
 </div>
 {{template "footer" .Cookie.OssUrl}}
 <script type="text/javascript">
-    var editFlag ={{hasPermi .Session.uid "system:role:edit"}};
-    var removeFlag ={{hasPermi .Session.uid "system:role:remove"}};
+    var editFlag ='{{hasPermi .Session.uid "system:role:edit"}}';
+    var removeFlag ='{{hasPermi .Session.uid "system:role:remove"}}';
     var prefix = ctx + "system/role";
 
 

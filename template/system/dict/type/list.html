@@ -52,9 +52,9 @@
 </div>
 {{template "footer" .Cookie.OssUrl}}
 <script type="text/javascript">
-    var editFlag = {{hasPermi .Session.uid "system:dict:edit"}}
-    var listFlag = {{hasPermi .Session.uid "system:dict:list"}}
-    var removeFlag = {{hasPermi .Session.uid "system:dict:remove"}}
+    var editFlag = '{{hasPermi .Session.uid "system:dict:edit"}}';
+    var listFlag = '{{hasPermi .Session.uid "system:dict:list"}}';
+    var removeFlag = '{{hasPermi .Session.uid "system:dict:remove"}}';
     var datas = {{getDictTypeData "sys_normal_disable"}};
     var prefix = ctx + "system/dict";
 

@@ -51,8 +51,8 @@
 </div>
 {{template "footer" .Cookie.OssUrl}}
 <script type="text/javascript">
-    var editFlag = {{hasPermi .Session.uid "system:config:edit"}};
-    var removeFlag = {{hasPermi .Session.uid "system:config:remove"}};
+    var editFlag = '{{hasPermi .Session.uid "system:config:edit"}}';
+    var removeFlag = '{{hasPermi .Session.uid "system:config:remove"}}';
     var datas = {{getDictTypeData "sys_yes_no"}};
     var prefix = ctx + "system/config";
 

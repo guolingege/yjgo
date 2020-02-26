@@ -61,8 +61,8 @@
 {{printf `{{template "footer" .Cookie.OssUrl}}`}}
 {{range $index, $column := .table.Columns}} {{if ne $column.DictType ""}}  var ${column.HtmlField}Datas = {{printf `{{getDictTypeData "%v"}}` $column.DictType}}; {{end}} {{end}}
 <script type="text/javascript">
-    var editFlag = {{printf `{{hasPermi .Session.uid "%v:%v:edit"}}` .table.ModuleName .table.BusinessName}};
-    var removeFlag = {{printf `{{hasPermi .Session.uid "%v:%v:remove"}}` .table.ModuleName .table.BusinessName}};
+    var editFlag = '{{printf `{{hasPermi .Session.uid "%v:%v:edit"}}` .table.ModuleName .table.BusinessName}}';
+    var removeFlag = '{{printf `{{hasPermi .Session.uid "%v:%v:remove"}}` .table.ModuleName .table.BusinessName}}';
 
     {{range $index, $column := .table.Columns}} {{if ne $column.DictType ""}}  var ${column.HtmlField}Datas = {{printf `{{getDictTypeData "%v"}}` $column.DictType}}; {{end}} {{end}}
     var prefix = ctx + "{{.table.ModuleName}}/{{.table.BusinessName}}";

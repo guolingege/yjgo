@@ -43,10 +43,10 @@
 </div>
 {{template "footer" .Cookie.OssUrl}}
 <script type="text/javascript">
-    var detailFlag = {{hasPermi .Session.uid "monitor:job:detail"}};
-    var editFlag = {{hasPermi .Session.uid "monitor:job:edit"}};
-    var removeFlag = {{hasPermi .Session.uid "monitor:job:remove"}};
-    var statusFlag = {{hasPermi .Session.uid "monitor:job:changeStatus"}};
+    var detailFlag = '{{hasPermi .Session.uid "monitor:job:detail"}}';
+    var editFlag = '{{hasPermi .Session.uid "monitor:job:edit"}}';
+    var removeFlag = '{{hasPermi .Session.uid "monitor:job:remove"}}';
+    var statusFlag = '{{hasPermi .Session.uid "monitor:job:changeStatus"}}';
     var datas ={{getDictTypeData "sys_job_group"}};
     var prefix = ctx + "monitor/job";
 

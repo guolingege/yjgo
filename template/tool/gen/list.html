@@ -50,10 +50,10 @@
 {{template "footer" .Cookie.OssUrl}}
 <script type="text/javascript">
     var prefix = ctx + "tool/gen";
-    var editFlag = {{hasPermi .Session.uid "tool:gen:edit"}};
-    var removeFlag = {{hasPermi .Session.uid "tool:gen:remove"}};
-    var previewFlag = {{hasPermi .Session.uid "tool:gen:preview"}};
-    var codeFlag = {{hasPermi .Session.uid "tool:gen:code"}};
+    var editFlag = '{{hasPermi .Session.uid "tool:gen:edit"}}';
+    var removeFlag = '{{hasPermi .Session.uid "tool:gen:remove"}}';
+    var previewFlag = '{{hasPermi .Session.uid "tool:gen:preview"}}';
+    var codeFlag = '{{hasPermi .Session.uid "tool:gen:code"}}';
 
     $(function () {
         var options = {

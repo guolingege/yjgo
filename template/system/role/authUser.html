@@ -43,7 +43,7 @@
 </div>
 {{template "footer" .Cookie.OssUrl}}
 <script type="text/javascript">
-    var removeFlag ={{hasPermi .Session.uid "system:role:remove"}};
+    var removeFlag ='{{hasPermi .Session.uid "system:role:remove"}}';
     var datas ={{getDictTypeData "sys_normal_disable"}};
     var prefix = ctx + "system/role";
 

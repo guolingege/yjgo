@@ -84,9 +84,9 @@
 <script src="/resource/ajax/libs/jquery-layout/jquery.layout-latest.js"></script>
 <script src="/resource/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js"></script>
 <script type="text/javascript">
-    var editFlag = {{hasPermi .Session.uid "system:user:edit"}};
-    var removeFlag = {{hasPermi .Session.uid "system:user:remove"}};
-    var resetPwdFlag = {{hasPermi .Session.uid "system:user:resetPwd"}};
+    var editFlag = '{{hasPermi .Session.uid "system:user:edit"}}';
+    var removeFlag = '{{hasPermi .Session.uid "system:user:remove"}}';
+    var resetPwdFlag = '{{hasPermi .Session.uid "system:user:resetPwd"}}';
     var prefix = ctx + "system/user";
 
     $(function () {

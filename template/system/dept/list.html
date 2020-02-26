@@ -41,9 +41,9 @@
 </div>
 {{template "footer" .Cookie.OssUrl}}
 <script type="text/javascript">
-    var addFlag ={{hasPermi .Session.uid "system:dept:add"}};
-    var editFlag ={{hasPermi .Session.uid "system:dept:edit"}};
-    var removeFlag ={{hasPermi .Session.uid "system:dept:remove"}};
+    var addFlag ='{{hasPermi .Session.uid "system:dept:add"}}';
+    var editFlag ='{{hasPermi .Session.uid "system:dept:edit"}}';
+    var removeFlag ='{{hasPermi .Session.uid "system:dept:remove"}}';
     var datas ={{getDictTypeData "sys_normal_disable"}};
     var prefix = ctx + "system/dept"
 
