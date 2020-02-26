@@ -10,13 +10,13 @@ import (
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/net/ghttp"
 	"github.com/gogf/gf/os/gcron"
-	"github.com/gogf/gf/os/glog"
 	"github.com/gogf/gf/os/gtime"
 	jobModel "yj-app/app/model/monitor/job"
 	userService "yj-app/app/service/system/user"
 	"yj-app/app/service/utils/convert"
 	"yj-app/app/service/utils/excel"
 	"yj-app/app/service/utils/page"
+	"yj-app/app/task"
 )
 
 //根据主键查询数据
@@ -59,16 +59,10 @@ func AddSave(req *jobModel.AddReq, session *ghttp.Session) (int64, error) {
 		return 0, gerror.New("任务名称已经存在")
 	}
 
-	if req.MisfirePolicy == "1" {
-		task, err := gcron.Add(req.CronExpression, func() { glog.Println("Every hour on the half hour") }, req.JobName)
-		if err != nil || task == nil {
-			return 0, err
-		}
-	} else {
-		task, err := gcron.AddOnce(req.CronExpression, func() { glog.Println("Every hour on the half hour") }, req.JobName)
-		if err != nil || task == nil {
-			return 0, err
-		}
+	//可以task目录下是否绑定对应的方法
+	f := task.GetByName(req.JobName)
+	if f == nil {
+		return 0, gerror.New("当前task目录下没有绑定这个方法")
 	}
 
 	var entity jobModel.Entity
@@ -111,16 +105,10 @@ func EditSave(req *jobModel.EditReq, session *ghttp.Session) (int64, error) {
 		gcron.Remove(req.JobName)
 	}
 
-	if req.MisfirePolicy == "1" {
-		task, err := gcron.Add(req.CronExpression, func() { glog.Println("Every hour on the half hour") }, req.JobName)
-		if err != nil || task == nil {
-			return 0, err
-		}
-	} else {
-		task, err := gcron.AddOnce(req.CronExpression, func() { glog.Println("Every hour on the half hour") }, req.JobName)
-		if err != nil || task == nil {
-			return 0, err
-		}
+	//可以task目录下是否绑定对应的方法
+	f := task.GetByName(req.JobName)
+	if f == nil {
+		return 0, gerror.New("当前task目录下没有绑定这个方法")
 	}
 
 	entity, err := jobModel.FindOne("job_id=?", req.JobId)
@@ -161,6 +149,59 @@ func EditSave(req *jobModel.EditReq, session *ghttp.Session) (int64, error) {
 	}
 
 	return rs, nil
+}
+
+//启动任务
+func Start(entity *jobModel.Entity) error {
+	//可以task目录下是否绑定对应的方法
+	f := task.GetByName(entity.JobName)
+	if f == nil {
+		return gerror.New("当前task目录下没有绑定这个方法")
+	}
+
+	rs := gcron.Search(entity.JobName)
+
+	if rs == nil {
+		if entity.MisfirePolicy == "1" {
+			task, err := gcron.Add(entity.CronExpression, f.Run, entity.JobName)
+			if err != nil || task == nil {
+				return err
+			}
+		} else {
+			task, err := gcron.AddOnce(entity.CronExpression, f.Run, entity.JobName)
+			if err != nil || task == nil {
+				return err
+			}
+		}
+	}
+
+	gcron.Start(entity.JobName)
+
+	if entity.MisfirePolicy == "1" {
+		entity.Status = "1"
+		entity.Update()
+	}
+
+	return nil
+}
+
+//停止任务
+func Stop(entity *jobModel.Entity) error {
+	//可以task目录下是否绑定对应的方法
+	f := task.GetByName(entity.JobName)
+	if f == nil {
+		return gerror.New("当前task目录下没有绑定这个方法")
+	}
+
+	rs := gcron.Search(entity.JobName)
+
+	if rs != nil {
+		gcron.Stop(entity.JobName)
+	}
+
+	entity.Status = "1"
+	entity.Update()
+	return nil
 }
 
 //根据条件查询数据

@@ -69,6 +69,7 @@ func LoadRounter(s *ghttp.Server) {
 		group.GET("/detail", job.Detail)
 		group.GET("/jobLog", job.LogList)
 		group.POST("/jobLog", job.LogListAjax)
+		group.POST("/run", job.Start)
 		group.POST("/start", job.Start)
 		group.POST("/stop", job.Stop)
 	})

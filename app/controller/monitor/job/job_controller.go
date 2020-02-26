@@ -207,11 +207,15 @@ func Start(r *ghttp.Request) {
 		response.ErrorMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, "参数错误")
 	}
 	job, _ := jobService.SelectRecordById(jobId)
-	if job != nil {
+	if job == nil {
 		response.ErrorMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, "任务不存在")
 	}
-	gcron.Start(job.JobName)
-	response.SucessMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, "启动成功")
+	err := jobService.Start(job)
+	if err != nil {
+		response.ErrorMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, err.Error())
+	} else {
+		response.SucessMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, "启动成功")
+	}
 }
 
 //停止
@@ -221,10 +225,14 @@ func Stop(r *ghttp.Request) {
 		response.ErrorMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, "参数错误")
 	}
 	job, _ := jobService.SelectRecordById(jobId)
-	if job != nil {
+	if job == nil {
 		response.ErrorMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, "任务不存在")
 	}
 
-	gcron.Stop(job.JobName)
-	response.SucessMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, "启动成功")
+	err := jobService.Stop(job)
+	if err != nil {
+		response.ErrorMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, err.Error())
+	} else {
+		response.SucessMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, "停止成功")
+	}
 }

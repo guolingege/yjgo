@@ -1,0 +1,25 @@
+package task
+
+func init() {
+	var task1 TaskEntity
+	task1.FuncName = "test1"
+	task1.Param = nil
+	task1.Run = Test1
+	Add(task1)
+
+	var task2 TaskEntity
+	task2.FuncName = "test2"
+	task2.Param = nil
+	task2.Run = Test1
+	Add(task2)
+}
+
+//无参测试
+func Test1() {
+	println("无参测试")
+}
+
+//传参测试
+func Test2(param ...string) {
+	println(param)
+}
