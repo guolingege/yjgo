@@ -5,9 +5,9 @@
 # http://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
-# Host: 49.234.46.230 (MySQL 5.7.26)
+# Host: 127.0.0.1 (MySQL 5.7.26)
 # Database: yjgo
-# Generation Time: 2020-02-20 01:29:18 +0000
+# Generation Time: 2020-02-27 03:12:15 +0000
 # ************************************************************
 
 
@@ -174,7 +174,7 @@ VALUES
 	(1,'主框架页-默认皮肤样式名称','sys.index.skinName','skin-blue','Y','admin','2018-03-16 11:33:00','','2020-02-12 15:32:15','蓝色 skin-blue、绿色 skin-green、紫色 skin-purple、红色 skin-red、黄色 skin-yellow'),
 	(2,'用户管理-账号初始密码','sys.user.initPassword','123456','Y','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00','初始化密码 123456'),
 	(3,'主框架页-侧边栏主题','sys.index.sideTheme','theme-dark','Y','admin','2018-03-16 11:33:00','','2020-02-05 10:46:28','深黑主题theme-dark，浅色主题theme-light，深蓝主题theme-blue'),
-	(4,'静态资源网盘存储','sys.resource.url','null','Y','admin','2020-02-18 20:10:33','','2020-02-19 10:36:22','public目录下的静态资源存储到OSS/COS等网盘，如果不需要动静分离设为null，如果需要设置OSS/COS等网盘网址即可');
+	(4,'静态资源网盘存储','sys.resource.url','http://cos.yunjie.info/yjg','Y','admin','2020-02-18 20:10:33','','2020-02-19 10:36:22','public目录下的静态资源存储到OSS/COS等网盘，如果不存储设为null，设置网址即开始');
 
 /*!40000 ALTER TABLE `sys_config` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -330,6 +330,7 @@ DROP TABLE IF EXISTS `sys_job`;
 CREATE TABLE `sys_job` (
   `job_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '任务ID',
   `job_name` varchar(64) NOT NULL DEFAULT '' COMMENT '任务名称',
+  `job_params` varchar(200) DEFAULT '' COMMENT '参数',
   `job_group` varchar(64) NOT NULL DEFAULT 'DEFAULT' COMMENT '任务组名',
   `invoke_target` varchar(500) NOT NULL COMMENT '调用目标字符串',
   `cron_expression` varchar(255) DEFAULT '' COMMENT 'cron执行表达式',
@@ -347,12 +348,10 @@ CREATE TABLE `sys_job` (
 LOCK TABLES `sys_job` WRITE;
 /*!40000 ALTER TABLE `sys_job` DISABLE KEYS */;
 
-INSERT INTO `sys_job` (`job_id`, `job_name`, `job_group`, `invoke_target`, `cron_expression`, `misfire_policy`, `concurrent`, `status`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`)
+INSERT INTO `sys_job` (`job_id`, `job_name`, `job_params`, `job_group`, `invoke_target`, `cron_expression`, `misfire_policy`, `concurrent`, `status`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`)
 VALUES
-	(1,'test1','DEFAULT','test1()','0 30 * * * *','2','1','1','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(2,'test2','DEFAULT','test2(\"111\")','* * * * * *','2','1','1','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(3,'test3','DEFAULT','test3(\"111\",\"222\")','@hourly','2','1','1','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(8,'test4','DEFAULT','test1','0 0/7 * * * ?','1','1','1','admin','2020-02-19 16:08:37','',NULL,'');
+	(10,'test1','','DEFAULT','test1','* * * * * *','1','1','1','admin','2020-02-26 15:30:27','','2020-02-26 16:51:46',''),
+	(12,'test2','helloworld|yjgo','DEFAULT','test2','* * * * * *','1','1','1','admin','2020-02-27 10:20:26','',NULL,'');
 
 /*!40000 ALTER TABLE `sys_job` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -463,7 +462,14 @@ VALUES
 	(82,'admin','175.0.212.81','','Chrome','Intel Mac OS X 10_14_6','0','登陆成功','2020-02-20 09:13:15'),
 	(83,'admin','175.0.212.81','深圳','Chrome','Intel Mac OS X 10_14_6','0','账号或密码不正确','2020-02-20 09:17:29'),
 	(84,'admin','175.0.212.81','深圳','Chrome','Intel Mac OS X 10_14_6','0','账号或密码不正确','2020-02-20 09:17:40'),
-	(85,'admin','175.0.212.81','深圳','Chrome','Intel Mac OS X 10_14_6','0','登陆成功','2020-02-20 09:18:46');
+	(85,'admin','175.0.212.81','深圳','Chrome','Intel Mac OS X 10_14_6','0','登陆成功','2020-02-20 09:18:46'),
+	(86,'admin','[::1]','内网IP','Chrome','Intel Mac OS X 10_14_6','0','账号或密码不正确','2020-02-20 10:51:36'),
+	(87,'admin','[::1]','内网IP','Chrome','Intel Mac OS X 10_14_6','0','登陆成功','2020-02-20 10:51:48'),
+	(88,'admin','[::1]','内网IP','Chrome','Intel Mac OS X 10_14_6','0','登陆成功','2020-02-20 15:31:34'),
+	(89,'admin','[::1]','内网IP','Chrome','Intel Mac OS X 10_14_6','0','登陆成功','2020-02-20 15:34:24'),
+	(90,'admin','[::1]','内网IP','Chrome','Intel Mac OS X 10_14_6','0','登陆成功','2020-02-26 14:54:49'),
+	(91,'admin','[::1]','内网IP','Chrome','Intel Mac OS X 10_14_6','0','登陆成功','2020-02-26 15:21:37'),
+	(92,'admin','[::1]','内网IP','Chrome','Intel Mac OS X 10_14_6','0','登陆成功','2020-02-27 11:08:34');
 
 /*!40000 ALTER TABLE `sys_logininfor` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -531,7 +537,6 @@ VALUES
 	(31,'记住翻页',6,5,'/demo/table/remember','','C','0','demo:remember:view','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(32,'跳转指定页',6,6,'/demo/table/pageGo','','C','0','demo:pageGo:view','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(33,'查询参数',6,7,'/demo/table/params','','C','0','demo:params:view','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(34,'初始多表格',6,8,'/demo/table/multi','','C','0','demo:multi:view','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(35,'点击加载表格',6,9,'/demo/table/button','','C','0','demo:button:view','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(36,'表格冻结列',6,10,'/demo/table/fixedColumns','','C','0','demo:fixedColumns:view','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(37,'触发事件',6,11,'/demo/table/event','','C','0','demo:event:view','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
@@ -560,7 +565,6 @@ VALUES
 	(104,'岗位管理',1,5,'/system/post','','C','0','system:post:view','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00','岗位管理菜单'),
 	(105,'字典管理',1,6,'/system/dict','','C','0','system:dict:view','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00','字典管理菜单'),
 	(106,'参数设置',1,7,'/system/config','','C','0','system:config:view','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00','参数设置菜单'),
-	(107,'通知公告',1086,8,'/system/notice','menuItem','C','0','system:notice:view','#','admin','2018-03-16 11:33:00','','2020-02-20 09:12:54',''),
 	(109,'在线用户',2,1,'/monitor/online','','C','0','monitor:online:view','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00','在线用户菜单'),
 	(110,'定时任务',2,2,'/monitor/job','','C','0','monitor:job:view','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00','定时任务菜单'),
 	(112,'服务监控',2,3,'/monitor/server','','C','0','monitor:server:view','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00','服务监控菜单'),
@@ -571,11 +575,8 @@ VALUES
 	(501,'登录日志',2,5,'/monitor/logininfor','','C','0','monitor:logininfor:view','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00','登录日志菜单'),
 	(502,'用户查询',100,1,'/system/user/list','','F','0','system:user:list','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1001,'用户新增',100,2,'/system/user/add','','F','0','system:user:add','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(1002,'用户修改',100,3,'/system/user/edit','','F','0','system:user:edit','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(1003,'用户删除',100,4,'/system/user/remove','','F','0','system:user:remove','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1004,'用户导出',100,5,'/system/user/export','','F','0','system:user:export','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1005,'用户导入',100,6,'/system/user/import','','F','0','system:user:import','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(1006,'重置密码',100,7,'/system/user/resetpwd','','F','0','system:user:resetPwd','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1007,'角色查询',101,1,'/system/role/list','','F','0','system:role:list','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1008,'角色新增',101,2,'/system/role/add','','F','0','system:role:add','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1009,'角色修改',101,3,'/system/role/edit','','F','0','system:role:edit','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
@@ -583,8 +584,6 @@ VALUES
 	(1011,'角色导出',101,5,'/system/role/export','','F','0','system:role:export','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1012,'菜单查询',102,1,'/system/menu/list','','F','0','system:menu:list','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1013,'菜单新增',102,2,'/system/menu/add','','F','0','system:menu:add','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(1014,'菜单修改',102,3,'/system/menu/edit','','F','0','system:menu:edit','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(1015,'菜单删除',102,4,'/system/menu/remove','','F','0','system:menu:remove','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1016,'部门查询',103,1,'/system/dept/list','','F','0','system:dept:list','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1017,'部门新增',103,2,'/system/dept/add','','F','0','system:dept:add','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1018,'部门修改',103,3,'/system/dept/edit','','F','0','system:dept:edit','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
@@ -596,18 +595,10 @@ VALUES
 	(1024,'岗位导出',104,5,'/system/post/export','','F','0','system:post:export','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1025,'字典查询',105,1,'/system/dict/list','','F','0','system:dict:list','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1026,'字典新增',105,2,'/system/dict/add','','F','0','system:dict:add','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(1027,'字典修改',105,3,'/system/dict/edit','','F','0','system:dict:edit','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(1028,'字典删除',105,4,'/system/dict/remove','','F','0','system:dict:remove','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1029,'字典导出',105,5,'/system/dict/export','','F','0','system:dict:export','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1030,'参数查询',106,1,'/system/config/list','','F','0','system:config:list','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1031,'参数新增',106,2,'/system/config/add','','F','0','system:config:add','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(1032,'参数修改',106,3,'/system/config/edit','','F','0','system:config:edit','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(1033,'参数删除',106,4,'/system/config/remove','','F','0','system:config:remove','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1034,'参数导出',106,5,'/system/config/export','','F','0','system:config:export','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(1035,'公告查询',107,1,'/system/notice/list','','F','0','system:notice:list','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(1036,'公告新增',107,2,'/system/notice/add','','F','0','system:notice:add','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(1037,'公告修改',107,3,'/system/notice/edit','','F','0','system:notice:edit','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(1038,'公告删除',107,4,'/system/notice/remove','','F','0','system:notice:remove','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1039,'操作查询',500,1,'/monitor/operlog/list','','F','0','monitor:operlog:list','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1040,'操作删除',500,2,'/monitor/operlog/remove','','F','0','monitor:operlog:remove','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1041,'详细信息',500,3,'/monitor/operlog/detail','','F','0','monitor:operlog:detail','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
@@ -639,9 +630,7 @@ VALUES
 	(1097,'菜单树',102,1,'/system/menu/roleMenuTreeData','','F','0','system:menu:roleMenuTreeData','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1098,'用户中心',100,7,'/system/user/profile','','F','0','system:user:profile','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1099,'修改头像',100,8,'/system/user/profile/avatar','','F','0','system:user:profile:avatar','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(1100,'用户重置密码',100,9,'/system/user/profile/resetPwd','','F','0','system:user:profile:resetPwd','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1101,'用户修改信息',100,10,'/system/user/profile/update','','F','0','system:user:profile:update','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(1102,'用户重置密码',100,11,'/system/user/profile/resetSavePwd','','F','0','system:user:profile:resetSavePwd','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1103,'检查邮箱是否存在',100,12,'/system/user/profile/checkEmailUnique','','F','0','system:user:profile:checkEmailUnique','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1104,'检查邮箱是否存在',100,13,'/system/user/profile/checkEmailUniqueAll','','F','0','system:user:profile:checkEmailUniqueAll','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1105,'检查手机是否存在',100,14,'/system/user/profile/checkPhoneUnique','','F','0','system:user:profile:checkPhoneUnique','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
@@ -679,8 +668,6 @@ VALUES
 	(1138,'类型唯一检查',105,7,'/system/dict/checkDictTypeUnique','','F','0','system:dict:checkDictTypeUnique','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1139,'字典查询',105,8,'/system/dict/data/list','','F','0','system:dict:data:list','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1140,'字典新增',105,9,'/system/dict/data/add','','F','0','system:dict:data:add','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(1141,'字典修改',105,10,'/system/dict/data/edit','','F','0','system:dict:data:edit','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(1142,'字典删除',105,11,'/system/dict/data/remove','','F','0','system:dict:data:remove','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1143,'字典导出',105,12,'/system/dict/data/export','','F','0','system:dict:data:export','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1144,'字典详情',105,13,'/system/dict/detail','','F','0','system:dict:detail','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1145,'导入数据表',114,5,'/tool/gen/importTable','','F','0','tool:gen:importTable','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
@@ -690,7 +677,10 @@ VALUES
 	(1149,'字典树',105,15,'/system/dict/treeData','','F','0','system:dict:treeData','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1150,'生成代码',114,7,'/tool/gen/genCode','','F','0','tool:gen:genCode','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
 	(1151,'日志查询',110,8,'/monitor/jobLog','','F','0','monitor:job:list','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
-	(1152,'日志查询',110,9,'/monitor/jobLog/list','','F','0','monitor:job:list','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00','');
+	(1152,'日志查询',110,9,'/monitor/jobLog/list','','F','0','monitor:job:list','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
+	(1153,'任务执行',110,3,'/monitor/job/start','','F','0','monitor:job:start','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
+	(1154,'任务执行',110,3,'/monitor/job/run','','F','0','monitor:job:run','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00',''),
+	(1155,'任务执行',110,3,'/monitor/job/stop','','F','0','monitor:job:stop','#','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00','');
 
 /*!40000 ALTER TABLE `sys_menu` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -958,7 +948,44 @@ VALUES
 	(241,'修改用户密码',2,'/system/user/profile/resetSavePwd','POST',1,'admin','运维部门','/system/user/profile/resetSavePwd','175.0.212.81','','{\"Password\":\"\",\"NewPassword\":\"yunjiego\",\"ConfirmPassword\":\"\"}','{\"code\":500,\"msg\":\"请输入旧密码; 旧密码长度为5到30位; 请输入确认密码; 确认密码长度为5到30位\",\"data\":null,\"otype\":2}',1,'','2020-02-20 09:22:21'),
 	(242,'修改用户密码',2,'/system/user/profile/resetSavePwd','POST',1,'admin','运维部门','/system/user/profile/resetSavePwd','175.0.212.81','深圳','{\"Password\":\"\",\"NewPassword\":\"yjg123456\",\"ConfirmPassword\":\"\"}','{\"code\":500,\"msg\":\"请输入旧密码; 旧密码长度为5到30位; 请输入确认密码; 确认密码长度为5到30位\",\"data\":null,\"otype\":2}',1,'','2020-02-20 09:22:54'),
 	(243,'修改用户密码',2,'/system/user/profile/resetSavePwd','POST',1,'admin','运维部门','/system/user/profile/resetSavePwd','175.0.212.81','深圳','{\"Password\":\"\",\"NewPassword\":\"yjg123456\",\"ConfirmPassword\":\"\"}','{\"code\":500,\"msg\":\"请输入旧密码; 旧密码长度为5到30位; 请输入确认密码; 确认密码长度为5到30位\",\"data\":null,\"otype\":2}',1,'','2020-02-20 09:23:04'),
-	(244,'修改用户密码',2,'/system/user/profile/resetSavePwd','POST',1,'admin','运维部门','/system/user/profile/resetSavePwd','175.0.212.81','深圳','{\"Password\":\"\",\"NewPassword\":\"yjg123456\",\"ConfirmPassword\":\"\"}','{\"code\":500,\"msg\":\"请输入旧密码; 旧密码长度为5到30位; 请输入确认密码; 确认密码长度为5到30位\",\"data\":null,\"otype\":2}',1,'','2020-02-20 09:23:15');
+	(244,'修改用户密码',2,'/system/user/profile/resetSavePwd','POST',1,'admin','运维部门','/system/user/profile/resetSavePwd','175.0.212.81','深圳','{\"Password\":\"\",\"NewPassword\":\"yjg123456\",\"ConfirmPassword\":\"\"}','{\"code\":500,\"msg\":\"请输入旧密码; 旧密码长度为5到30位; 请输入确认密码; 确认密码长度为5到30位\",\"data\":null,\"otype\":2}',1,'','2020-02-20 09:23:15'),
+	(245,'修改用户密码',2,'/system/user/profile/resetSavePwd','POST',1,'admin','运维部门','/system/user/profile/resetSavePwd','[::1]','内网IP','{\"OldPassword\":\"1qaz2wsx\",\"NewPassword\":\"yjg123456\",\"Confirm\":\"yjg123456\"}','{\"code\":0,\"msg\":\"操作成功\",\"data\":null,\"otype\":2}',0,'','2020-02-20 09:42:04'),
+	(246,'demo演示',2,'/demo/operate/edit','POST',1,'admin','运维部门','/demo/operate/edit','[::1]','内网IP','{\"UserId\":1}','{\"code\":0,\"msg\":\"操作成功\",\"data\":{\"userId\":1,\"userCode\":\"1000001\",\"userPhone\":\"15888888888\",\"userEmail\":\"111@qq.com\",\"userBalance\":100,\"status\":\"0\",\"createTime\":\"2020-01-12 02:02:02\"},\"otype\":2}',0,'','2020-02-21 16:59:28'),
+	(247,'demo演示',2,'/demo/operate/edit','POST',1,'admin','运维部门','/demo/operate/edit','[::1]','内网IP','{\"UserId\":1}','{\"code\":0,\"msg\":\"操作成功\",\"data\":{\"userId\":1,\"userCode\":\"1000001\",\"userPhone\":\"15888888888\",\"userEmail\":\"111@qq.com\",\"userBalance\":100,\"status\":\"0\",\"createTime\":\"2020-01-12 02:02:02\"},\"otype\":2}',0,'','2020-02-21 16:59:30'),
+	(248,'demo演示',2,'/demo/operate/edit?id=1','GET',1,'admin','运维部门','/demo/operate/edit?id=1','[::1]','内网IP','{\"UserId\":1}','{\"code\":0,\"msg\":\"操作成功\",\"data\":{\"userId\":1,\"userCode\":\"1000001\",\"userPhone\":\"15888888888\",\"userEmail\":\"111@qq.com\",\"userBalance\":100,\"status\":\"0\",\"createTime\":\"2020-01-12 02:02:02\"},\"otype\":2}',0,'','2020-02-21 17:23:28'),
+	(249,'demo演示',2,'/demo/operate/edit?id=2','GET',1,'admin','运维部门','/demo/operate/edit?id=2','[::1]','内网IP','{\"UserId\":1}','{\"code\":0,\"msg\":\"操作成功\",\"data\":{\"userId\":1,\"userCode\":\"1000001\",\"userPhone\":\"15888888888\",\"userEmail\":\"111@qq.com\",\"userBalance\":100,\"status\":\"0\",\"createTime\":\"2020-01-12 02:02:02\"},\"otype\":2}',0,'','2020-02-21 17:23:32'),
+	(250,'修改角色',1,'/system/role/edit','POST',1,'admin','运维部门','/system/role/edit','[::1]','内网IP','{\"RoleId\":1,\"RoleName\":\"管理员\",\"RoleKey\":\"admin\",\"RoleSort\":\"1\",\"Status\":\"0\",\"Remark\":\"管理员\",\"MenuIds\":\"1,100,502,1001,1004,1005,1098,1099,1101,1103,1104,1105,1106,1107,1108,1109,101,1007,1008,1009,1010,1011,1110,1111,1112,1113,1114,1115,1117,1118,1119,1120,1121,1122,102,1097,1012,1013,1123,1124,1125,1126,1127,103,1016,1017,1018,1019,1093,1094,1116,1129,1130,104,1020,1021,1022,1023,1024,1131,1132,1133,1134,105,1025,1026,1029,1137,1138,1139,1140,1143,1144,1148,1149,106,1030,1031,1034,1135,1136,1086,107,1035,1036,1037,1038,2,109,1047,1048,1049,110,1050,1051,1052,1053,1054,1055,1056,1151,1152,112,500,1039,1040,1096,1041,1042,501,1043,1044,1045,1046,1095,3,113,114,1057,1058,1059,1060,1061,1145,1146,1147,1150,115,4,5,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,6,27,28,29,30,31,32,33,35,36,37,38,39,40,41,42,43,44,7,45,46,47,8,48,49,9,50,51,52,53,10,54,55\"}','{\"code\":0,\"msg\":\"操作成功\",\"data\":1,\"otype\":1}',0,'','2020-02-26 14:55:29'),
+	(251,'修改定时任务调度',1,'/monitor/job/edit','POST',1,'admin','运维部门','/monitor/job/edit','[::1]','内网IP','{\"JobName\":\"test1\",\"JobGroup\":\"DEFAULT\",\"JobId\":1,\"InvokeTarget\":\"test1()\",\"CronExpression\":\"0 30 * * * *\",\"MisfirePolicy\":\"2\",\"Concurrent\":\"1\",\"Status\":\"1\",\"Remark\":\"\"}','{\"code\":0,\"msg\":\"操作成功\",\"data\":1,\"otype\":1}',0,'','2020-02-26 15:07:17'),
+	(252,'修改定时任务调度',1,'/monitor/job/edit','POST',1,'admin','运维部门','/monitor/job/edit','[::1]','内网IP','{\"JobName\":\"test1\",\"JobGroup\":\"DEFAULT\",\"JobId\":1,\"InvokeTarget\":\"test1()\",\"CronExpression\":\"0 30 * * * *\",\"MisfirePolicy\":\"2\",\"Concurrent\":\"1\",\"Status\":\"1\",\"Remark\":\"\"}','{\"code\":0,\"msg\":\"操作成功\",\"data\":1,\"otype\":1}',0,'','2020-02-26 15:08:02'),
+	(253,'',0,'/monitor/job/run','POST',1,'admin','运维部门','/monitor/job/run','[::1]','内网IP','{\"jobId\":1}','{\"code\":500,\"msg\":\"任务不存在\",\"data\":null,\"otype\":0}',1,'','2020-02-26 15:21:58'),
+	(254,'',0,'/monitor/job/run','POST',1,'admin','运维部门','/monitor/job/run','[::1]','内网IP','{\"jobId\":1}','{\"code\":0,\"msg\":\"启动成功\",\"data\":null,\"otype\":0}',0,'','2020-02-26 15:23:46'),
+	(255,'删除定时任务调度',3,'/monitor/job/remove','POST',1,'admin','运维部门','/monitor/job/remove','[::1]','内网IP','{\"Ids\":\"1,2,3,8\"}','{\"code\":0,\"msg\":\"操作成功\",\"data\":4,\"otype\":3}',0,'','2020-02-26 15:27:24'),
+	(256,'新增定时任务调度',1,'/monitor/job/add','POST',1,'admin','运维部门','/monitor/job/add','[::1]','内网IP','{\"JobName\":\"test1\",\"JobGroup\":\"DEFAULT\",\"InvokeTarget\":\"test1\",\"CronExpression\":\"* * * * * *\",\"MisfirePolicy\":\"2\",\"Concurrent\":\"1\",\"Status\":\"1\",\"Remark\":\"\"}','{\"code\":0,\"msg\":\"操作成功\",\"data\":9,\"otype\":1}',0,'','2020-02-26 15:29:06'),
+	(257,'',0,'/monitor/job/run','POST',1,'admin','运维部门','/monitor/job/run','[::1]','内网IP','{\"jobId\":9}','{\"code\":0,\"msg\":\"启动成功\",\"data\":null,\"otype\":0}',0,'','2020-02-26 15:29:25'),
+	(258,'删除定时任务调度',3,'/monitor/job/remove','POST',1,'admin','运维部门','/monitor/job/remove','[::1]','内网IP','{\"Ids\":\"9\"}','{\"code\":0,\"msg\":\"操作成功\",\"data\":1,\"otype\":3}',0,'','2020-02-26 15:29:44'),
+	(259,'新增定时任务调度',1,'/monitor/job/add','POST',1,'admin','运维部门','/monitor/job/add','[::1]','内网IP','{\"JobName\":\"test1\",\"JobGroup\":\"DEFAULT\",\"InvokeTarget\":\"test1\",\"CronExpression\":\"* * * * * *\",\"MisfirePolicy\":\"2\",\"Concurrent\":\"1\",\"Status\":\"1\",\"Remark\":\"\"}','{\"code\":0,\"msg\":\"操作成功\",\"data\":10,\"otype\":1}',0,'','2020-02-26 15:30:27'),
+	(260,'',0,'/monitor/job/run','POST',1,'admin','运维部门','/monitor/job/run','[::1]','内网IP','{\"jobId\":10}','{\"code\":0,\"msg\":\"启动成功\",\"data\":null,\"otype\":0}',0,'','2020-02-26 15:30:31'),
+	(261,'',0,'/monitor/job/run','POST',1,'admin','运维部门','/monitor/job/run','[::1]','内网IP','{\"jobId\":10}','{\"code\":0,\"msg\":\"启动成功\",\"data\":null,\"otype\":0}',0,'','2020-02-26 16:28:44'),
+	(262,'',0,'/monitor/job/run','POST',1,'admin','运维部门','/monitor/job/run','[::1]','内网IP','{\"jobId\":10}','{\"code\":0,\"msg\":\"启动成功\",\"data\":null,\"otype\":0}',0,'','2020-02-26 16:28:52'),
+	(263,'',0,'/monitor/job/run','POST',1,'admin','运维部门','/monitor/job/run','[::1]','内网IP','{\"jobId\":10}','{\"code\":0,\"msg\":\"启动成功\",\"data\":null,\"otype\":0}',0,'','2020-02-26 16:31:55'),
+	(264,'',0,'/monitor/job/run','POST',1,'admin','运维部门','/monitor/job/run','[::1]','内网IP','{\"jobId\":10}','{\"code\":0,\"msg\":\"启动成功\",\"data\":null,\"otype\":0}',0,'','2020-02-26 16:33:11'),
+	(265,'',0,'/monitor/job/run','POST',1,'admin','运维部门','/monitor/job/run','[::1]','内网IP','{\"jobId\":10}','{\"code\":0,\"msg\":\"启动成功\",\"data\":null,\"otype\":0}',0,'','2020-02-26 16:33:19'),
+	(266,'',0,'/monitor/job/run','POST',1,'admin','运维部门','/monitor/job/run','[::1]','内网IP','{\"jobId\":10}','{\"code\":0,\"msg\":\"启动成功\",\"data\":null,\"otype\":0}',0,'','2020-02-26 16:42:25'),
+	(267,'修改定时任务调度',1,'/monitor/job/edit','POST',1,'admin','运维部门','/monitor/job/edit','[::1]','内网IP','{\"JobName\":\"test1\",\"JobGroup\":\"DEFAULT\",\"JobId\":10,\"InvokeTarget\":\"test1\",\"CronExpression\":\"* * * * * *\",\"MisfirePolicy\":\"1\",\"Concurrent\":\"1\",\"Status\":\"1\",\"Remark\":\"\"}','{\"code\":0,\"msg\":\"操作成功\",\"data\":1,\"otype\":1}',0,'','2020-02-26 16:51:46'),
+	(268,'',0,'/monitor/job/start','POST',1,'admin','运维部门','/monitor/job/start','[::1]','内网IP','{\"jobId\":10}','{\"code\":0,\"msg\":\"启动成功\",\"data\":null,\"otype\":0}',0,'','2020-02-26 16:52:55'),
+	(269,'新增定时任务调度',1,'/monitor/job/add','POST',1,'admin','运维部门','/monitor/job/add','[::1]','内网IP','{\"JobName\":\"test2\",\"JobParams\":\"hello|world\",\"JobGroup\":\"DEFAULT\",\"InvokeTarget\":\"test2\",\"CronExpression\":\"* * * * * *\",\"MisfirePolicy\":\"1\",\"Concurrent\":\"1\",\"Status\":\"1\",\"Remark\":\"\"}','{\"code\":0,\"msg\":\"操作成功\",\"data\":11,\"otype\":1}',0,'','2020-02-27 10:18:14'),
+	(270,'删除定时任务调度',3,'/monitor/job/remove','POST',1,'admin','运维部门','/monitor/job/remove','[::1]','内网IP','{\"Ids\":\"11\"}','{\"code\":0,\"msg\":\"操作成功\",\"data\":1,\"otype\":3}',0,'','2020-02-27 10:19:53'),
+	(271,'新增定时任务调度',1,'/monitor/job/add','POST',1,'admin','运维部门','/monitor/job/add','[::1]','内网IP','{\"JobName\":\"test2\",\"JobParams\":\"helloworld|yjgo\",\"JobGroup\":\"DEFAULT\",\"InvokeTarget\":\"test2\",\"CronExpression\":\"* * * * * *\",\"MisfirePolicy\":\"1\",\"Concurrent\":\"1\",\"Status\":\"1\",\"Remark\":\"\"}','{\"code\":0,\"msg\":\"操作成功\",\"data\":12,\"otype\":1}',0,'','2020-02-27 10:20:26'),
+	(272,'',0,'/monitor/job/start','POST',1,'admin','运维部门','/monitor/job/start','[::1]','内网IP','{\"jobId\":12}','{\"code\":0,\"msg\":\"启动成功\",\"data\":null,\"otype\":0}',0,'','2020-02-27 10:20:35'),
+	(273,'',0,'/monitor/job/start','POST',1,'admin','运维部门','/monitor/job/start','[::1]','内网IP','{\"jobId\":12}','{\"code\":0,\"msg\":\"启动成功\",\"data\":null,\"otype\":0}',0,'','2020-02-27 10:21:33'),
+	(274,'',0,'/monitor/job/start','POST',1,'admin','运维部门','/monitor/job/start','[::1]','内网IP','{\"jobId\":12}','{\"code\":0,\"msg\":\"启动成功\",\"data\":null,\"otype\":0}',0,'','2020-02-27 10:27:15'),
+	(275,'',0,'/monitor/job/start','POST',1,'admin','运维部门','/monitor/job/start','[::1]','内网IP','{\"jobId\":12}','{\"code\":0,\"msg\":\"启动成功\",\"data\":null,\"otype\":0}',0,'','2020-02-27 10:28:33'),
+	(276,'',0,'/monitor/job/stop','POST',1,'admin','运维部门','/monitor/job/stop','[::1]','内网IP','{\"jobId\":12}','{\"code\":0,\"msg\":\"停止成功\",\"data\":null,\"otype\":0}',0,'','2020-02-27 10:28:37'),
+	(277,'',0,'/monitor/job/start','POST',1,'admin','运维部门','/monitor/job/start','[::1]','内网IP','{\"jobId\":12}','{\"code\":0,\"msg\":\"启动成功\",\"data\":null,\"otype\":0}',0,'','2020-02-27 10:31:30'),
+	(278,'',0,'/monitor/job/start','POST',1,'admin','运维部门','/monitor/job/start','[::1]','内网IP','{\"jobId\":12}','{\"code\":0,\"msg\":\"启动成功\",\"data\":null,\"otype\":0}',0,'','2020-02-27 11:11:12'),
+	(279,'',0,'/monitor/job/stop','POST',1,'admin','运维部门','/monitor/job/stop','[::1]','内网IP','{\"jobId\":12}','{\"code\":0,\"msg\":\"停止成功\",\"data\":null,\"otype\":0}',0,'','2020-02-27 11:11:18'),
+	(280,'',0,'/monitor/job/start','POST',1,'admin','运维部门','/monitor/job/start','[::1]','内网IP','{\"jobId\":10}','{\"code\":0,\"msg\":\"启动成功\",\"data\":null,\"otype\":0}',0,'','2020-02-27 11:11:23'),
+	(281,'',0,'/monitor/job/stop','POST',1,'admin','运维部门','/monitor/job/stop','[::1]','内网IP','{\"jobId\":10}','{\"code\":0,\"msg\":\"停止成功\",\"data\":null,\"otype\":0}',0,'','2020-02-27 11:11:28');
 
 /*!40000 ALTER TABLE `sys_oper_log` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1021,7 +1048,7 @@ LOCK TABLES `sys_role` WRITE;
 
 INSERT INTO `sys_role` (`role_id`, `role_name`, `role_key`, `role_sort`, `data_scope`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`)
 VALUES
-	(1,'管理员','admin',1,'1','0','0','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00','管理员');
+	(1,'管理员','admin',1,'1','0','0','admin','2018-03-16 11:33:00','','2020-02-26 14:55:29','管理员');
 
 /*!40000 ALTER TABLE `sys_role` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1066,6 +1093,185 @@ LOCK TABLES `sys_role_menu` WRITE;
 
 INSERT INTO `sys_role_menu` (`role_id`, `menu_id`)
 VALUES
+	(1,1),
+	(1,2),
+	(1,3),
+	(1,4),
+	(1,5),
+	(1,6),
+	(1,7),
+	(1,8),
+	(1,9),
+	(1,10),
+	(1,11),
+	(1,12),
+	(1,13),
+	(1,14),
+	(1,15),
+	(1,16),
+	(1,17),
+	(1,18),
+	(1,19),
+	(1,20),
+	(1,21),
+	(1,22),
+	(1,23),
+	(1,24),
+	(1,25),
+	(1,26),
+	(1,27),
+	(1,28),
+	(1,29),
+	(1,30),
+	(1,31),
+	(1,32),
+	(1,33),
+	(1,35),
+	(1,36),
+	(1,37),
+	(1,38),
+	(1,39),
+	(1,40),
+	(1,41),
+	(1,42),
+	(1,43),
+	(1,44),
+	(1,45),
+	(1,46),
+	(1,47),
+	(1,48),
+	(1,49),
+	(1,50),
+	(1,51),
+	(1,52),
+	(1,53),
+	(1,54),
+	(1,55),
+	(1,100),
+	(1,101),
+	(1,102),
+	(1,103),
+	(1,104),
+	(1,105),
+	(1,106),
+	(1,107),
+	(1,109),
+	(1,110),
+	(1,112),
+	(1,113),
+	(1,114),
+	(1,115),
+	(1,500),
+	(1,501),
+	(1,502),
+	(1,1001),
+	(1,1004),
+	(1,1005),
+	(1,1007),
+	(1,1008),
+	(1,1009),
+	(1,1010),
+	(1,1011),
+	(1,1012),
+	(1,1013),
+	(1,1016),
+	(1,1017),
+	(1,1018),
+	(1,1019),
+	(1,1020),
+	(1,1021),
+	(1,1022),
+	(1,1023),
+	(1,1024),
+	(1,1025),
+	(1,1026),
+	(1,1029),
+	(1,1030),
+	(1,1031),
+	(1,1034),
+	(1,1035),
+	(1,1036),
+	(1,1037),
+	(1,1038),
+	(1,1039),
+	(1,1040),
+	(1,1041),
+	(1,1042),
+	(1,1043),
+	(1,1044),
+	(1,1045),
+	(1,1046),
+	(1,1047),
+	(1,1048),
+	(1,1049),
+	(1,1050),
+	(1,1051),
+	(1,1052),
+	(1,1053),
+	(1,1054),
+	(1,1055),
+	(1,1056),
+	(1,1057),
+	(1,1058),
+	(1,1059),
+	(1,1060),
+	(1,1061),
+	(1,1086),
+	(1,1093),
+	(1,1094),
+	(1,1095),
+	(1,1096),
+	(1,1097),
+	(1,1098),
+	(1,1099),
+	(1,1101),
+	(1,1103),
+	(1,1104),
+	(1,1105),
+	(1,1106),
+	(1,1107),
+	(1,1108),
+	(1,1109),
+	(1,1110),
+	(1,1111),
+	(1,1112),
+	(1,1113),
+	(1,1114),
+	(1,1115),
+	(1,1116),
+	(1,1117),
+	(1,1118),
+	(1,1119),
+	(1,1120),
+	(1,1121),
+	(1,1122),
+	(1,1123),
+	(1,1124),
+	(1,1125),
+	(1,1126),
+	(1,1127),
+	(1,1129),
+	(1,1130),
+	(1,1131),
+	(1,1132),
+	(1,1133),
+	(1,1134),
+	(1,1135),
+	(1,1136),
+	(1,1137),
+	(1,1138),
+	(1,1139),
+	(1,1140),
+	(1,1143),
+	(1,1144),
+	(1,1145),
+	(1,1146),
+	(1,1147),
+	(1,1148),
+	(1,1149),
+	(1,1150),
+	(1,1151),
+	(1,1152),
 	(2,1),
 	(2,2),
 	(2,3),
@@ -1268,7 +1474,7 @@ LOCK TABLES `sys_user` WRITE;
 
 INSERT INTO `sys_user` (`user_id`, `dept_id`, `login_name`, `user_name`, `user_type`, `email`, `phonenumber`, `sex`, `avatar`, `password`, `salt`, `status`, `del_flag`, `login_ip`, `login_date`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`)
 VALUES
-	(1,110,'admin','超级管理员','00','dd122221111d@163.com','15888888881','0','/upload/admin1579180516186761000.png','c158decd0bc0a52a28867f9b571c843f','Sp6Jqx','0','0','127.0.0.1','2020-01-13 13:20:40','admin','2018-03-16 11:33:00','admin','2020-01-27 08:53:05','管理员111111');
+	(1,110,'admin','超级管理员','00','dd122221111d@163.com','15888888881','0','/upload/admin1579180516186761000.png','609ac514e6ef0b9a5f4eee66693fd7f8','NcSB3H','0','0','127.0.0.1','2020-01-13 13:20:40','admin','2018-03-16 11:33:00','admin','2020-01-27 08:53:05','管理员111111');
 
 /*!40000 ALTER TABLE `sys_user` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1300,8 +1506,9 @@ LOCK TABLES `sys_user_online` WRITE;
 INSERT INTO `sys_user_online` (`sessionId`, `login_name`, `dept_name`, `ipaddr`, `login_location`, `browser`, `os`, `status`, `start_timestamp`, `last_access_time`, `expire_time`)
 VALUES
 	('C0LS01Q354HSCZPLNN','admin','','[::1]','内网IP','Chrome','Intel Mac OS X 10_14_6','on_line','2020-02-18 11:17:57','2020-02-18 11:17:57',1440),
-	('C0P4CGVPNRIWGJGIOQ','admin','','[::1]','内网IP','Chrome','Intel Mac OS X 10_14_6','on_line','2020-02-19 14:27:47','2020-02-19 14:27:47',1440),
-	('C0Q4YHC5QEO2U18WVI','admin','','175.0.212.81','深圳','Chrome','Intel Mac OS X 10_14_6','on_line','2020-02-20 09:18:46','2020-02-20 09:18:46',1440);
+	('C0P4CGVPNRIWGJGIOQ','admin','','[::1]','内网IP','Chrome','Intel Mac OS X 10_14_6','on_line','2020-02-20 15:34:24','2020-02-20 15:34:24',1440),
+	('C0Q4YHC5QEO2U18WVI','admin','','175.0.212.81','深圳','Chrome','Intel Mac OS X 10_14_6','on_line','2020-02-20 09:18:46','2020-02-20 09:18:46',1440),
+	('C0VWCVICJDC8CSTC53','admin','','[::1]','内网IP','Chrome','Intel Mac OS X 10_14_6','on_line','2020-02-27 11:08:34','2020-02-27 11:08:34',1440);
 
 /*!40000 ALTER TABLE `sys_user_online` ENABLE KEYS */;
 UNLOCK TABLES;

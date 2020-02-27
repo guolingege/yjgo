@@ -33,3 +33,13 @@ func Add(task TaskEntity) {
 
 	taskList = append(taskList, task)
 }
+
+//修改参数
+func EditParams(funcName string, params []string) {
+	for index := range taskList {
+		if taskList[index].FuncName == funcName {
+			taskList[index].Param = params
+			break
+		}
+	}
+}

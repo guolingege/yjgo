@@ -15,6 +15,7 @@ import (
 //新增页面请求参数
 type AddReq struct {
 	JobName        string `p:"jobName" `
+	JobParams      string `p:"jobParams"` // 任务参数
 	JobGroup       string `p:"jobGroup" `
 	InvokeTarget   string `p:"invokeTarget" `
 	CronExpression string `p:"cronExpression" `
@@ -27,6 +28,7 @@ type AddReq struct {
 //修改页面请求参数
 type EditReq struct {
 	JobName        string `p:"jobName" `
+	JobParams      string `p:"jobParams"` // 任务参数
 	JobGroup       string `p:"jobGroup" `
 	JobId          int64  `p:"jobId" v:"required#主键ID不能为空"`
 	InvokeTarget   string `p:"invokeTarget" `
@@ -37,7 +39,7 @@ type EditReq struct {
 	Remark         string `p:"remark" `
 }
 
-//分页请求参数 
+//分页请求参数
 type SelectPageReq struct {
 	JobId          int64  `p:"jobId"`          //任务ID
 	JobName        string `p:"jobName"`        //任务名称

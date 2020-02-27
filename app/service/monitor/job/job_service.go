@@ -11,6 +11,7 @@ import (
 	"github.com/gogf/gf/net/ghttp"
 	"github.com/gogf/gf/os/gcron"
 	"github.com/gogf/gf/os/gtime"
+	"strings"
 	jobModel "yj-app/app/model/monitor/job"
 	userService "yj-app/app/service/system/user"
 	"yj-app/app/service/utils/convert"
@@ -67,6 +68,7 @@ func AddSave(req *jobModel.AddReq, session *ghttp.Session) (int64, error) {
 
 	var entity jobModel.Entity
 	entity.JobName = req.JobName
+	entity.JobParams = req.JobParams
 	entity.JobGroup = req.JobGroup
 	entity.InvokeTarget = req.InvokeTarget
 	entity.CronExpression = req.CronExpression
@@ -122,6 +124,7 @@ func EditSave(req *jobModel.EditReq, session *ghttp.Session) (int64, error) {
 	}
 
 	entity.InvokeTarget = req.InvokeTarget
+	entity.JobParams = req.JobParams
 	entity.CronExpression = req.CronExpression
 	entity.MisfirePolicy = req.MisfirePolicy
 	entity.Concurrent = req.Concurrent
@@ -159,6 +162,10 @@ func Start(entity *jobModel.Entity) error {
 		return gerror.New("当前task目录下没有绑定这个方法")
 	}
 
+	//传参
+	paramArr := strings.Split(entity.JobParams, "|")
+	task.EditParams(f.FuncName, paramArr)
+
 	rs := gcron.Search(entity.JobName)
 
 	if rs == nil {
@@ -178,7 +185,7 @@ func Start(entity *jobModel.Entity) error {
 	gcron.Start(entity.JobName)
 
 	if entity.MisfirePolicy == "1" {
-		entity.Status = "1"
+		entity.Status = "0"
 		entity.Update()
 	}
 

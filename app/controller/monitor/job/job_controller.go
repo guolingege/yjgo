@@ -210,6 +210,7 @@ func Start(r *ghttp.Request) {
 	if job == nil {
 		response.ErrorMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, "任务不存在")
 	}
+
 	err := jobService.Start(job)
 	if err != nil {
 		response.ErrorMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, err.Error())

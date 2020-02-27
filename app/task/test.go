@@ -10,7 +10,7 @@ func init() {
 	var task2 TaskEntity
 	task2.FuncName = "test2"
 	task2.Param = nil
-	task2.Run = Test1
+	task2.Run = Test2
 	Add(task2)
 }
 
@@ -20,6 +20,12 @@ func Test1() {
 }
 
 //传参测试
-func Test2(param ...string) {
-	println(param)
+func Test2() {
+	//获取参数
+	task := GetByName("test2")
+	if task == nil {
+		return
+	}
+
+	println(task.Param)
 }

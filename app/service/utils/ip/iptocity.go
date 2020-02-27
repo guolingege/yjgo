@@ -14,7 +14,7 @@ func GetCityByIp(ip string) string {
 		return "内网IP"
 	}
 
-	url := "http://ip.taobao.com/service/getIpInfo.php?ip=119.139.196.127"
+	url := "http://ip.taobao.com/service/getIpInfo.php?ip=" + ip
 	bytes := ghttp.GetBytes(url)
 	json, err := gjson.DecodeToJson(bytes)
 	if err != nil {

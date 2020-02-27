@@ -12,19 +12,20 @@ import (
 
 // Entity is the golang structure for table sys_job.
 type Entity struct {
-    JobId          int64       `orm:"job_id,primary"    json:"job_id"`          // 任务ID                                             
-    JobName        string      `orm:"job_name,primary"  json:"job_name"`        // 任务名称                                           
-    JobGroup       string      `orm:"job_group,primary" json:"job_group"`       // 任务组名                                           
-    InvokeTarget   string      `orm:"invoke_target"     json:"invoke_target"`   // 调用目标字符串                                     
-    CronExpression string      `orm:"cron_expression"   json:"cron_expression"` // cron执行表达式                                     
-    MisfirePolicy  string      `orm:"misfire_policy"    json:"misfire_policy"`  // 计划执行错误策略（1立即执行 2执行一次 3放弃执行）  
-    Concurrent     string      `orm:"concurrent"        json:"concurrent"`      // 是否并发执行（0允许 1禁止）                        
-    Status         string      `orm:"status"            json:"status"`          // 状态（0正常 1暂停）                                
-    CreateBy       string      `orm:"create_by"         json:"create_by"`       // 创建者                                             
-    CreateTime     *gtime.Time `orm:"create_time"       json:"create_time"`     // 创建时间                                           
-    UpdateBy       string      `orm:"update_by"         json:"update_by"`       // 更新者                                             
-    UpdateTime     *gtime.Time `orm:"update_time"       json:"update_time"`     // 更新时间                                           
-    Remark         string      `orm:"remark"            json:"remark"`          // 备注信息                                           
+	JobId          int64       `orm:"job_id,primary"    json:"job_id"`          // 任务ID
+	JobName        string      `orm:"job_name,primary"  json:"job_name"`        // 任务名称
+	JobParams      string      `orm:"job_params"  json:"job_params"`            // 任务参数
+	JobGroup       string      `orm:"job_group,primary" json:"job_group"`       // 任务组名
+	InvokeTarget   string      `orm:"invoke_target"     json:"invoke_target"`   // 调用目标字符串
+	CronExpression string      `orm:"cron_expression"   json:"cron_expression"` // cron执行表达式
+	MisfirePolicy  string      `orm:"misfire_policy"    json:"misfire_policy"`  // 计划执行错误策略（1立即执行 2执行一次 3放弃执行）
+	Concurrent     string      `orm:"concurrent"        json:"concurrent"`      // 是否并发执行（0允许 1禁止）
+	Status         string      `orm:"status"            json:"status"`          // 状态（0正常 1暂停）
+	CreateBy       string      `orm:"create_by"         json:"create_by"`       // 创建者
+	CreateTime     *gtime.Time `orm:"create_time"       json:"create_time"`     // 创建时间
+	UpdateBy       string      `orm:"update_by"         json:"update_by"`       // 更新者
+	UpdateTime     *gtime.Time `orm:"update_time"       json:"update_time"`     // 更新时间
+	Remark         string      `orm:"remark"            json:"remark"`          // 备注信息
 }
 
 // OmitEmpty sets OPTION_OMITEMPTY option for the model, which automatically filers
