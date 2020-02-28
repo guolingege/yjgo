@@ -48,10 +48,10 @@
         </div>
 
         <div class="btn-group-sm" id="toolbar" role="group">
-            {{printf `{{getPermiButton .Session.uid "%v:%v:add" "新增" "btn btn-success" "fa fa-plus"}}` .table.ModuleName .table.BusinessName}}
-            {{printf `{{getPermiButton .Session.uid "%v:%v:edit" "修改" "btn btn-primary single disabled" "fa fa-edit"}}` .table.ModuleName .table.BusinessName}}
-            {{printf `{{getPermiButton .Session.uid "%v:%v:remove" "删除" "btn btn-danger multiple disabled" "fa fa-remove"}}` .table.ModuleName .table.BusinessName}}
-            {{printf `{{getPermiButton .Session.uid "%v:%v:export" "导出" "btn btn-warning" "fa fa-download"}}` .table.ModuleName .table.BusinessName}}
+            {{printf `{{getPermiButton .Session.uid "%v:%v:add" "$.operate.add()" "新增" "btn btn-success" "fa fa-plus"}}` .table.ModuleName .table.BusinessName}}
+            {{printf `{{getPermiButton .Session.uid "%v:%v:edit" "$.operate.edit()" "修改" "btn btn-primary single disabled" "fa fa-edit"}}` .table.ModuleName .table.BusinessName}}
+            {{printf `{{getPermiButton .Session.uid "%v:%v:remove" "$.operate.removeAll()" "删除" "btn btn-danger multiple disabled" "fa fa-remove"}}` .table.ModuleName .table.BusinessName}}
+            {{printf `{{getPermiButton .Session.uid "%v:%v:export" "$.table.exportExcel()" "导出" "btn btn-warning" "fa fa-download"}}` .table.ModuleName .table.BusinessName}}
         </div>
         <div class="col-sm-12 select-table table-striped">
             <table id="bootstrap-table"></table>
