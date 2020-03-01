@@ -1,6 +1,7 @@
 package demo
 
 import (
+	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"yj-app/app/controller/demo/form"
 	"yj-app/app/controller/demo/icon"
@@ -10,10 +11,9 @@ import (
 	"yj-app/app/controller/demo/table"
 )
 
-//加载路由
-func LoadRounter(s *ghttp.Server) {
+func init() {
+	s := g.Server()
 	s.Group("/demo/form", func(group *ghttp.RouterGroup) {
-
 		group.ALL("/autocomplete", form.Autocomplete)
 		group.ALL("/basic", form.Basic)
 		group.ALL("/button", form.Button)

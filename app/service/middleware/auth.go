@@ -13,7 +13,7 @@ var FramePages = []string{"/index", "/system/main", "/system/download", "/system
 
 // 鉴权中间件，只有登录成功之后才能通过
 func Auth(r *ghttp.Request) {
-
+	r.GetParam()
 	//判断是否登陆
 	if userService.IsSignedIn(r.Session) {
 		//根据url判断是否有权限

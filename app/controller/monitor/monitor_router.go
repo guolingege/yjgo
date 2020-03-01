@@ -1,6 +1,7 @@
 package monitor
 
 import (
+	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"yj-app/app/controller/monitor/job"
 	"yj-app/app/controller/monitor/logininfor"
@@ -11,7 +12,8 @@ import (
 )
 
 //加载路由
-func LoadRounter(s *ghttp.Server) {
+func init() {
+	s := g.Server()
 	// 服务监控
 	s.Group("/monitor/server", func(group *ghttp.RouterGroup) {
 		group.Middleware(middleware.Auth)

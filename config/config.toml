@@ -19,7 +19,7 @@
 
 # Database.
 [database]
-    link  = "mysql:root:password@tcp(127.0.0.1:3306)/yjgo"
+    link  = "mysql:zyroot:GdacBgRdi+YF$9o?sCWxYk8n@tcp(127.0.0.1:3306)/yjgo"
     debug = true
     # Database logger.
     [database.logger]
