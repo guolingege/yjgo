@@ -371,7 +371,7 @@ func GenCode(r *ghttp.Request) {
 	}
 
 	if tmpRouter, err := r.Response.ParseTpl("vm/go/router.html", g.Map{"table": entity}); err == nil {
-		fileName := strings.Join([]string{curDir, "/app/controller/", entity.ModuleName, "/", entity.BusinessName, "/", entity.BusinessName, "_router.go"}, "")
+		fileName := strings.Join([]string{curDir, "/app/controller/", entity.ModuleName, "/", entity.BusinessName, "_router.go"}, "")
 		if !gfile.Exists(fileName) {
 			f, err := gfile.Create(fileName)
 			if err == nil {
