@@ -1,13 +1,15 @@
 package tool
 
 import (
+	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"yj-app/app/controller/tool/gen"
 	"yj-app/app/service/middleware"
 )
 
 //加载路由
-func LoadRounter(s *ghttp.Server) {
+func init() {
+	s := g.Server()
 	// 服务监控
 	s.Group("/tool", func(group *ghttp.RouterGroup) {
 		group.Middleware(middleware.Auth)

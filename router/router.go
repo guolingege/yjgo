@@ -11,6 +11,7 @@ import (
 	_ "yj-app/app/controller/system"
 	errorc "yj-app/app/controller/system/error"
 	"yj-app/app/controller/system/index"
+	_ "yj-app/app/controller/tool"
 )
 
 func init() {
