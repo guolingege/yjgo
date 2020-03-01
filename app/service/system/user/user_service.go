@@ -42,8 +42,8 @@ func Export(param *userModel.SelectPageReq) (string, error) {
 	}
 
 	head := []string{"用户名", "呢称", "Email", "电话号码", "性别", "部门", "领导", "状态", "删除标记", "创建人", "创建时间", "备注"}
-
-	url, err := excel.DownlaodExcel(head, result)
+	key := []string{"login_name", "user_name", "email", "phonenumber", "sex", "dept_name", "leader", "status", "del_flag", "create_by", "create_time", "remark"}
+	url, err := excel.DownlaodExcel(head, key, result)
 
 	if err != nil {
 		return "", err
@@ -327,7 +327,7 @@ func SignOut(session *ghttp.Session) error {
 //强退用户
 func ForceLogout(sessionId string) error {
 	tmp := SessionList.Get(sessionId)
-	if tmp!=nil {
+	if tmp != nil {
 		session := tmp.(*ghttp.Session)
 		if session != nil {
 			return SignOut(session)

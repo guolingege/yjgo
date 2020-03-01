@@ -69,8 +69,8 @@ func Export(param *logininfor.SelectPageReq) (string, error) {
 	}
 
 	head := []string{"访问编号", "登录名称", "登录地址", "登录地点", "浏览器", "操作系统", "登录状态", "操作信息", "登录时间"}
-
-	url, err := excel.DownlaodExcel(head, result)
+	key := []string{"info_id", "login_name", "ipaddr", "login_location", "browser", "os", "status", "msg", "login_time"}
+	url, err := excel.DownlaodExcel(head, key, result)
 
 	if err != nil {
 		return "", err

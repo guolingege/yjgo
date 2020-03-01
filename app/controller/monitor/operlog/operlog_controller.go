@@ -11,7 +11,7 @@ import (
 
 //用户列表页
 func List(r *ghttp.Request) {
-	response.WriteTpl(r, "monitor/operlog/list.html")
+	response.BuildTpl(r, "monitor/operlog/list.html").WriteTplExtend()
 }
 
 //用户列表分页数据
@@ -33,12 +33,7 @@ func ListAjax(r *ghttp.Request) {
 		rows = *result
 	}
 
-	r.Response.WriteJsonExit(model.TableDataInfo{
-		Code:  0,
-		Msg:   "操作成功",
-		Total: page.Total,
-		Rows:  rows,
-	})
+	response.BuildTable(r, page.Total, rows).WriteJsonExit()
 }
 
 //清空记录
@@ -47,9 +42,9 @@ func Clean(r *ghttp.Request) {
 	rs := operlogService.DeleteRecordAll()
 
 	if rs > 0 {
-		response.SucessDataDel(r, "清空操作日志", "all", rs)
+		response.SucessResp(r).SetBtype(model.Buniss_Del).SetData(rs).Log("操作日志管理", "all").WriteJsonExit()
 	} else {
-		response.ErrorDelData(r, "清空操作日志", "all", 0)
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).Log("操作日志管理", "all").WriteJsonExit()
 	}
 }
 
@@ -58,15 +53,15 @@ func Remove(r *ghttp.Request) {
 	var req *model.RemoveReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "删除操作日志", req, model.Buniss_Del, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).SetMsg(err.Error()).Log("操作日志管理", req).WriteJsonExit()
 	}
 
 	rs := operlogService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-		response.SucessDataDel(r, "删除操作日志", req, rs)
+		response.SucessResp(r).SetBtype(model.Buniss_Del).SetData(rs).Log("操作日志管理", req).WriteJsonExit()
 	} else {
-		response.ErrorDelData(r, "删除操作日志", req, 0)
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).Log("操作日志管理", req).WriteJsonExit()
 	}
 }
 
@@ -76,7 +71,7 @@ func Detail(r *ghttp.Request) {
 	id := r.GetQueryInt64("id")
 
 	if id <= 0 {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "参数错误",
 		})
 		return
@@ -85,13 +80,13 @@ func Detail(r *ghttp.Request) {
 	operLog, err := operlogService.SelectRecordById(id)
 
 	if err != nil {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "数据不存在",
 		})
 		return
 	}
 
-	response.WriteTpl(r, "monitor/operlog/detail.html", g.Map{
+	response.BuildTpl(r, "monitor/operlog/detail.html").WriteTplExtend(g.Map{
 		"operLog": operLog,
 	})
 }
@@ -101,13 +96,13 @@ func Export(r *ghttp.Request) {
 	var req *operlogModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "导出登陆日志", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("导出操作日志", req).WriteJsonExit()
 	}
 	url, err := operlogService.Export(req)
 
 	if err != nil {
-		response.ErrorMsg(r, "导出登陆日志", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("导出操作日志", req).WriteJsonExit()
 	} else {
-		response.SucessMsg(r, "", req, model.Buniss_Other, url)
+		response.SucessResp(r).SetMsg(url).Log("导出操作日志", req).WriteJsonExit()
 	}
 }

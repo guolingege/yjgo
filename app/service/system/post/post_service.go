@@ -132,8 +132,8 @@ func Export(param *postModel.SelectPageReq) (string, error) {
 	}
 
 	head := []string{"岗位序号", "岗位名称", "岗位编码", "岗位排序", "状态"}
-
-	url, err := excel.DownlaodExcel(head, result)
+	key := []string{"post_id", "post_name", "post_code", "post_sort", "stat"}
+	url, err := excel.DownlaodExcel(head, key, result)
 
 	if err != nil {
 		return "", err

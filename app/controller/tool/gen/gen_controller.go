@@ -16,14 +16,14 @@ import (
 
 //生成代码列表页面
 func Gen(r *ghttp.Request) {
-	response.WriteTpl(r, "tool/gen/list.html")
+	response.BuildTpl(r, "tool/gen/list.html").WriteTplExtend()
 }
 
 func GenList(r *ghttp.Request) {
 	var req *tableModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "列表查询", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("生成代码", req).WriteJsonExit()
 	}
 	rows := make([]tableModel.Entity, 0)
 	result, page, err := tableService.SelectListByPage(req)
@@ -32,17 +32,12 @@ func GenList(r *ghttp.Request) {
 		rows = *result
 	}
 
-	r.Response.WriteJsonExit(model.TableDataInfo{
-		Code:  0,
-		Msg:   "操作成功",
-		Total: page.Total,
-		Rows:  rows,
-	})
+	response.BuildTable(r, page.Total, rows).WriteJsonExit()
 }
 
 //导入数据表
 func ImportTable(r *ghttp.Request) {
-	response.WriteTpl(r, "tool/gen/importTable.html")
+	response.BuildTpl(r, "tool/gen/importTable.html").WriteTplExtend()
 }
 
 //删除数据
@@ -50,15 +45,15 @@ func Remove(r *ghttp.Request) {
 	var req *model.RemoveReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorEdit(r, "删除参数", req)
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).Log("生成代码", req).WriteJsonExit()
 	}
 
 	rs := tableService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-		response.SucessDataDel(r, "删除参数", req, rs)
+		response.SucessResp(r).SetBtype(model.Buniss_Del).Log("生成代码", req).WriteJsonExit()
 	} else {
-		response.ErrorDataMsg(r, "删除参数", req, model.Buniss_Del, 0, "未删除数据")
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).Log("生成代码", req).WriteJsonExit()
 	}
 }
 
@@ -67,7 +62,7 @@ func Edit(r *ghttp.Request) {
 	id := r.GetQueryInt64("id")
 
 	if id <= 0 {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "参数错误",
 		})
 		return
@@ -76,7 +71,7 @@ func Edit(r *ghttp.Request) {
 	entity, err := tableService.SelectRecordById(id)
 
 	if err != nil || entity == nil {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "参数不存在",
 		})
 		return
@@ -86,7 +81,7 @@ func Edit(r *ghttp.Request) {
 	queryTypeTpl := tableService.QueryTypeTpl()
 	htmlTypeTpl := tableService.HtmlTypeTpl()
 
-	response.WriteTpl(r, "tool/gen/edit.html", g.Map{
+	response.BuildTpl(r, "tool/gen/edit.html").WriteTplExtend(g.Map{
 		"table":        entity,
 		"goTypeTpl":    goTypeTpl,
 		"queryTypeTpl": queryTypeTpl,
@@ -99,13 +94,13 @@ func EditSave(r *ghttp.Request) {
 	var req tableModel.EditReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "生成代码", g.Map{"tableName": req.TableName}, model.Buniss_Edit, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).SetBtype(model.Buniss_Edit).Log("生成代码", g.Map{"tableName": req.TableName}).WriteJsonExit()
 	}
 	_, err := tableService.SaveEdit(&req, r.Session)
 	if err != nil {
-		response.ErrorMsg(r, "生成代码", g.Map{"tableName": req.TableName}, model.Buniss_Edit, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).SetBtype(model.Buniss_Edit).Log("生成代码", g.Map{"tableName": req.TableName}).WriteJsonExit()
 	}
-	response.SucessEdit(r, "生成代码", g.Map{"tableName": req.TableName})
+	response.SucessResp(r).SetBtype(model.Buniss_Edit).Log("生成代码", g.Map{"tableName": req.TableName}).WriteJsonExit()
 }
 
 //预览代码
@@ -278,7 +273,7 @@ func GenCode(r *ghttp.Request) {
 	curDir, err := os.Getwd()
 
 	if err != nil {
-		response.ErrorMsg(r, "生成代码", g.Map{"tableId": tableId}, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("生成代码", g.Map{"tableId": tableId}).WriteJsonExit()
 	}
 
 	if tmpAdd, err := r.Response.ParseTpl("vm/html/add.html", g.Map{"table": entity}); err == nil {
@@ -407,7 +402,7 @@ func GenCode(r *ghttp.Request) {
 			f.Close()
 		}
 	}
-	response.SucessOther(r,"生成代码",g.Map{"tableId": tableId})
+	response.SucessResp(r).Log("生成代码", g.Map{"tableId": tableId})
 }
 
 //查询数据库列表
@@ -415,7 +410,7 @@ func DataList(r *ghttp.Request) {
 	var req *tableModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "列表查询", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("生成代码", req)
 	}
 	rows := make([]tableModel.Entity, 0)
 	result, page, err := tableService.SelectDbTableList(req)
@@ -436,12 +431,12 @@ func DataList(r *ghttp.Request) {
 func ImportTableSave(r *ghttp.Request) {
 	tables := r.GetFormString("tables")
 	if tables == "" {
-		response.ErrorMsg(r, "导入表结构", g.Map{"tables": tables}, model.Buniss_Add, "参数错误")
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("参数错误").Log("生成代码", g.Map{"tables": tables})
 	}
 
 	user := userService.GetProfile(r.Session)
 	if user == nil {
-		response.ErrorMsg(r, "导入表结构", g.Map{"tables": tables}, model.Buniss_Add, "登陆超时")
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("登陆超时").Log("生成代码", g.Map{"tables": tables})
 	}
 
 	operName := user.LoginName
@@ -449,15 +444,15 @@ func ImportTableSave(r *ghttp.Request) {
 	tableArr := strings.Split(tables, ",")
 	tableList, err := tableService.SelectDbTableListByNames(tableArr)
 	if err != nil {
-		response.ErrorMsg(r, "导入表结构", g.Map{"tables": tables}, model.Buniss_Add, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("生成代码", g.Map{"tables": tables})
 	}
 
 	if tableList == nil {
-		response.ErrorMsg(r, "导入表结构", g.Map{"tables": tables}, model.Buniss_Add, "请选择需要导入的表")
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("请选择需要导入的表").Log("生成代码", g.Map{"tables": tables})
 	}
 
 	tableService.ImportGenTable(tableList, operName)
-	response.SucessAdd(r, "导入表结构", g.Map{"tables": tables})
+	response.SucessResp(r).Log("导入表结构", g.Map{"tables": tables})
 }
 
 //根据table_id查询表列数据
@@ -465,7 +460,7 @@ func ColumnList(r *ghttp.Request) {
 	tableId := r.GetQueryInt64("tableId")
 	//获取参数
 	if tableId <= 0 {
-		response.ErrorMsg(r, "列表查询", g.Map{"tableId": tableId}, model.Buniss_Other, "参数错误")
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("参数错误").Log("生成代码", g.Map{"tableId": tableId})
 	}
 	rows := make([]tableColumnModel.Entity, 0)
 	result, err := tableService.SelectGenTableColumnListByTableId(tableId)

@@ -16,7 +16,7 @@ import (
 
 //用户列表页
 func List(r *ghttp.Request) {
-	response.WriteTpl(r, "system/user/list.html")
+	response.BuildTpl(r, "system/user/list.html").WriteTplExtend()
 }
 
 //用户列表分页数据
@@ -24,7 +24,7 @@ func ListAjax(r *ghttp.Request) {
 	var req *userModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "用户列表查询", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("用户管理", req).WriteJsonExit()
 	}
 	rows := make([]userModel.UserListEntity, 0)
 	result, page, err := userService.SelectRecordList(req)
@@ -32,13 +32,7 @@ func ListAjax(r *ghttp.Request) {
 	if err == nil && result != nil {
 		rows = *result
 	}
-
-	r.Response.WriteJsonExit(model.TableDataInfo{
-		Code:  0,
-		Msg:   "操作成功",
-		Total: page.Total,
-		Rows:  rows,
-	})
+	response.BuildTable(r, page.Total, rows).WriteJsonExit()
 }
 
 //用户新增页面
@@ -58,10 +52,9 @@ func Add(r *ghttp.Request) {
 	postP, _ := postService.SelectListAll(paramsPost)
 
 	if postP != nil {
-		posts = * postP
+		posts = *postP
 	}
-
-	response.WriteTpl(r, "system/user/add.html", g.Map{
+	response.BuildTpl(r, "system/user/add.html").WriteTplExtend(g.Map{
 		"roles": roles,
 		"posts": posts,
 	})
@@ -72,33 +65,33 @@ func AddSave(r *ghttp.Request) {
 	var req *userModel.AddReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "新增用户", req, model.Buniss_Add, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("新增用户", req).WriteJsonExit()
 	}
 
 	//判断登陆名是否已注册
 	isHadName := userService.CheckLoginName(req.LoginName)
 	if isHadName {
-		response.ErrorMsg(r, "新增用户", req, model.Buniss_Add, "登陆名已经存在")
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("登陆名已经存在").Log("新增用户", req).WriteJsonExit()
 	}
 
 	//判断手机号码是否已注册
 	isHadPhone := userService.CheckPhoneUniqueAll(req.Phonenumber)
 	if isHadPhone {
-		response.ErrorMsg(r, "新增用户", req, model.Buniss_Add, "手机号码已经存在")
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("手机号码已经存在").Log("新增用户", req).WriteJsonExit()
 	}
 
 	//判断邮箱是否已注册
 	isHadEmail := userService.CheckEmailUniqueAll(req.Email)
 	if isHadEmail {
-		response.ErrorMsg(r, "新增用户", req, model.Buniss_Add, "邮箱已经存在")
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("邮箱已经存在").Log("新增用户", req).WriteJsonExit()
 	}
 
 	uid, err := userService.AddSave(req, r.Session)
 
 	if err != nil || uid <= 0 {
-		response.ErrorAdd(r, "新增用户", req)
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).Log("新增用户", req).WriteJsonExit()
 	}
-	response.SucessDataAdd(r, "新增用户", req, uid)
+	response.SucessResp(r).SetData(uid).SetBtype(model.Buniss_Add).Log("新增用户", req).WriteJsonExit()
 }
 
 //用户修改页面
@@ -106,7 +99,7 @@ func Edit(r *ghttp.Request) {
 	id := r.GetQueryInt64("id")
 
 	if id <= 0 {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "参数错误",
 		})
 		return
@@ -115,7 +108,7 @@ func Edit(r *ghttp.Request) {
 	user, err := userService.SelectRecordById(id)
 
 	if err != nil || user == nil {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "用户不存在",
 		})
 		return
@@ -142,10 +135,10 @@ func Edit(r *ghttp.Request) {
 	postP, _ := postService.SelectPostsByUserId(id)
 
 	if postP != nil {
-		posts = * postP
+		posts = *postP
 	}
 
-	response.WriteTpl(r, "system/user/edit.html", g.Map{
+	response.BuildTpl(r, "system/user/edit.html").WriteTplExtend(g.Map{
 		"user":     user,
 		"deptName": deptName,
 		"roles":    roles,
@@ -158,7 +151,7 @@ func ResetPwd(r *ghttp.Request) {
 	id := r.GetQueryInt64("userId")
 
 	if id <= 0 {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "参数错误",
 		})
 		return
@@ -167,12 +160,12 @@ func ResetPwd(r *ghttp.Request) {
 	user, err := userService.SelectRecordById(id)
 
 	if err != nil || user == nil {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "用户不存在",
 		})
 		return
 	}
-	response.WriteTpl(r, "system/user/resetPwd.html", g.Map{
+	response.BuildTpl(r, "system/user/resetPwd.html").WriteTplExtend(g.Map{
 		"user": user,
 	})
 }
@@ -181,15 +174,15 @@ func ResetPwd(r *ghttp.Request) {
 func ResetPwdSave(r *ghttp.Request) {
 	var req *userModel.ResetPwdReq
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "重置密码", req, model.Buniss_Edit, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("重置密码", req).WriteJsonExit()
 	}
 
 	result, err := userService.ResetPassword(req)
 
 	if err != nil || !result {
-		response.ErrorMsg(r, "重置密码", req, model.Buniss_Edit, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("重置密码", req).WriteJsonExit()
 	} else {
-		response.SucessEdit(r, "重置密码", req)
+		response.SucessResp(r).SetBtype(model.Buniss_Edit).Log("重置密码", req).WriteJsonExit()
 	}
 }
 
@@ -198,28 +191,28 @@ func EditSave(r *ghttp.Request) {
 	var req *userModel.EditReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorEdit(r, "修改用户", req)
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("修改用户", req).WriteJsonExit()
 	}
 
 	//判断手机号码是否已注册
 	isHadPhone := userService.CheckPhoneUnique(req.UserId, req.Phonenumber)
 	if isHadPhone {
-		response.ErrorMsg(r, "修改用户", req, model.Buniss_Edit, "手机号码已经存在")
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg("手机号码已经存在").Log("修改用户", req).WriteJsonExit()
 	}
 
 	//判断邮箱是否已注册
 	isHadEmail := userService.CheckEmailUnique(req.UserId, req.Email)
 	if isHadEmail {
-		response.ErrorMsg(r, "修改用户", req, model.Buniss_Edit, "邮箱已经存在")
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg("邮箱已经存在").Log("修改用户", req).WriteJsonExit()
 	}
 
 	uid, err := userService.EditSave(req, r.Session)
 
 	if err != nil || uid <= 0 {
-		response.ErrorEdit(r, "修改用户", req)
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).Log("修改用户", req).WriteJsonExit()
 	}
 
-	response.SucessDataEdit(r, "修改用户", req, uid)
+	response.SucessResp(r).SetData(uid).SetBtype(model.Buniss_Edit).Log("修改用户", req).WriteJsonExit()
 }
 
 //删除数据
@@ -227,16 +220,15 @@ func Remove(r *ghttp.Request) {
 	var req *model.RemoveReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorEdit(r, "删除用户", req)
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).SetMsg(err.Error()).Log("删除用户", req).WriteJsonExit()
 	}
 
 	rs := userService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-
-		response.SucessDataDel(r, "删除用户", req, rs)
+		response.SucessResp(r).SetData(rs).SetBtype(model.Buniss_Del).Log("删除用户", req).WriteJsonExit()
 	} else {
-		response.ErrorDataMsg(r, "删除用户", req, model.Buniss_Del, 0, "未删除数据")
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).Log("删除用户", req).WriteJsonExit()
 	}
 }
 
@@ -245,17 +237,12 @@ func Export(r *ghttp.Request) {
 	var req *userModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		r.Response.WriteJsonExit(model.CommonRes{
-			Code: 500,
-			Msg:  err.Error(),
-		})
-		response.ErrorOther(r, "导出Excel", req)
+		response.ErrorResp(r).SetMsg(err.Error()).Log("导出Excel", req).WriteJsonExit()
 	}
 	url, err := userService.Export(req)
 
 	if err != nil {
-		response.ErrorMsg(r, "导出Excel", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("导出Excel", req).WriteJsonExit()
 	}
-
-	response.SucessMsg(r, "导出Excel", req, model.Buniss_Other, url)
+	response.SucessResp(r).SetMsg(url).Log("导出Excel", req).WriteJsonExit()
 }

@@ -16,7 +16,7 @@ import (
 
 //列表页
 func List(r *ghttp.Request) {
-	response.WriteTpl(r, "monitor/job/list.html")
+	response.BuildTpl(r, "monitor/job/list.html").WriteTplExtend()
 }
 
 //列表分页数据
@@ -24,7 +24,7 @@ func ListAjax(r *ghttp.Request) {
 	var req *jobModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "列表查询", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("定时任务管理", req).WriteJsonExit()
 	}
 	rows := make([]jobModel.Entity, 0)
 	result, page, err := jobService.SelectListByPage(req)
@@ -32,18 +32,12 @@ func ListAjax(r *ghttp.Request) {
 	if err == nil && result != nil {
 		rows = *result
 	}
-
-	r.Response.WriteJsonExit(model.TableDataInfo{
-		Code:  0,
-		Msg:   "操作成功",
-		Total: page.Total,
-		Rows:  rows,
-	})
+	response.BuildTable(r, page.Total, rows).WriteJsonExit()
 }
 
 //列表页
 func LogList(r *ghttp.Request) {
-	response.WriteTpl(r, "monitor/job/jobLog.html")
+	response.BuildTpl(r, "monitor/job/jobLog.html").WriteTplExtend()
 }
 
 //列表分页数据
@@ -51,7 +45,7 @@ func LogListAjax(r *ghttp.Request) {
 	var req *jobLogModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "列表查询", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("任务日志管理", req).WriteJsonExit()
 	}
 	rows := make([]jobLogModel.Entity, 0)
 	result, page, err := jobLogService.SelectListByPage(req)
@@ -71,7 +65,7 @@ func LogListAjax(r *ghttp.Request) {
 //新增页面
 func Add(r *ghttp.Request) {
 	user := userService.GetProfile(r.Session)
-	response.WriteTpl(r, "monitor/job/add.html", g.Map{"loginName": user.LoginName})
+	response.BuildTpl(r, "monitor/job/add.html").WriteTplExtend(g.Map{"loginName": user.LoginName})
 }
 
 //新增页面保存
@@ -79,15 +73,15 @@ func AddSave(r *ghttp.Request) {
 	var req *jobModel.AddReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "新增定时任务调度", req, model.Buniss_Add, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("定时任务管理", req).WriteJsonExit()
 	}
 
-	rid, err := jobService.AddSave(req, r.Session)
+	id, err := jobService.AddSave(req, r.Session)
 
-	if err != nil || rid <= 0 {
-		response.ErrorAdd(r, "新增定时任务调度", req)
+	if err != nil || id <= 0 {
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).Log("定时任务管理", req).WriteJsonExit()
 	}
-	response.SucessDataAdd(r, "新增定时任务调度", req, rid)
+	response.SucessResp(r).SetBtype(model.Buniss_Add).SetData(id).Log("定时任务管理", req).WriteJsonExit()
 }
 
 //修改页
@@ -95,7 +89,7 @@ func Edit(r *ghttp.Request) {
 	id := r.GetQueryInt64("id")
 
 	if id <= 0 {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "参数错误",
 		})
 		return
@@ -104,7 +98,7 @@ func Edit(r *ghttp.Request) {
 	entity, err := jobService.SelectRecordById(id)
 
 	if err != nil || entity == nil {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "数据不存在",
 		})
 		return
@@ -112,7 +106,7 @@ func Edit(r *ghttp.Request) {
 
 	user := userService.GetProfile(r.Session)
 
-	response.WriteTpl(r, "monitor/job/edit.html", g.Map{
+	response.BuildTpl(r, "monitor/job/edit.html").WriteTplExtend(g.Map{
 		"job":       entity,
 		"loginName": user.LoginName,
 	})
@@ -123,40 +117,53 @@ func EditSave(r *ghttp.Request) {
 	var req jobModel.EditReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "定时任务调度岗位", req, model.Buniss_Add, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("定时任务管理", req).WriteJsonExit()
 	}
 
 	rs, err := jobService.EditSave(&req, r.Session)
 
 	if err != nil || rs <= 0 {
-		response.ErrorAdd(r, "修改定时任务调度", req)
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).Log("定时任务管理", req).WriteJsonExit()
 	}
-	response.SucessDataAdd(r, "修改定时任务调度", req, rs)
+	response.SucessResp(r).SetBtype(model.Buniss_Edit).SetData(rs).Log("定时任务管理", req).WriteJsonExit()
 }
 
 //详情页
 func Detail(r *ghttp.Request) {
 	id := r.GetInt64("id")
 	if id <= 0 {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "参数错误",
 		})
 		return
 	}
 	job, err := jobService.SelectRecordById(id)
 	if err != nil || job == nil {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "数据不存在",
 		})
 		return
 	}
-	response.WriteTpl(r, "monitor/job/detail.html", g.Map{"job": job})
+	response.BuildTpl(r, "monitor/job/detail.html").WriteTplExtend(g.Map{"job": job})
 }
 
 //详情页
 func DetailLog(r *ghttp.Request) {
-	var jobLog jobLogModel.Entity
-	response.WriteTpl(r, "monitor/job/detailLog.html", g.Map{"jobLog": jobLog})
+	id := r.GetInt64("id")
+	if id <= 0 {
+		response.ErrorTpl(r).WriteTpl(g.Map{
+			"desc": "参数错误",
+		})
+		return
+	}
+	jobLog, err := jobLogService.SelectRecordById(id)
+	if err != nil || jobLog == nil {
+		response.ErrorTpl(r).WriteTpl(g.Map{
+			"desc": "数据不存在",
+		})
+		return
+	}
+	response.BuildTpl(r, "monitor/job/detailLog.html").WriteTplExtend(g.Map{"jobLog": jobLog})
 }
 
 //删除数据
@@ -164,7 +171,7 @@ func Remove(r *ghttp.Request) {
 	var req *model.RemoveReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorEdit(r, "删除定时任务调度", req)
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).SetMsg(err.Error()).Log("定时任务管理", req).WriteJsonExit()
 	}
 
 	idarr := convert.ToInt64Array(req.Ids, ",")
@@ -178,9 +185,9 @@ func Remove(r *ghttp.Request) {
 	rs := jobService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-		response.SucessDataDel(r, "删除定时任务调度", req, rs)
+		response.SucessResp(r).SetBtype(model.Buniss_Del).SetData(rs).Log("定时任务管理", req).WriteJsonExit()
 	} else {
-		response.ErrorDataMsg(r, "删除定时任务调度", req, model.Buniss_Del, 0, "未删除数据")
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).Log("定时任务管理", req).WriteJsonExit()
 	}
 }
 
@@ -189,33 +196,32 @@ func Export(r *ghttp.Request) {
 	var req *jobModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorOther(r, "导出Excel", req)
+		response.ErrorResp(r).SetMsg(err.Error()).Log("定时任务管理", req).WriteJsonExit()
 	}
 	url, err := jobService.Export(req)
 
 	if err != nil {
-		response.ErrorMsg(r, "导出Excel", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("定时任务管理", req).WriteJsonExit()
 	}
-
-	response.SucessMsg(r, "导出Excel", req, model.Buniss_Other, url)
+	response.SucessResp(r).SetMsg(url).Log("定时任务管理", req).WriteJsonExit()
 }
 
 //启动
 func Start(r *ghttp.Request) {
 	jobId := r.GetFormInt64("jobId")
 	if jobId <= 0 {
-		response.ErrorMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, "参数错误")
+		response.ErrorResp(r).SetMsg("参数错误").Log("定时任务管理启动", g.Map{"jobId": jobId}).WriteJsonExit()
 	}
 	job, _ := jobService.SelectRecordById(jobId)
 	if job == nil {
-		response.ErrorMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, "任务不存在")
+		response.ErrorResp(r).SetMsg("任务不存在").Log("定时任务管理启动", g.Map{"jobId": jobId}).WriteJsonExit()
 	}
 
 	err := jobService.Start(job)
 	if err != nil {
-		response.ErrorMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("定时任务管理启动", g.Map{"jobId": jobId}).WriteJsonExit()
 	} else {
-		response.SucessMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, "启动成功")
+		response.ErrorResp(r).Log("定时任务管理启动", g.Map{"jobId": jobId}).WriteJsonExit()
 	}
 }
 
@@ -223,17 +229,17 @@ func Start(r *ghttp.Request) {
 func Stop(r *ghttp.Request) {
 	jobId := r.GetFormInt64("jobId")
 	if jobId <= 0 {
-		response.ErrorMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, "参数错误")
+		response.ErrorResp(r).SetMsg("参数错误").Log("定时任务管理停止", g.Map{"jobId": jobId}).WriteJsonExit()
 	}
 	job, _ := jobService.SelectRecordById(jobId)
 	if job == nil {
-		response.ErrorMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, "任务不存在")
+		response.ErrorResp(r).SetMsg("任务不存在").Log("定时任务管理停止", g.Map{"jobId": jobId}).WriteJsonExit()
 	}
 
 	err := jobService.Stop(job)
 	if err != nil {
-		response.ErrorMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("定时任务管理停止", g.Map{"jobId": jobId}).WriteJsonExit()
 	} else {
-		response.SucessMsg(r, "", g.Map{"jobId": jobId}, model.Buniss_Other, "停止成功")
+		response.SucessResp(r).SetMsg("停止成功").Log("定时任务管理停止", g.Map{"jobId": jobId}).WriteJsonExit()
 	}
 }

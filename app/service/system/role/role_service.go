@@ -242,8 +242,8 @@ func Export(param *roleModel.SelectPageReq) (string, error) {
 	}
 
 	head := []string{"用户名", "呢称", "Email", "电话号码", "性别", "部门", "领导", "状态", "删除标记", "创建人", "创建时间", "备注"}
-
-	url, err := excel.DownlaodExcel(head, result)
+	key := []string{"role_id", "role_name", "role_key", "role_sort", "data_scope", "status"}
+	url, err := excel.DownlaodExcel(head, key, result)
 
 	if err != nil {
 		return "", err

@@ -16,7 +16,7 @@ import (
 )
 
 //新增记录
-func Add(r *ghttp.Request, title, inContent string, outContent model.CommonRes) error {
+func Add(r *ghttp.Request, title, inContent string, outContent *model.CommonRes) error {
 	user := userService.GetProfile(r.Session)
 	if user == nil {
 		return gerror.New("用户未登陆")
@@ -61,7 +61,6 @@ func Add(r *ghttp.Request, title, inContent string, outContent model.CommonRes) 
 
 	_, err := operLog.Insert()
 	return err
-
 }
 
 // 根据条件分页查询用户列表
@@ -120,8 +119,8 @@ func Export(param *oper_log.SelectPageReq) (string, error) {
 	}
 
 	head := []string{"日志主键", "模块标题", "业务类型", "方法名称", "请求方式", "操作类别", "操作人员", "部门名称", "请求URL", "主机地址", "操作地点", "请求参数", "返回参数", "操作状态", "操作时间"}
-
-	url, err := excel.DownlaodExcel(head, result)
+	key := []string{"oper_id", "title", "business_type", "method", "request_method", "operator_type", "oper_name", "dept_name", "oper_url", "oper_ip", "oper_location", "oper_param", "json_result", "status", "error_msg", "oper_time"}
+	url, err := excel.DownlaodExcel(head, key, result)
 
 	if err != nil {
 		return "", err

@@ -10,7 +10,7 @@ import (
 
 //用户列表页
 func List(r *ghttp.Request) {
-	response.WriteTpl(r, "monitor/logininfor/list.html")
+	response.BuildTpl(r, "monitor/logininfor/list.html").WriteTplExtend()
 }
 
 //用户列表分页数据
@@ -18,10 +18,7 @@ func ListAjax(r *ghttp.Request) {
 	var req *logininforModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		r.Response.WriteJsonExit(model.CommonRes{
-			Code: 500,
-			Msg:  err.Error(),
-		})
+		response.ErrorResp(r).SetMsg(err.Error()).WriteJsonExit()
 	}
 
 	rows := make([]logininforModel.Entity, 0)
@@ -31,13 +28,7 @@ func ListAjax(r *ghttp.Request) {
 	if err == nil && result != nil {
 		rows = *result
 	}
-
-	r.Response.WriteJsonExit(model.TableDataInfo{
-		Code:  0,
-		Msg:   "操作成功",
-		Total: page.Total,
-		Rows:  rows,
-	})
+	response.BuildTable(r, page.Total, rows).WriteJsonExit()
 }
 
 //删除数据
@@ -45,15 +36,15 @@ func Remove(r *ghttp.Request) {
 	var req *model.RemoveReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "删除登陆日志", req, model.Buniss_Del, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).SetMsg(err.Error()).Log("登陆日志管理", req).WriteJsonExit()
 	}
 
 	rs := logininforService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-		response.SucessDataDel(r, "删除登陆日志", req, rs)
+		response.SucessResp(r).SetBtype(model.Buniss_Del).SetData(rs).Log("登陆日志管理", req).WriteJsonExit()
 	} else {
-		response.ErrorDelData(r, "删除登陆日志", req, 0)
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).Log("登陆日志管理", req).WriteJsonExit()
 	}
 }
 
@@ -63,9 +54,9 @@ func Clean(r *ghttp.Request) {
 	rs := logininforService.DeleteRecordAll()
 
 	if rs > 0 {
-		response.SucessDataDel(r, "清空登陆日志", "all", rs)
+		response.SucessResp(r).SetBtype(model.Buniss_Del).SetData(rs).Log("登陆日志管理", "all").WriteJsonExit()
 	} else {
-		response.ErrorDelData(r, "清空登陆日志", "all", 0)
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).Log("登陆日志管理", "all").WriteJsonExit()
 	}
 }
 
@@ -74,15 +65,15 @@ func Export(r *ghttp.Request) {
 	var req *logininforModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "导出登陆日志", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("导出登陆日志", req).WriteJsonExit()
 	}
 
 	url, err := logininforService.Export(req)
 
 	if err != nil {
-		response.ErrorMsg(r, "导出登陆日志", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("导出登陆日志", req).WriteJsonExit()
 	} else {
-		response.SucessMsg(r, "", req, model.Buniss_Other, url)
+		response.SucessResp(r).SetMsg(url).Log("导出登陆日志", req).WriteJsonExit()
 	}
 }
 
@@ -90,15 +81,11 @@ func Export(r *ghttp.Request) {
 func Unlock(r *ghttp.Request) {
 	loginName := r.GetQueryString("loginName")
 	if loginName == "" {
-		response.ErrorMsg(r, "解锁账号", "loginName", model.Buniss_Other, "参数错误")
+		response.ErrorResp(r).SetMsg("参数错误").Log("解锁账号", "loginName="+loginName).WriteJsonExit()
 	} else {
 		logininforService.RemovePasswordCounts(loginName)
 		logininforService.Unlock(loginName)
-		r.Response.WriteJsonExit(model.CommonRes{
-			Code: 0,
-			Msg:  "操作成功",
-		})
-		response.SucessOther(r, "解锁账号", loginName)
+		response.SucessResp(r).Log("解锁账号", "loginName="+loginName).WriteJsonExit()
 	}
 
 }

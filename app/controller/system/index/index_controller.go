@@ -46,7 +46,7 @@ func Index(r *ghttp.Request) {
 		sideTheme := configService.GetValueByKey("sys.index.sideTheme")
 		skinName := configService.GetValueByKey("sys.index.skinName")
 
-		response.WriteTpl(r, "index.html", g.Map{
+		response.BuildTpl(r, "index.html").WriteTplExtend(g.Map{
 			"avatar":    avatar,
 			"loginname": loginname,
 			"username":  username,
@@ -61,7 +61,7 @@ func Index(r *ghttp.Request) {
 
 //后台框架欢迎页面
 func Main(r *ghttp.Request) {
-	response.WriteTpl(r, "main.html")
+	response.BuildTpl(r, "main.html").WriteTplExtend()
 }
 
 //下载文件
@@ -70,16 +70,17 @@ func Download(r *ghttp.Request) {
 	delete := r.GetQueryBool("delete")
 
 	if fileName == "" {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "参数错误",
 		})
+
 		return
 	}
 
 	// 创建路径
 	curDir, err := os.Getwd()
 	if err != nil {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "获取目录失败",
 		})
 		return
@@ -91,7 +92,7 @@ func Download(r *ghttp.Request) {
 	defer file.Close()
 
 	if err != nil {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "参数错误",
 		})
 		return
@@ -111,7 +112,7 @@ func Download(r *ghttp.Request) {
 
 //切换皮肤
 func SwitchSkin(r *ghttp.Request) {
-	response.WriteTpl(r, "skin.html")
+	response.BuildTpl(r, "skin.html").WriteTplExtend()
 }
 
 //注销

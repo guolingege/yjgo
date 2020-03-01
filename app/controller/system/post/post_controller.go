@@ -11,7 +11,7 @@ import (
 
 //列表页
 func List(r *ghttp.Request) {
-	response.WriteTpl(r, "system/post/list.html")
+	response.BuildTpl(r, "system/post/list.html").WriteTplExtend()
 }
 
 //列表分页数据
@@ -19,7 +19,7 @@ func ListAjax(r *ghttp.Request) {
 	var req *postModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "列表查询", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("岗位管理", req).WriteJsonExit()
 	}
 	rows := make([]postModel.Entity, 0)
 	result, page, err := postService.SelectListByPage(req)
@@ -28,17 +28,12 @@ func ListAjax(r *ghttp.Request) {
 		rows = *result
 	}
 
-	r.Response.WriteJsonExit(model.TableDataInfo{
-		Code:  0,
-		Msg:   "操作成功",
-		Total: page.Total,
-		Rows:  rows,
-	})
+	response.BuildTable(r, page.Total, rows).WriteJsonExit()
 }
 
 //新增页面
 func Add(r *ghttp.Request) {
-	response.WriteTpl(r, "system/post/add.html")
+	response.BuildTpl(r, "system/post/add.html").WriteTplExtend()
 }
 
 //新增页面保存
@@ -46,23 +41,23 @@ func AddSave(r *ghttp.Request) {
 	var req *postModel.AddReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "新增岗位", req, model.Buniss_Add, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("岗位管理", req).WriteJsonExit()
 	}
 
 	if postService.CheckPostNameUniqueAll(req.PostName) == "1" {
-		response.ErrorMsg(r, "新增岗位", req, model.Buniss_Add, "岗位名称已存在")
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("岗位名称已存在").Log("岗位管理", req).WriteJsonExit()
 	}
 
 	if postService.CheckPostCodeUniqueAll(req.PostCode) == "1" {
-		response.ErrorMsg(r, "新增岗位", req, model.Buniss_Add, "岗位编码已存在")
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("岗位编码已存在").Log("岗位管理", req).WriteJsonExit()
 	}
 
-	rid, err := postService.AddSave(req, r.Session)
+	pid, err := postService.AddSave(req, r.Session)
 
-	if err != nil || rid <= 0 {
-		response.ErrorAdd(r, "新增岗位", req)
+	if err != nil || pid <= 0 {
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).Log("岗位管理", req).WriteJsonExit()
 	}
-	response.SucessDataAdd(r, "新增岗位", req, rid)
+	response.ErrorResp(r).SetData(pid).SetBtype(model.Buniss_Add).Log("岗位管理", req).WriteJsonExit()
 }
 
 //修改页面
@@ -70,7 +65,7 @@ func Edit(r *ghttp.Request) {
 	id := r.GetQueryInt64("id")
 
 	if id <= 0 {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTplExtend(g.Map{
 			"desc": "参数错误",
 		})
 		return
@@ -79,13 +74,13 @@ func Edit(r *ghttp.Request) {
 	post, err := postService.SelectRecordById(id)
 
 	if err != nil || post == nil {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTplExtend(g.Map{
 			"desc": "岗位不存在",
 		})
 		return
 	}
 
-	response.WriteTpl(r, "system/post/edit.html", g.Map{
+	response.BuildTpl(r, "system/post/edit.html").WriteTplExtend(g.Map{
 		"post": post,
 	})
 }
@@ -95,23 +90,23 @@ func EditSave(r *ghttp.Request) {
 	var req *postModel.EditReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "修改岗位", req, model.Buniss_Add, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("岗位管理", req).WriteJsonExit()
 	}
 
 	if postService.CheckPostNameUnique(req.PostName, req.PostId) == "1" {
-		response.ErrorMsg(r, "修改岗位", req, model.Buniss_Add, "岗位名称已存在")
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg("岗位名称已存在").Log("岗位管理", req).WriteJsonExit()
 	}
 
 	if postService.CheckPostCodeUnique(req.PostCode, req.PostId) == "1" {
-		response.ErrorMsg(r, "修改岗位", req, model.Buniss_Add, "岗位编码已存在")
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg("岗位编码已存在").Log("岗位管理", req).WriteJsonExit()
 	}
 
 	rs, err := postService.EditSave(req, r.Session)
 
 	if err != nil || rs <= 0 {
-		response.ErrorAdd(r, "修改岗位", req)
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).Log("岗位管理", req).WriteJsonExit()
 	}
-	response.SucessDataAdd(r, "修改岗位", req, rs)
+	response.SucessResp(r).SetData(rs).SetBtype(model.Buniss_Edit).Log("岗位管理", req).WriteJsonExit()
 }
 
 //删除数据
@@ -119,16 +114,15 @@ func Remove(r *ghttp.Request) {
 	var req *model.RemoveReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorEdit(r, "删除岗位", req)
+		response.ErrorResp(r).SetMsg(err.Error()).SetBtype(model.Buniss_Del).Log("岗位管理", req).WriteJsonExit()
 	}
 
 	rs := postService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-
-		response.SucessDataDel(r, "删除岗位", req, rs)
+		response.SucessResp(r).SetBtype(model.Buniss_Del).Log("岗位管理", req).WriteJsonExit()
 	} else {
-		response.ErrorDataMsg(r, "删除岗位", req, model.Buniss_Del, 0, "未删除数据")
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).Log("岗位管理", req).WriteJsonExit()
 	}
 }
 
@@ -137,15 +131,14 @@ func Export(r *ghttp.Request) {
 	var req *postModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorOther(r, "导出Excel", req)
+		response.ErrorResp(r).SetMsg(err.Error()).Log("岗位管理", req).WriteJsonExit()
 	}
 	url, err := postService.Export(req)
 
 	if err != nil {
-		response.ErrorMsg(r, "导出Excel", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("岗位管理", req).WriteJsonExit()
 	}
-
-	response.SucessMsg(r, "导出Excel", req, model.Buniss_Other, url)
+	response.SucessResp(r).SetMsg(url).SetBtype(model.Buniss_Del).Log("岗位管理", req).WriteJsonExit()
 }
 
 //检查岗位名称是否已经存在不包括本岗位

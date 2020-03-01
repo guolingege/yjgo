@@ -11,7 +11,7 @@ import (
 
 //列表页
 func List(r *ghttp.Request) {
-	response.WriteTpl(r, "system/dept/list.html")
+	response.BuildTpl(r, "system/dept/list.html").WriteTplExtend()
 }
 
 //列表分页数据
@@ -19,7 +19,7 @@ func ListAjax(r *ghttp.Request) {
 	var req *deptModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "列表查询", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
 	}
 	rows := make([]deptModel.Entity, 0)
 	result, err := deptService.SelectListAll(req)
@@ -41,7 +41,7 @@ func Add(r *ghttp.Request) {
 
 	tmp := deptService.SelectDeptById(pid)
 
-	response.WriteTpl(r, "system/dept/add.html", g.Map{"dept": tmp})
+	response.BuildTpl(r, "system/dept/add.html").WriteTplExtend(g.Map{"dept": tmp})
 }
 
 //新增页面保存
@@ -49,19 +49,19 @@ func AddSave(r *ghttp.Request) {
 	var req *deptModel.AddReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "新增部门", req, model.Buniss_Add, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
 	}
 
 	if deptService.CheckDeptNameUniqueAll(req.DeptName, req.ParentId) == "1" {
-		response.ErrorMsg(r, "新增部门", req, model.Buniss_Add, "菜单名称已存在")
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("部门名称已存在").Log("部门管理", req).WriteJsonExit()
 	}
 
 	rid, err := deptService.AddSave(req, r.Session)
 
 	if err != nil || rid <= 0 {
-		response.ErrorAdd(r, "新增部门", req)
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).Log("部门管理", req).WriteJsonExit()
 	}
-	response.SucessDataAdd(r, "新增部门", req, rid)
+	response.SucessResp(r).SetBtype(model.Buniss_Add).Log("部门管理", req).WriteJsonExit()
 }
 
 //修改页面
@@ -69,7 +69,7 @@ func Edit(r *ghttp.Request) {
 	id := r.GetQueryInt64("id")
 
 	if id <= 0 {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "参数错误",
 		})
 		return
@@ -78,13 +78,13 @@ func Edit(r *ghttp.Request) {
 	dept := deptService.SelectDeptById(id)
 
 	if dept == nil || dept.DeptId <= 0 {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "部门不存在",
 		})
 		return
 	}
 
-	response.WriteTpl(r, "system/dept/edit.html", g.Map{
+	response.BuildTpl(r, "system/dept/edit.html").WriteTplExtend(g.Map{
 		"dept": dept,
 	})
 }
@@ -94,19 +94,19 @@ func EditSave(r *ghttp.Request) {
 	var req *deptModel.EditReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "修改部门", req, model.Buniss_Add, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("部门管理", req).WriteJsonExit()
 	}
 
 	if deptService.CheckDeptNameUnique(req.DeptName, req.DeptId, req.ParentId) == "1" {
-		response.ErrorMsg(r, "修改部门", req, model.Buniss_Add, "部门名称已存在")
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg("部门名称已存在").Log("部门管理", req).WriteJsonExit()
 	}
 
 	rs, err := deptService.EditSave(req, r.Session)
 
 	if err != nil || rs <= 0 {
-		response.ErrorAdd(r, "修改部门", req)
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).Log("部门管理", req).WriteJsonExit()
 	}
-	response.SucessDataAdd(r, "修改部门", req, rs)
+	response.SucessResp(r).SetData(rs).SetBtype(model.Buniss_Edit).Log("部门管理", req).WriteJsonExit()
 }
 
 //删除数据
@@ -116,9 +116,9 @@ func Remove(r *ghttp.Request) {
 	rs := deptService.DeleteDeptById(id)
 
 	if rs > 0 {
-		response.SucessDataDel(r, "删除部门", g.Map{"id": id}, rs)
+		response.SucessResp(r).SetBtype(model.Buniss_Del).Log("部门管理", g.Map{"id": id}).WriteJsonExit()
 	} else {
-		response.ErrorDataMsg(r, "删除部门", g.Map{"id": id}, model.Buniss_Del, 0, "未删除数据")
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).Log("部门管理", g.Map{"id": id}).WriteJsonExit()
 	}
 }
 
@@ -134,11 +134,11 @@ func SelectDeptTree(r *ghttp.Request) {
 	deptPoint := deptService.SelectDeptById(deptId)
 
 	if deptPoint != nil {
-		response.WriteTpl(r, "system/dept/tree.html", g.Map{
+		response.BuildTpl(r, "system/dept/tree.html").WriteTpl(g.Map{
 			"dept": *deptPoint,
 		})
 	} else {
-		response.WriteTpl(r, "system/dept/tree.html")
+		response.BuildTpl(r, "system/dept/tree.html").WriteTplExtend()
 	}
 }
 
@@ -149,7 +149,7 @@ func RoleDeptTreeData(r *ghttp.Request) {
 	result, err := deptService.RoleDeptTreeData(roleId)
 
 	if err != nil {
-		response.ErrorMsg(r, "菜单树", g.Map{"roleId": roleId}, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("菜单树", g.Map{"roleId": roleId})
 	}
 
 	r.Response.WriteJsonExit(result)
@@ -169,7 +169,7 @@ func CheckDeptNameUnique(r *ghttp.Request) {
 
 //检查部门名称是否已经存在
 func CheckDeptNameUniqueAll(r *ghttp.Request) {
- 	var req *deptModel.CheckDeptNameALLReq
+	var req *deptModel.CheckDeptNameALLReq
 	if err := r.Parse(&req); err != nil {
 		r.Response.WriteflnExit("1")
 	}

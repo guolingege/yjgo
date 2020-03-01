@@ -62,8 +62,8 @@ func Export(param *logModel.SelectPageReq) (string, error) {
 	}
 
 	head := []string{"任务日志ID", "任务名称", "任务组名", "调用目标字符串", "日志信息", "执行状态（0正常 1失败）", "异常信息", "创建时间"}
-
-	url, err := excel.DownlaodExcel(head, result)
+	key := []string{"job_log_id", "job_name", "job_group", "invoke_target", "job_message", "status", "exception_info", "create_time"}
+	url, err := excel.DownlaodExcel(head, key, result)
 
 	if err != nil {
 		return "", err

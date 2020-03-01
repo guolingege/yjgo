@@ -6,9 +6,9 @@ import (
 )
 
 func Fontawesome(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/icon/fontawesome.html")
+	response.BuildTpl(r, "demo/icon/fontawesome.html").WriteTplExtend()
 }
 
 func Glyphicons(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/icon/glyphicons.html")
+	response.BuildTpl(r, "demo/icon/glyphicons.html").WriteTplExtend()
 }

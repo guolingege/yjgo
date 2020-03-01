@@ -7,75 +7,75 @@ import (
 )
 
 func Button(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/table/button.html")
+	response.BuildTpl(r, "demo/table/button.html").WriteTplExtend()
 }
 
 func Child(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/table/child.html")
+	response.BuildTpl(r, "demo/table/child.html").WriteTplExtend()
 }
 
 func Curd(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/table/curd.html")
+	response.BuildTpl(r, "demo/table/curd.html").WriteTplExtend()
 }
 
 func Detail(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/table/detail.html")
+	response.BuildTpl(r, "demo/table/detail.html").WriteTplExtend()
 }
 
 func Editable(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/table/editable.html")
+	response.BuildTpl(r, "demo/table/editable.html").WriteTplExtend()
 }
 
 func Event(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/table/event.html")
+	response.BuildTpl(r, "demo/table/event.html").WriteTplExtend()
 }
 
 func Export(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/table/export.html")
+	response.BuildTpl(r, "demo/table/export.html").WriteTplExtend()
 }
 
 func FixedColumns(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/table/fixedColumns.html")
+	response.BuildTpl(r, "demo/table/fixedColumns.html").WriteTplExtend()
 }
 
 func Footer(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/table/footer.html")
+	response.BuildTpl(r, "demo/table/footer.html").WriteTplExtend()
 }
 
 func GroupHeader(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/table/groupHeader.html")
+	response.BuildTpl(r, "demo/table/groupHeader.html").WriteTplExtend()
 }
 
 func Image(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/table/image.html")
+	response.BuildTpl(r, "demo/table/image.html").WriteTplExtend()
 }
 
 func Multi(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/table/multi.html")
+	response.BuildTpl(r, "demo/table/multi.html").WriteTplExtend()
 }
 
 func Other(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/table/other.html")
+	response.BuildTpl(r, "demo/table/other.html").WriteTplExtend()
 }
 
 func PageGo(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/table/pageGo.html")
+	response.BuildTpl(r, "demo/table/pageGo.html").WriteTplExtend()
 }
 
 func Params(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/table/params.html")
+	response.BuildTpl(r, "demo/table/params.html").WriteTplExtend()
 }
 
 func Remember(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/table/remember.html")
+	response.BuildTpl(r, "demo/table/remember.html").WriteTplExtend()
 }
 
 func Recorder(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/table/recorder.html")
+	response.BuildTpl(r, "demo/table/recorder.html").WriteTplExtend()
 }
 
 func Search(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/table/search.html")
+	response.BuildTpl(r, "demo/table/search.html").WriteTplExtend()
 }
 
 type us struct {
@@ -112,5 +112,3 @@ func List(r *ghttp.Request) {
 		Rows:  rows,
 	})
 }
-
-

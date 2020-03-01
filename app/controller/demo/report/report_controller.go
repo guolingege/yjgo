@@ -6,17 +6,17 @@ import (
 )
 
 func Echarts(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/report/echarts.html")
+	response.BuildTpl(r, "demo/report/echarts.html").WriteTplExtend()
 }
 
 func Metrics(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/report/metrics.html")
+	response.BuildTpl(r, "demo/report/metrics.html").WriteTplExtend()
 }
 
 func Peity(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/report/peity.html")
+	response.BuildTpl(r, "demo/report/peity.html").WriteTplExtend()
 }
 
 func Sparkline(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/report/sparkline.html")
+	response.BuildTpl(r, "demo/report/sparkline.html").WriteTplExtend()
 }

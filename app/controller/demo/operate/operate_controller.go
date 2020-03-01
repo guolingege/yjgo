@@ -8,7 +8,7 @@ import (
 )
 
 func Add(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/operate/add.html")
+	response.BuildTpl(r, "demo/operate/add.html").WriteTplExtend()
 }
 
 func Detail(r *ghttp.Request) {
@@ -22,7 +22,7 @@ func Detail(r *ghttp.Request) {
 	tmp.UserSex = "0"
 	tmp.UserPhone = "15888888888"
 	tmp.UserEmail = "111@qq.com"
-	response.WriteTpl(r, "demo/operate/detail.html", g.Map{"user": tmp})
+	response.BuildTpl(r, "demo/operate/detail.html").WriteTplExtend(g.Map{"user": tmp})
 }
 
 type us struct {
@@ -48,7 +48,7 @@ func EditSave(r *ghttp.Request) {
 	tmp.UserSex = "0"
 	tmp.UserPhone = "15888888888"
 	tmp.UserEmail = "111@qq.com"
-	response.SucessDataEdit(r, "demo演示", g.Map{"UserId": 1}, tmp)
+	response.SucessResp(r).SetData(tmp).Log("demo演示", g.Map{"UserId": 1}).WriteJsonExit()
 }
 
 func Edit(r *ghttp.Request) {
@@ -62,15 +62,15 @@ func Edit(r *ghttp.Request) {
 	tmp.UserSex = "0"
 	tmp.UserPhone = "15888888888"
 	tmp.UserEmail = "111@qq.com"
-	response.WriteTpl(r, "demo/operate/edit.html", g.Map{"user": tmp})
+	response.BuildTpl(r, "demo/operate/edit.html").WriteTplExtend(g.Map{"user": tmp})
 }
 
 func Other(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/operate/other.html")
+	response.BuildTpl(r, "demo/operate/other.html").WriteTplExtend()
 }
 
 func Table(r *ghttp.Request) {
-	response.WriteTpl(r, "demo/operate/table.html")
+	response.BuildTpl(r, "demo/operate/table.html").WriteTplExtend()
 }
 
 func List(r *ghttp.Request) {

@@ -131,8 +131,8 @@ func Export(param *{{.table.BusinessName}}Model.SelectPageReq) (string, error) {
 	}
 
 	head := []string{ {{range $index, $column := .table.Columns}} {{if eq $index 0}}"{{$column.ColumnComment}}"{{else}},"{{$column.ColumnComment}}"{{end}}{{end}}}
-
-	url, err := excel.DownlaodExcel(head, result)
+	key := []string{ {{range $index, $column := .table.Columns}} {{if eq $index 0}}"{{$column.ColumnName}}"{{else}},"{{$column.ColumnName}}"{{end}}{{end}}}
+	url, err := excel.DownlaodExcel(head,key, result)
 
 	if err != nil {
 		return "", err

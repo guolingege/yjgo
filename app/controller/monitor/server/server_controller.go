@@ -111,7 +111,7 @@ func Server(r *ghttp.Request) {
 		}
 	}
 
-	response.WriteTpl(r, "monitor/server/server.html", g.Map{
+	response.BuildTpl(r, "monitor/server/server.html").WriteTplExtend(g.Map{
 		"cpuNum":          cpuNum,
 		"cpuUsed":         cpuUsed,
 		"cpuAvg5":         cpuAvg5,

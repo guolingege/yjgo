@@ -31,7 +31,7 @@ func CreateFilePath(filePath string) error {
 }
 
 // 下载Excel
-func DownlaodExcel(heads []string, data gdb.Result) (string, error) {
+func DownlaodExcel(heads, key []string, data gdb.Result) (string, error) {
 	// 创建路径
 	curDir, err := os.Getwd()
 
@@ -69,9 +69,10 @@ func DownlaodExcel(heads []string, data gdb.Result) (string, error) {
 
 	// 主体写入数据
 	for _, record := range data {
+
 		row = sheet.AddRow()
-		for _, v := range record {
-			row.AddCell().Value = v.String()
+		for _, v := range key {
+			row.AddCell().Value = record[v].String()
 		}
 	}
 	// 在提供的路径中将文件保存到xlsx文件

@@ -17,13 +17,13 @@ const (
 
 //表单构建
 func Build(r *ghttp.Request) {
-	response.WriteTpl(r, "tool/build.html")
+	response.BuildTpl(r, "tool/build.html").WriteTplExtend()
 }
 
 //swagger文档
 func Swagger(r *ghttp.Request) {
 	a := r.GetQueryString("a")
-	if a=="r" {
+	if a == "r" {
 		//重新生成文档
 		curDir, err := os.Getwd()
 		if err != nil {

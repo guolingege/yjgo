@@ -11,7 +11,7 @@ import (
 
 //列表页
 func List(r *ghttp.Request) {
-	response.WriteTpl(r, "system/dict/type/list.html")
+	response.BuildTpl(r, "system/dict/type/list.html").WriteTplExtend()
 }
 
 //列表分页数据
@@ -19,7 +19,7 @@ func ListAjax(r *ghttp.Request) {
 	var req *dictTypeModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "列表查询", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("字典类型管理", req).WriteJsonExit()
 	}
 	rows := make([]dictTypeModel.Entity, 0)
 	result, page, err := dictTypeService.SelectListByPage(req)
@@ -28,17 +28,12 @@ func ListAjax(r *ghttp.Request) {
 		rows = *result
 	}
 
-	r.Response.WriteJsonExit(model.TableDataInfo{
-		Code:  0,
-		Msg:   "操作成功",
-		Total: page.Total,
-		Rows:  rows,
-	})
+	response.BuildTable(r, page.Total, rows).WriteJsonExit()
 }
 
 //新增页面
 func Add(r *ghttp.Request) {
-	response.WriteTpl(r, "system/dict/type/add.html")
+	response.BuildTpl(r, "system/dict/type/add.html").WriteTplExtend()
 }
 
 //新增页面保存
@@ -46,19 +41,19 @@ func AddSave(r *ghttp.Request) {
 	var req *dictTypeModel.AddReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "新增字典类型", req, model.Buniss_Add, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("字典管理", req).WriteJsonExit()
 	}
 
 	if dictTypeService.CheckDictTypeUniqueAll(req.DictType) == "1" {
-		response.ErrorMsg(r, "新增字典类型", req, model.Buniss_Add, "字典类型已存在")
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("字典类型已存在").Log("字典管理", req).WriteJsonExit()
 	}
 
 	rid, err := dictTypeService.AddSave(req, r.Session)
 
 	if err != nil || rid <= 0 {
-		response.ErrorAdd(r, "新增字典类型", req)
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).Log("字典管理", req).WriteJsonExit()
 	}
-	response.SucessDataAdd(r, "新增字典类型", req, rid)
+	response.SucessResp(r).SetData(rid).Log("字典管理", req).WriteJsonExit()
 }
 
 //修改页面
@@ -66,7 +61,7 @@ func Edit(r *ghttp.Request) {
 	id := r.GetQueryInt64("id")
 
 	if id <= 0 {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "字典类型错误",
 		})
 		return
@@ -75,13 +70,13 @@ func Edit(r *ghttp.Request) {
 	entity, err := dictTypeService.SelectRecordById(id)
 
 	if err != nil || entity == nil {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "字典类型不存在",
 		})
 		return
 	}
 
-	response.WriteTpl(r, "system/dict/type/edit.html", g.Map{
+	response.BuildTpl(r, "system/dict/type/edit.html").WriteTplExtend(g.Map{
 		"dict": entity,
 	})
 }
@@ -91,19 +86,19 @@ func EditSave(r *ghttp.Request) {
 	var req *dictTypeModel.EditReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "参数字典类型", req, model.Buniss_Add, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("字典类型管理", req).WriteJsonExit()
 	}
 
 	if dictTypeService.CheckDictTypeUnique(req.DictType, req.DictId) == "1" {
-		response.ErrorMsg(r, "新增字典类型", req, model.Buniss_Add, "字典类型已存在")
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg("字典类型已存在").Log("字典类型管理", req).WriteJsonExit()
 	}
 
 	rs, err := dictTypeService.EditSave(req, r.Session)
 
 	if err != nil || rs <= 0 {
-		response.ErrorAdd(r, "修改字典类型", req)
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).Log("字典类型管理", req).WriteJsonExit()
 	}
-	response.SucessDataAdd(r, "修改字典类型", req, rs)
+	response.SucessResp(r).Log("字典类型管理", req).WriteJsonExit()
 }
 
 //删除数据
@@ -111,16 +106,15 @@ func Remove(r *ghttp.Request) {
 	var req *model.RemoveReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorEdit(r, "删除字典类型", req)
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).SetMsg(err.Error()).Log("字典管理", req).WriteJsonExit()
 	}
 
 	rs := dictTypeService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-
-		response.SucessDataDel(r, "删除字典类型", req, rs)
+		response.SucessResp(r).SetBtype(model.Buniss_Del).Log("字典管理", req).WriteJsonExit()
 	} else {
-		response.ErrorDataMsg(r, "删除字典类型", req, model.Buniss_Del, 0, "未删除数据")
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).Log("字典管理", req).WriteJsonExit()
 	}
 }
 
@@ -128,7 +122,7 @@ func Remove(r *ghttp.Request) {
 func Detail(r *ghttp.Request) {
 	dictId := r.GetQueryInt64("dictId")
 	if dictId <= 0 {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "参数错误",
 		})
 		return
@@ -136,7 +130,7 @@ func Detail(r *ghttp.Request) {
 	dict, _ := dictTypeService.SelectRecordById(dictId)
 
 	if dict == nil {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "字典类别不存在",
 		})
 		return
@@ -144,13 +138,13 @@ func Detail(r *ghttp.Request) {
 
 	dictList, _ := dictTypeService.SelectListAll(nil)
 	if dictList == nil {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "参数错误2",
 		})
 		return
 	}
 
-	response.WriteTpl(r, "system/dict/data/list.html", g.Map{
+	response.BuildTpl(r, "system/dict/data/list.html").WriteTplExtend(g.Map{
 		"dict":     dict,
 		"dictList": dictList,
 	})
@@ -161,9 +155,10 @@ func SelectDictTree(r *ghttp.Request) {
 	columnId := r.GetQueryInt64("columnId")
 	dictType := r.GetQueryString("dictType")
 	if columnId <= 0 || dictType == "" {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "参数错误",
 		})
+
 		return
 	}
 
@@ -177,7 +172,7 @@ func SelectDictTree(r *ghttp.Request) {
 		dict = *rs
 	}
 
-	response.WriteTpl(r, "system/dict/type/tree.html", g.Map{
+	response.BuildTpl(r, "system/dict/type/tree.html").WriteTplExtend(g.Map{
 		"columnId": columnId,
 		"dict":     dict,
 	})
@@ -188,15 +183,15 @@ func Export(r *ghttp.Request) {
 	var req *dictTypeModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorOther(r, "导出Excel", req)
+		response.ErrorResp(r).SetMsg(err.Error()).Log("字典管理", req).WriteJsonExit()
 	}
 	url, err := dictTypeService.Export(req)
 
 	if err != nil {
-		response.ErrorMsg(r, "导出Excel", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("字典管理", req).WriteJsonExit()
 	}
 
-	response.SucessMsg(r, "导出Excel", req, model.Buniss_Other, url)
+	response.SucessResp(r).SetMsg(url).Log("导出Excel", req).WriteJsonExit()
 }
 
 //检查字典类型是否唯一不包括本参数
@@ -207,7 +202,6 @@ func CheckDictTypeUnique(r *ghttp.Request) {
 	}
 
 	result := dictTypeService.CheckDictTypeUnique(req.DictType, req.DictId)
-
 	r.Response.WritefExit(result)
 }
 

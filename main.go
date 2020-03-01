@@ -13,5 +13,10 @@ import (
 // @host localhost
 // @BasePath /api
 func main() {
-	g.Server().Run()
+	g.Server().Start()
+
+	api := g.Server("api")
+	api.SetPort(8080)
+	api.Start()
+	g.Wait()
 }

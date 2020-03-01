@@ -23,13 +23,14 @@ type EntityFlag struct {
 	Remark     string      `orm:"remark"          json:"remark"`      // 备注
 	Flag       bool        `json:"flag"`                              // 标记
 }
+
 //数据权限保存请求参数
 type DataScopeReq struct {
 	RoleId    int64  `p:"roleId"  v:"required#角色ID不能为空"`
 	RoleName  string `p:"roleName"  v:"required#角色名称不能为空"`
-	RoleKey   string `p:"roleKey"  v:"required#角色名称不能为空"`
-	DataScope string `p:"dataScope"  v:"required#角色名称不能为空"`
-	DeptIds   string `p:"deptIds"  v:"required#角色名称不能为空"`
+	RoleKey   string `p:"roleKey"  v:"required#权限字符串不能为空"`
+	DataScope string `p:"dataScope"  v:"required#数据范围不能为空"`
+	DeptIds   string `p:"deptIds"`
 }
 
 //检查角色名称请求参数
@@ -182,7 +183,7 @@ func SelectListExport(param *SelectPageReq) (gdb.Result, error) {
 }
 
 //获取所有角色数据
-func SelectListAll(param *SelectPageReq) (*[] EntityFlag, error) {
+func SelectListAll(param *SelectPageReq) (*[]EntityFlag, error) {
 	db, err := gdb.Instance()
 
 	if err != nil {

@@ -17,7 +17,7 @@ import (
 //用户资料页面
 func Profile(r *ghttp.Request) {
 	user := userService.GetProfile(r.Session)
-	response.WriteTpl(r, "system/user/profile/profile.html", g.Map{
+	response.BuildTpl(r, "system/user/profile/profile.html").WriteTplExtend(g.Map{
 		"user": user,
 	})
 }
@@ -27,15 +27,15 @@ func Update(r *ghttp.Request) {
 	var req *userModel.ProfileReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "修改用户信息", req, model.Buniss_Edit, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("用户管理", req).WriteJsonExit()
 	}
 
 	err := userService.UpdateProfile(req, r.Session)
 
 	if err != nil {
-		response.ErrorMsg(r, "修改用户信息", req, model.Buniss_Edit, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("用户管理", req).WriteJsonExit()
 	} else {
-		response.SucessEdit(r, "修改用户信息", req)
+		response.SucessResp(r).SetBtype(model.Buniss_Edit).Log("用户管理", req).WriteJsonExit()
 	}
 }
 
@@ -43,22 +43,22 @@ func Update(r *ghttp.Request) {
 func UpdatePassword(r *ghttp.Request) {
 	var req *userModel.PasswordReq
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "修改用户密码", req, model.Buniss_Edit, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("用户管理", req).WriteJsonExit()
 	}
 
 	err := userService.UpdatePassword(req, r.Session)
 
 	if err != nil {
-		response.ErrorMsg(r, "修改用户密码", req, model.Buniss_Edit, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("用户管理", req).WriteJsonExit()
 	} else {
-		response.SucessEdit(r, "修改用户密码", req)
+		response.SucessResp(r).SetBtype(model.Buniss_Edit).Log("修改用户密码", req).WriteJsonExit()
 	}
 }
 
 //修改头像页面
 func Avatar(r *ghttp.Request) {
 	user := userService.GetProfile(r.Session)
-	response.WriteTpl(r, "system/user/profile/avatar.html", g.Map{
+	response.BuildTpl(r, "system/user/profile/avatar.html").WriteTplExtend(g.Map{
 		"user": user,
 	})
 }
@@ -66,7 +66,7 @@ func Avatar(r *ghttp.Request) {
 //修改密码页面
 func EditPwd(r *ghttp.Request) {
 	user := userService.GetProfile(r.Session)
-	response.WriteTpl(r, "system/user/profile/resetPwd.html", g.Map{
+	response.BuildTpl(r, "system/user/profile/resetPwd.html").WriteTplExtend(g.Map{
 		"user": user,
 	})
 }
@@ -187,7 +187,7 @@ func UpdateAvatar(r *ghttp.Request) {
 	curDir, err := os.Getwd()
 
 	if err != nil {
-		response.ErrorMsg(r, "保存头像", g.Map{"userid": user.UserId}, model.Buniss_Edit, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("保存头像", g.Map{"userid": user.UserId}).WriteJsonExit()
 	}
 
 	saveDir := curDir + "/public/upload/"
@@ -195,14 +195,14 @@ func UpdateAvatar(r *ghttp.Request) {
 	files := r.GetMultipartFiles("avatarfile")
 
 	if files == nil || len(files) < 1 {
-		response.ErrorMsg(r, "保存头像", g.Map{"userid": user.UserId}, model.Buniss_Edit, "没有获取到上传文件")
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg("没有获取到上传文件").Log("保存头像", g.Map{"userid": user.UserId}).WriteJsonExit()
 	}
 
 	item := files[0]
 
 	file, err := item.Open()
 	if err != nil {
-		response.ErrorMsg(r, "保存头像", g.Map{"userid": user.UserId}, model.Buniss_Edit, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("保存头像", g.Map{"userid": user.UserId}).WriteJsonExit()
 	}
 
 	defer file.Close()
@@ -214,11 +214,11 @@ func UpdateAvatar(r *ghttp.Request) {
 	defer f.Close()
 
 	if err != nil {
-		response.ErrorMsg(r, "保存头像", g.Map{"userid": user.UserId}, model.Buniss_Edit, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("保存头像", g.Map{"userid": user.UserId}).WriteJsonExit()
 	}
 
 	if _, err := io.Copy(f, file); err != nil {
-		response.ErrorMsg(r, "保存头像", g.Map{"userid": user.UserId}, model.Buniss_Edit, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("保存头像", g.Map{"userid": user.UserId}).WriteJsonExit()
 	}
 
 	avatar := "/upload/" + filename
@@ -226,8 +226,8 @@ func UpdateAvatar(r *ghttp.Request) {
 	err = userService.UpdateAvatar(avatar, r.Session)
 
 	if err != nil {
-		response.ErrorMsg(r, "保存头像", g.Map{"userid": user.UserId}, model.Buniss_Edit, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("保存头像", g.Map{"userid": user.UserId}).WriteJsonExit()
 	} else {
-		response.SucessEdit(r, "保存头像", g.Map{"userid": user.UserId})
+		response.SucessResp(r).SetBtype(model.Buniss_Edit).Log("保存头像", g.Map{"userid": user.UserId}).WriteJsonExit()
 	}
 }

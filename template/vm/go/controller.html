@@ -17,7 +17,7 @@ import (
 
 //列表页
 func List(r *ghttp.Request) {
-	response.WriteTpl(r, "{{.table.ModuleName}}/{{.table.BusinessName}}/list.html")
+	response.BuildTpl(r, "{{.table.ModuleName}}/{{.table.BusinessName}}/list.html").WriteTplExtend()
 }
 
 //列表分页数据
@@ -25,7 +25,7 @@ func ListAjax(r *ghttp.Request) {
 	var req *{{.table.BusinessName}}Model.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "列表查询", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("{{.table.BusinessName}}管理", req).WriteJsonExit()
 	}
 	rows := make([]{{.table.BusinessName}}Model.Entity, 0)
 	result, page, err := {{.table.BusinessName}}Service.SelectListByPage(req)
@@ -34,17 +34,12 @@ func ListAjax(r *ghttp.Request) {
 		rows = *result
 	}
 
-	r.Response.WriteJsonExit(model.TableDataInfo{
-		Code:  0,
-		Msg:   "操作成功",
-		Total: page.Total,
-		Rows:  rows,
-	})
+	response.BuildTable(r, page.Total, rows).WriteJsonExit()
 }
 
 //新增页面
 func Add(r *ghttp.Request) {
-	response.WriteTpl(r, "{{.table.ModuleName}}/{{.table.BusinessName}}/add.html")
+	response.BuildTpl(r, "{{.table.ModuleName}}/{{.table.BusinessName}}/add.html").WriteTplExtend()
 }
 
 //新增页面保存
@@ -52,15 +47,15 @@ func AddSave(r *ghttp.Request) {
 	var req *{{.table.BusinessName}}Model.AddReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "新增{{.table.FunctionName}}", req, model.Buniss_Add, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("{{.table.FunctionName}}新增数据", req).WriteJsonExit()
 	}
 
-	rid, err := {{.table.BusinessName}}Service.AddSave(req, r.Session)
+	id, err := {{.table.BusinessName}}Service.AddSave(req, r.Session)
 
-	if err != nil || rid <= 0 {
-		response.ErrorAdd(r, "新增{{.table.FunctionName}}", req)
+	if err != nil || id <= 0 {
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).Log("{{.table.FunctionName}}新增数据", req).WriteJsonExit()
 	}
-	response.SucessDataAdd(r, "新增{{.table.FunctionName}}", req, rid)
+	response.SucessResp(r).SetData(id).Log("{{.table.FunctionName}}新增数据", req).WriteJsonExit()
 }
 
 //修改页面
@@ -68,7 +63,7 @@ func Edit(r *ghttp.Request) {
 	id := r.GetQueryInt64("id")
 
 	if id <= 0 {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "参数错误",
 		})
 		return
@@ -77,13 +72,13 @@ func Edit(r *ghttp.Request) {
 	entity, err := {{.table.BusinessName}}Service.SelectRecordById(id)
 
 	if err != nil || entity == nil {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "数据不存在",
 		})
 		return
 	}
 
-	response.WriteTpl(r, "{{.table.ModuleName}}/{{.table.BusinessName}}/edit.html", g.Map{
+	response.BuildTpl(r, "system/config/edit.html").WriteTplExtend(g.Map{
 		"{{.table.BusinessName}}": entity,
 	})
 }
@@ -93,15 +88,15 @@ func EditSave(r *ghttp.Request) {
 	var req {{.table.BusinessName}}Model.EditReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "{{.table.FunctionName}}岗位", req, model.Buniss_Add, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("{{.table.FunctionName}}修改数据", req).WriteJsonExit()
 	}
 
 	rs, err := {{.table.BusinessName}}Service.EditSave(&req, r.Session)
 
 	if err != nil || rs <= 0 {
-		response.ErrorAdd(r, "修改{{.table.FunctionName}}", req)
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).Log("{{.table.FunctionName}}修改数据", req).WriteJsonExit()
 	}
-	response.SucessDataAdd(r, "修改{{.table.FunctionName}}", req, rs)
+	response.SucessResp(r).SetBtype(model.Buniss_Edit).Log("{{.table.FunctionName}}修改数据", req).WriteJsonExit()
 }
 
 //删除数据
@@ -109,16 +104,15 @@ func Remove(r *ghttp.Request) {
 	var req *model.RemoveReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorEdit(r, "删除{{.table.FunctionName}}", req)
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).SetMsg(err.Error()).Log("{{.table.FunctionName}}删除数据", req).WriteJsonExit()
 	}
 
 	rs := {{.table.BusinessName}}Service.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-
-		response.SucessDataDel(r, "删除{{.table.FunctionName}}", req, rs)
+		response.SucessResp(r).SetBtype(model.Buniss_Del).Log("{{.table.FunctionName}}删除数据", req).WriteJsonExit()
 	} else {
-		response.ErrorDataMsg(r, "删除{{.table.FunctionName}}", req, model.Buniss_Del, 0, "未删除数据")
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).Log("{{.table.FunctionName}}删除数据", req).WriteJsonExit()
 	}
 }
 
@@ -127,13 +121,12 @@ func Export(r *ghttp.Request) {
 	var req *{{.table.BusinessName}}Model.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorOther(r, "导出Excel", req)
+		response.ErrorResp(r).Log("{{.table.FunctionName}}导出数据", req).WriteJsonExit()
 	}
 	url, err := {{.table.BusinessName}}Service.Export(req)
 
 	if err != nil {
-		response.ErrorMsg(r, "导出Excel", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Other).Log("{{.table.FunctionName}}导出数据", req).WriteJsonExit()
 	}
-
-	response.SucessMsg(r, "导出Excel", req, model.Buniss_Other, url)
+	response.SucessResp(r).SetBtype(model.Buniss_Other).SetData(url).WriteJsonExit()
 }

@@ -14,9 +14,9 @@
                     <ul>
                         <li>
                             字典名称：
-                            <select id="dictType" name="dictType" class="form-control">
+                            <select id="dictType" name="dictType" class="form-control">{{$dictId := .dict.DictId}}
                                 {{range $index, $dict := .dictList}}
-                                    <option value="{{$dict.DictType}}">{{$dict.DictName}}</option>
+                                    <option value="{{$dict.DictType}}" {{if eq $dict.DictId $dictId}}selected{{end}}>{{$dict.DictName}}</option>
                                 {{end}}
                             </select>
                         </li>
@@ -52,8 +52,8 @@
 {{template "footer" .Cookie.OssUrl}}
 <script src="/resource/ajax/libs/select2/select2.min.js"></script>
 <script type="text/javascript">
-    var editFlag = {{hasPermi .Session.uid "system:dict:edit"}}
-    var removeFlag = {{hasPermi .Session.uid "system:dict:remove"}}
+    var editFlag = '{{hasPermi .Session.uid "system:dict:edit"}}';
+    var removeFlag = '{{hasPermi .Session.uid "system:dict:remove"}}';
     var datas = {{getDictTypeData "sys_normal_disable"}};
     var prefix = ctx + "system/dict/data";
 

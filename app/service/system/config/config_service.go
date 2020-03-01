@@ -164,8 +164,8 @@ func Export(param *configModel.SelectPageReq) (string, error) {
 	}
 
 	head := []string{"参数主键", "参数名称", "参数键名", "参数键值", "系统内置（Y是 N否）", "状态"}
-
-	url, err := excel.DownlaodExcel(head, result)
+	key := []string{"config_id", "config_name", "config_key", "config_value", "config_type"}
+	url, err := excel.DownlaodExcel(head, key, result)
 
 	if err != nil {
 		return "", err

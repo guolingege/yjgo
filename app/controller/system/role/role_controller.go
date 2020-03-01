@@ -13,7 +13,7 @@ import (
 
 //列表页
 func List(r *ghttp.Request) {
-	response.WriteTpl(r, "system/role/list.html")
+	response.BuildTpl(r, "system/role/list.html").WriteTplExtend()
 }
 
 //列表分页数据
@@ -21,7 +21,7 @@ func ListAjax(r *ghttp.Request) {
 	var req *roleModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "列表查询", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("角色管理", req).WriteJsonExit()
 	}
 	rows := make([]roleModel.Entity, 0)
 	result, page, err := roleService.SelectRecordPage(req)
@@ -29,18 +29,12 @@ func ListAjax(r *ghttp.Request) {
 	if err == nil && result != nil {
 		rows = *result
 	}
-
-	r.Response.WriteJsonExit(model.TableDataInfo{
-		Code:  0,
-		Msg:   "操作成功",
-		Total: page.Total,
-		Rows:  rows,
-	})
+	response.BuildTable(r, page.Total, rows).WriteJsonExit()
 }
 
 //新增页面
 func Add(r *ghttp.Request) {
-	response.WriteTpl(r, "system/role/add.html")
+	response.BuildTpl(r, "system/role/add.html").WriteTplExtend()
 }
 
 //新增页面保存
@@ -48,23 +42,23 @@ func AddSave(r *ghttp.Request) {
 	var req *roleModel.AddReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "新增角色", req, model.Buniss_Add, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("角色管理", req).WriteJsonExit()
 	}
 
 	if roleService.CheckRoleNameUniqueAll(req.RoleName) == "1" {
-		response.ErrorMsg(r, "新增角色", req, model.Buniss_Add, "角色名称已存在")
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("角色名称已存在").Log("角色管理", req).WriteJsonExit()
 	}
 
 	if roleService.CheckRoleKeyUniqueAll(req.RoleKey) == "1" {
-		response.ErrorMsg(r, "新增角色", req, model.Buniss_Add, "角色权限已存在")
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("角色权限已存在").Log("角色管理", req).WriteJsonExit()
 	}
 
 	rid, err := roleService.AddSave(req, r.Session)
 
 	if err != nil || rid <= 0 {
-		response.ErrorAdd(r, "新增角色", req)
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).Log("角色管理", req).WriteJsonExit()
 	}
-	response.SucessDataAdd(r, "新增角色", req, rid)
+	response.SucessResp(r).SetData(rid).SetBtype(model.Buniss_Add).Log("角色管理", req).WriteJsonExit()
 }
 
 //修改页面
@@ -72,7 +66,7 @@ func Edit(r *ghttp.Request) {
 	id := r.GetQueryInt64("id")
 
 	if id <= 0 {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTplExtend(g.Map{
 			"desc": "参数错误",
 		})
 		return
@@ -81,13 +75,13 @@ func Edit(r *ghttp.Request) {
 	role, err := roleService.SelectRecordById(id)
 
 	if err != nil || role == nil {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTplExtend(g.Map{
 			"desc": "角色不存在",
 		})
 		return
 	}
 
-	response.WriteTpl(r, "system/role/edit.html", g.Map{
+	response.BuildTpl(r, "system/role/edit.html").WriteTplExtend(g.Map{
 		"role": role,
 	})
 }
@@ -97,23 +91,23 @@ func EditSave(r *ghttp.Request) {
 	var req *roleModel.EditReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "修改角色", req, model.Buniss_Add, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("角色管理", req).WriteJsonExit()
 	}
 
 	if roleService.CheckRoleNameUnique(req.RoleName, req.RoleId) == "1" {
-		response.ErrorMsg(r, "修改角色", req, model.Buniss_Add, "角色名称已存在")
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg("角色名称已存在").Log("角色管理", req).WriteJsonExit()
 	}
 
 	if roleService.CheckRoleKeyUnique(req.RoleKey, req.RoleId) == "1" {
-		response.ErrorMsg(r, "修改角色", req, model.Buniss_Add, "角色权限已存在")
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg("角色权限已存在").Log("角色管理", req).WriteJsonExit()
 	}
 
 	rs, err := roleService.EditSave(req, r.Session)
 
 	if err != nil || rs <= 0 {
-		response.ErrorAdd(r, "修改角色", req)
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).Log("角色管理", req).WriteJsonExit()
 	}
-	response.SucessDataAdd(r, "修改角色", req, rs)
+	response.SucessResp(r).SetBtype(model.Buniss_Edit).SetData(rs).Log("角色管理", req).WriteJsonExit()
 }
 
 //分配用户添加
@@ -121,7 +115,7 @@ func SelectUser(r *ghttp.Request) {
 	id := r.GetQueryInt64("id")
 
 	if id <= 0 {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTplExtend(g.Map{
 			"desc": "参数错误",
 		})
 		return
@@ -130,11 +124,11 @@ func SelectUser(r *ghttp.Request) {
 	role, err := roleService.SelectRecordById(id)
 
 	if err != nil {
-		response.WriteTpl(r, "error/error.html", g.Map{
-			"desc": "参数错误",
+		response.ErrorTpl(r).WriteTplExtend(g.Map{
+			"desc": "角色不存在",
 		})
 	} else {
-		response.WriteTpl(r, "system/role/selectUser.html", g.Map{
+		response.BuildTpl(r, "system/role/selectUser.html").WriteTplExtend(g.Map{
 			"role": role,
 		})
 	}
@@ -165,16 +159,15 @@ func Remove(r *ghttp.Request) {
 	var req *model.RemoveReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorEdit(r, "删除角色", req)
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).SetMsg(err.Error()).Log("角色管理", req).WriteJsonExit()
 	}
 
 	rs := roleService.DeleteRecordByIds(req.Ids)
 
 	if rs > 0 {
-
-		response.SucessDataDel(r, "删除角色", req, rs)
+		response.SucessResp(r).SetBtype(model.Buniss_Del).SetData(rs).Log("角色管理", req).WriteJsonExit()
 	} else {
-		response.ErrorDataMsg(r, "删除角色", req, model.Buniss_Del, 0, "未删除数据")
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).Log("角色管理", req).WriteJsonExit()
 	}
 }
 
@@ -183,15 +176,14 @@ func Export(r *ghttp.Request) {
 	var req *roleModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorOther(r, "导出Excel", req)
+		response.ErrorResp(r).SetMsg(err.Error()).Log("角色管理", req).WriteJsonExit()
 	}
 	url, err := roleService.Export(req)
 
 	if err != nil {
-		response.ErrorMsg(r, "导出Excel", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("角色管理", req).WriteJsonExit()
 	}
-
-	response.SucessMsg(r, "导出Excel", req, model.Buniss_Other, url)
+	response.SucessResp(r).SetMsg(url).Log("角色管理", req).WriteJsonExit()
 }
 
 //数据权限
@@ -199,11 +191,11 @@ func AuthDataScope(r *ghttp.Request) {
 	roleId := r.GetQueryInt64("id")
 	role, err := roleService.SelectRecordById(roleId)
 	if err != nil {
-		response.WriteTpl(r, "error/error.html", g.Map{
-			"desc": "参数错误",
+		response.ErrorTpl(r).WriteTplExtend(g.Map{
+			"desc": "角色不存在",
 		})
 	} else {
-		response.WriteTpl(r, "system/role/dataScope.html", g.Map{
+		response.BuildTpl(r, "system/role/dataScope.html").WriteTplExtend(g.Map{
 			"role": role,
 		})
 	}
@@ -214,17 +206,17 @@ func AuthDataScopeSave(r *ghttp.Request) {
 	var req *roleModel.DataScopeReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorOther(r, "数据权限保存", req)
+		response.ErrorResp(r).SetMsg(err.Error()).Log("角色管理", req).WriteJsonExit()
 	}
 	if !roleService.CheckRoleAllowed(req.RoleId) {
-		response.ErrorMsg(r, "数据权限保存", req, model.Buniss_Other, "不允许操作超级管理员角色")
+		response.ErrorResp(r).SetMsg("不允许操作超级管理员角色").Log("角色管理", req).WriteJsonExit()
 	}
 
 	rs, err := roleService.AuthDataScope(req, r.Session)
 	if err != nil || rs <= 0 {
-		response.ErrorMsg(r, "数据权限保存", req, model.Buniss_Other, "保存数据失败")
+		response.ErrorResp(r).SetMsg("保存数据失败").SetMsg(err.Error()).Log("角色管理", req).WriteJsonExit()
 	} else {
-		response.SucessOther(r, "数据权限保存", req)
+		response.SucessResp(r).Log("角色管理", req).WriteJsonExit()
 	}
 }
 
@@ -233,11 +225,11 @@ func AuthUser(r *ghttp.Request) {
 	roleId := r.GetQueryInt64("id")
 	role, err := roleService.SelectRecordById(roleId)
 	if err != nil {
-		response.WriteTpl(r, "error/error.html", g.Map{
-			"desc": "参数错误",
+		response.ErrorTpl(r).WriteTplExtend(g.Map{
+			"desc": "角色不存在",
 		})
 	} else {
-		response.WriteTpl(r, "system/role/authUser.html", g.Map{
+		response.BuildTpl(r, "system/role/authUser.html").WriteTplExtend(g.Map{
 			"role": role,
 		})
 	}
@@ -269,29 +261,29 @@ func SelectAll(r *ghttp.Request) {
 	userIds := r.GetFormString("userIds")
 
 	if roleId <= 0 {
-		response.ErrorMsg(r, "保存分配用户", g.Map{
+		response.ErrorResp(r).SetMsg("参数错误1").SetBtype(model.Buniss_Add).Log("角色管理", g.Map{
 			"roleId":  roleId,
 			"userIds": userIds,
-		}, model.Buniss_Add, "参数错误1")
+		}).WriteJsonExit()
 	}
 	if userIds == "" {
-		response.ErrorMsg(r, "保存分配用户", g.Map{
+		response.ErrorResp(r).SetMsg("参数错误2").SetBtype(model.Buniss_Add).Log("角色管理", g.Map{
 			"roleId":  roleId,
 			"userIds": userIds,
-		}, model.Buniss_Add, "参数错误2")
+		}).WriteJsonExit()
 	}
 
 	rs := roleService.InsertAuthUsers(roleId, userIds)
 	if rs > 0 {
-		response.SucessAdd(r, "保存分配用户", g.Map{
+		response.SucessResp(r).SetBtype(model.Buniss_Add).Log("角色管理", g.Map{
 			"roleId":  roleId,
 			"userIds": userIds,
-		})
+		}).WriteJsonExit()
 	} else {
-		response.ErrorMsg(r, "保存分配用户", g.Map{
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).Log("角色管理", g.Map{
 			"roleId":  roleId,
 			"userIds": userIds,
-		}, model.Buniss_Add, "保存失败")
+		}).WriteJsonExit()
 	}
 
 }
@@ -302,15 +294,15 @@ func CancelAll(r *ghttp.Request) {
 	userIds := r.GetFormString("userIds")
 	if roleId > 0 && userIds != "" {
 		roleService.DeleteUserRoleInfos(roleId, userIds)
-		response.SucessDel(r, "取消用户角色授权", g.Map{
+		response.SucessResp(r).SetBtype(model.Buniss_Del).Log("角色管理", g.Map{
 			"roleId":  roleId,
 			"userIds": userIds,
-		})
+		}).WriteJsonExit()
 	} else {
-		response.ErrorMsg(r, "取消用户角色授权", g.Map{
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).SetMsg("参数错误").Log("角色管理", g.Map{
 			"roleId":  roleId,
 			"userIds": userIds,
-		}, model.Buniss_Del, "参数错误")
+		}).WriteJsonExit()
 	}
 }
 
@@ -320,15 +312,15 @@ func Cancel(r *ghttp.Request) {
 	userId := r.GetFormInt64("userId")
 	if roleId > 0 && userId > 0 {
 		roleService.DeleteUserRoleInfo(userId, roleId)
-		response.SucessDel(r, "取消用户角色授权", g.Map{
+		response.SucessResp(r).SetBtype(model.Buniss_Del).Log("角色管理", g.Map{
 			"roleId": roleId,
 			"userId": userId,
-		})
+		}).WriteJsonExit()
 	} else {
-		response.ErrorMsg(r, "取消用户角色授权", g.Map{
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).SetMsg("参数错误").Log("角色管理", g.Map{
 			"roleId": roleId,
 			"userId": userId,
-		}, model.Buniss_Del, "参数错误")
+		}).WriteJsonExit()
 	}
 }
 

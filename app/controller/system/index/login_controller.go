@@ -16,7 +16,6 @@ import (
 	"yj-app/app/service/utils/response"
 )
 
-
 type RegisterReq struct {
 	UserName     string `p:"username"  v:"required|length:5,30#请输入账号|账号长度为:min到:max位"`
 	Password     string `p:"password" v:"required|length:6,30#请输入密码|密码长度不够"`
@@ -34,7 +33,7 @@ func Login(r *ghttp.Request) {
 		return
 	}
 
-	response.WriteTpl(r, "login.html")
+	response.BuildTpl(r, "login.html").WriteTplExtend()
 }
 
 // 图形验证码

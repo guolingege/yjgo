@@ -6,13 +6,13 @@ import (
 )
 
 func Unauth(r *ghttp.Request) {
-	response.WriteTpl(r, "error/unauth.html")
+	response.BuildTpl(r, "error/unauth.html").WriteTpl()
 }
 
 func Error(r *ghttp.Request) {
-	response.WriteTpl(r, "error/500.html")
+	response.BuildTpl(r, "error/500.html").WriteTpl()
 }
 
 func NotFound(r *ghttp.Request) {
-	response.WriteTpl(r, "error/404.html")
+	response.BuildTpl(r, "error/404.html").WriteTpl()
 }

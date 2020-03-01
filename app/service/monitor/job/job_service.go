@@ -229,8 +229,8 @@ func Export(param *jobModel.SelectPageReq) (string, error) {
 	}
 
 	head := []string{"任务ID", "任务名称", "任务组名", "调用目标字符串", "cron执行表达式", "计划执行错误策略（1立即执行 2执行一次 3放弃执行）", "是否并发执行（0允许 1禁止）", "状态（0正常 1暂停）", "创建者", "创建时间", "更新者", "更新时间", "备注信息"}
-
-	url, err := excel.DownlaodExcel(head, result)
+	key := []string{"job_id", "job_name", "job_group", "invoke_target", "cron_expression", "misfire_policy", "concurrent", "status", "create_by", "create_time", "update_by", "update_time", "remark"}
+	url, err := excel.DownlaodExcel(head, key, result)
 
 	if err != nil {
 		return "", err

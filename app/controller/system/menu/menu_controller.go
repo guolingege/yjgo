@@ -12,7 +12,7 @@ import (
 
 //列表页
 func List(r *ghttp.Request) {
-	response.WriteTpl(r, "system/menu/list.html")
+	response.BuildTpl(r, "system/menu/list.html").WriteTplExtend()
 }
 
 //列表分页数据
@@ -20,7 +20,7 @@ func ListAjax(r *ghttp.Request) {
 	var req *menuModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "列表查询", req, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("菜单管理", req).WriteJsonExit()
 	}
 	rows := make([]menuModel.Entity, 0)
 	result, err := menuService.SelectListAll(req)
@@ -44,8 +44,7 @@ func Add(r *ghttp.Request) {
 		pmenu.MenuId = tmp.MenuId
 		pmenu.MenuName = tmp.MenuName
 	}
-
-	response.WriteTpl(r, "system/menu/add.html", g.Map{"menu": pmenu})
+	response.BuildTpl(r, "system/menu/add.html").WriteTplExtend(g.Map{"menu": pmenu})
 }
 
 //新增页面保存
@@ -53,19 +52,19 @@ func AddSave(r *ghttp.Request) {
 	var req *menuModel.AddReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "新增菜单", req, model.Buniss_Add, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("菜单管理", req).WriteJsonExit()
 	}
 
 	if menuService.CheckMenuNameUniqueAll(req.MenuName, req.ParentId) == "1" {
-		response.ErrorMsg(r, "新增菜单", req, model.Buniss_Add, "菜单名称已存在")
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("菜单名称已存在").Log("菜单管理", req).WriteJsonExit()
 	}
 
-	rid, err := menuService.AddSave(req, r.Session)
+	id, err := menuService.AddSave(req, r.Session)
 
-	if err != nil || rid <= 0 {
-		response.ErrorAdd(r, "新增菜单", req)
+	if err != nil || id <= 0 {
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("菜单管理", req).WriteJsonExit()
 	}
-	response.SucessDataAdd(r, "新增菜单", req, rid)
+	response.SucessResp(r).SetBtype(model.Buniss_Add).SetData(id).Log("菜单管理", req).WriteJsonExit()
 }
 
 //修改页面
@@ -73,7 +72,7 @@ func Edit(r *ghttp.Request) {
 	id := r.GetQueryInt64("id")
 
 	if id <= 0 {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "参数错误",
 		})
 		return
@@ -82,13 +81,13 @@ func Edit(r *ghttp.Request) {
 	menu, err := menuService.SelectRecordById(id)
 
 	if err != nil || menu == nil {
-		response.WriteTpl(r, "error/error.html", g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "菜单不存在",
 		})
 		return
 	}
 
-	response.WriteTpl(r, "system/menu/edit.html", g.Map{
+	response.BuildTpl(r, "system/menu/edit.html").WriteTplExtend(g.Map{
 		"menu": menu,
 	})
 }
@@ -98,19 +97,19 @@ func EditSave(r *ghttp.Request) {
 	var req *menuModel.EditReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorMsg(r, "修改菜单", req, model.Buniss_Add, err.Error())
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("菜单管理", req).WriteJsonExit()
 	}
 
 	if menuService.CheckMenuNameUnique(req.MenuName, req.MenuId, req.ParentId) == "1" {
-		response.ErrorMsg(r, "修改菜单", req, model.Buniss_Add, "菜单名称已存在")
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg("菜单名称已存在").Log("菜单管理", req).WriteJsonExit()
 	}
 
 	rs, err := menuService.EditSave(req, r.Session)
 
 	if err != nil || rs <= 0 {
-		response.ErrorAdd(r, "修改菜单", req)
+		response.ErrorResp(r).SetBtype(model.Buniss_Edit).Log("菜单管理", req).WriteJsonExit()
 	}
-	response.SucessDataAdd(r, "修改菜单", req, rs)
+	response.SucessResp(r).SetBtype(model.Buniss_Edit).SetData(rs).Log("菜单管理", req).WriteJsonExit()
 }
 
 //删除数据
@@ -120,9 +119,9 @@ func Remove(r *ghttp.Request) {
 	rs := menuService.DeleteRecordById(id)
 
 	if rs {
-		response.SucessDataDel(r, "删除菜单", g.Map{"id": id}, rs)
+		response.SucessResp(r).SetBtype(model.Buniss_Del).Log("菜单管理", g.Map{"id": id}).WriteJsonExit()
 	} else {
-		response.ErrorDataMsg(r, "删除菜单", g.Map{"id": id}, model.Buniss_Del, 0, "未删除数据")
+		response.ErrorResp(r).SetBtype(model.Buniss_Del).Log("菜单管理", g.Map{"id": id}).WriteJsonExit()
 	}
 }
 
@@ -131,12 +130,12 @@ func SelectMenuTree(r *ghttp.Request) {
 	menuId := r.GetQueryInt64("menuId")
 	menu, err := menuService.SelectRecordById(menuId)
 	if err != nil {
-		response.WriteTpl(r, "error/error.html", g.Map{
-			"desc": "参数错误",
+		response.ErrorTpl(r).WriteTpl(g.Map{
+			"desc": "菜单不存在",
 		})
 		return
 	}
-	response.WriteTpl(r, "system/menu/tree.html", g.Map{
+	response.BuildTpl(r, "system/menu/tree.html").WriteTplExtend(g.Map{
 		"menu": menu,
 	})
 }
@@ -145,18 +144,18 @@ func SelectMenuTree(r *ghttp.Request) {
 func MenuTreeData(r *ghttp.Request) {
 	user := userService.GetProfile(r.Session)
 	if user == nil {
-		response.ErrorMsg(r, "加载菜单列表树", g.Map{"userId": user.UserId,}, model.Buniss_Other, "登陆超时")
+		response.ErrorResp(r).SetMsg("登陆超时").Log("菜单管理", g.Map{"userId": user.UserId}).WriteJsonExit()
 	}
 	ztrees, err := menuService.MenuTreeData(user.UserId)
 	if err != nil {
-		response.ErrorMsg(r, "加载菜单列表树", g.Map{"userId": user.UserId,}, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("菜单管理", g.Map{"userId": user.UserId}).WriteJsonExit()
 	}
 	r.Response.WriteJsonExit(ztrees)
 }
 
 //选择图标
 func Icon(r *ghttp.Request) {
-	response.WriteTpl(r, "system/menu/icon.html")
+	response.BuildTpl(r, "system/menu/icon.html").WriteTplExtend()
 }
 
 //加载角色菜单列表树
@@ -165,17 +164,16 @@ func RoleMenuTreeData(r *ghttp.Request) {
 
 	user := userService.GetProfile(r.Session)
 	if user == nil || user.UserId <= 0 {
-		response.ErrorMsg(r, "菜单树", g.Map{"roleId": roleId}, model.Buniss_Other, "登陆超时")
+		response.ErrorResp(r).SetMsg("登陆超时").Log("菜单管理", g.Map{"roleId": roleId}).WriteJsonExit()
 	}
 
 	result, err := menuService.RoleMenuTreeData(roleId, user.UserId)
 
 	if err != nil {
-		response.ErrorMsg(r, "菜单树", g.Map{"roleId": roleId}, model.Buniss_Other, err.Error())
+		response.ErrorResp(r).SetMsg(err.Error()).Log("菜单管理", g.Map{"roleId": roleId}).WriteJsonExit()
 	}
 
 	r.Response.WriteJsonExit(result)
-
 }
 
 //检查菜单名是否已经存在不包括本角色

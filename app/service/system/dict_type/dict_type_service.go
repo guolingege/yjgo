@@ -140,8 +140,8 @@ func Export(param *dictTypeModel.SelectPageReq) (string, error) {
 	}
 
 	head := []string{"字典主键", "字典名称", "字典类型", "状态", "创建者", "创建时间", "更新者", "更新时间", "备注"}
-
-	url, err := excel.DownlaodExcel(head, result)
+	key := []string{"dict_id", "dict_name", "dict_type", "status", "create_by", "create_time", "update_by", "update_time", "remark"}
+	url, err := excel.DownlaodExcel(head, key, result)
 
 	if err != nil {
 		return "", err
