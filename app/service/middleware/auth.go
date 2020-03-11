@@ -34,8 +34,8 @@ func Auth(r *ghttp.Request) {
 
 			hasPermission := false
 
-			for i := range *menus {
-				if strings.EqualFold((*menus)[i].Url, url.Path) {
+			for i := range menus {
+				if strings.EqualFold(menus[i].Url, url.Path) {
 					hasPermission = true
 					break
 				}

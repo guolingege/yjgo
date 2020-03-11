@@ -207,7 +207,7 @@ func SelectMenuNormalAll() ([]EntityExtend, error) {
 }
 
 //根据用户ID读取菜单数据
-func SelectMenusByUserId(userId string) ([]EntityExtend, error) {
+func SelectMenusByUserId(userId int64) ([]EntityExtend, error) {
 	var result []EntityExtend
 
 	db, err := gdb.Instance()
@@ -220,7 +220,7 @@ func SelectMenusByUserId(userId string) ([]EntityExtend, error) {
 	model.LeftJoin("sys_user_role ur", "rm.role_id = ur.role_id")
 	model.LeftJoin("sys_role ro", "ur.role_id = ro.role_id")
 	model.Fields("distinct m.menu_id, m.parent_id, m.menu_name, m.url, m.visible, ifnull(m.perms,'') as perms, m.target, m.menu_type, m.icon, m.order_num, m.create_time")
-	model.Where("ur.user_id = ? and  m.visible = 0  AND ro.status = 0")
+	model.Where("ur.user_id = ? and  m.visible = 0  AND ro.status = 0", userId)
 	model.Order("m.parent_id, m.order_num")
 	model.Structs(&result)
 

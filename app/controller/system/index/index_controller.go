@@ -24,7 +24,7 @@ func Index(r *ghttp.Request) {
 			avatar = "/resource/img/profile.jpg"
 		}
 
-		var menus *[]menu.EntityExtend
+		var menus []menu.EntityExtend
 
 		//获取菜单数据
 		if userService.IsAdmin(user.UserId) {
@@ -35,7 +35,7 @@ func Index(r *ghttp.Request) {
 			}
 
 		} else {
-			tmp, err := menuService.SelectMenusByUserId(string(user.UserId))
+			tmp, err := menuService.SelectMenusByUserId(user.UserId)
 			fmt.Println(tmp)
 			if err == nil {
 				menus = tmp

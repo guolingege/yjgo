@@ -165,28 +165,24 @@ func MenuTreeData(userId int64) (*[]model.Ztree, error) {
 }
 
 //获取用户的菜单数据
-func SelectMenuNormalByUser(userId int64) (*[]menuModel.EntityExtend, error) {
+func SelectMenuNormalByUser(userId int64) ([]menuModel.EntityExtend, error) {
 	if userService.IsAdmin(userId) {
 		return SelectMenuNormalAll()
 	} else {
-		return SelectMenusByUserId(gconv.String(userId))
+		return SelectMenusByUserId(userId)
 	}
 }
 
 //获取管理员菜单数据
-func SelectMenuNormalAll() (*[]menuModel.EntityExtend, error) {
-	var result []menuModel.EntityExtend
+func SelectMenuNormalAll() ([]menuModel.EntityExtend, error) {
 	//从缓存读取
 	cache := gcache.Get(model.MENU_CACHE)
-
 	if cache != nil {
-		err := gconv.Structs(cache, &result)
-		if err == nil {
-			return &result, nil
-		}
+		return cache.([]menuModel.EntityExtend), nil
 	}
 
 	//从数据库中读取
+	var result []menuModel.EntityExtend
 	result, err := menuModel.SelectMenuNormalAll()
 
 	if err != nil {
@@ -226,25 +222,22 @@ func SelectMenuNormalAll() (*[]menuModel.EntityExtend, error) {
 
 	//存入缓存
 	gcache.Set(model.MENU_CACHE, result, time.Hour)
-	return &result, nil
+	return result, nil
 }
 
 //根据用户ID读取菜单数据
-func SelectMenusByUserId(userId string) (*[]menuModel.EntityExtend, error) {
+func SelectMenusByUserId(userId int64) ([]menuModel.EntityExtend, error) {
 	var result []menuModel.EntityExtend
 
 	//从缓存读取
-	cache := gcache.Get(model.MENU_CACHE + userId)
+	cache := gcache.Get(model.MENU_CACHE + gconv.String(userId))
 
 	if cache != nil {
-		err := gconv.Structs(cache, &result)
-		if err == nil {
-			return &result, nil
-		}
+		return cache.([]menuModel.EntityExtend), nil
 	}
 
 	//从数据库中读取
-	result, err := menuModel.SelectMenusByUserId(userId)
+	result, err := menuModel.SelectMenusByUserId(gconv.Int64(userId))
 
 	if err != nil {
 		return nil, err
@@ -286,8 +279,8 @@ func SelectMenusByUserId(userId string) (*[]menuModel.EntityExtend, error) {
 	}
 
 	//存入缓存
-	gcache.Set(model.MENU_CACHE+userId, result, 3600000)
-	return &result, nil
+	gcache.Set(model.MENU_CACHE+gconv.String(userId), result, time.Hour)
+	return result, nil
 }
 
 //根据父id获取子菜单
@@ -374,14 +367,14 @@ func RoleMenuTreeData(roleId, userId int64) (*[]model.Ztree, error) {
 }
 
 //对象转菜单树
-func InitZtree(menuList *[]menuModel.EntityExtend, roleMenuList *[]string, permsFlag bool) (*[]model.Ztree, error) {
+func InitZtree(menuList []menuModel.EntityExtend, roleMenuList *[]string, permsFlag bool) (*[]model.Ztree, error) {
 	var result []model.Ztree
 	isCheck := false
 	if roleMenuList != nil && len(*roleMenuList) > 0 {
 		isCheck = true
 	}
 
-	for _, obj := range *menuList {
+	for _, obj := range menuList {
 		var ztree model.Ztree
 		ztree.Title = obj.MenuName
 		ztree.Id = obj.MenuId

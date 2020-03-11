@@ -2,10 +2,12 @@ package dict
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gogf/gf/database/gdb"
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/util/gconv"
 	"strings"
+	"time"
 	dictDataModel "yj-app/app/model/system/dict_data"
 )
 
@@ -51,6 +53,7 @@ func GetDictTypeRadio(dictType, name string, value interface{}) string {
 
 //通用的字典下拉框控件  字典类别   html控件id  html控件name html控件class  html控件value  html控件空值标签 是否可以多选
 func GetDictTypeSelect(dictType, id, name, className, value, emptyLabel, multiple string) string {
+	startT := time.Now() //计算当前时间
 	result, err := SelectDictDataByType(dictType)
 	if err != nil {
 		return ""
@@ -75,11 +78,14 @@ func GetDictTypeSelect(dictType, id, name, className, value, emptyLabel, multipl
 	}
 
 	htmlstr += `</select>`
+	tc := time.Since(startT) //计算耗时
+	fmt.Printf("time cost = %v\n", tc)
 	return htmlstr
 }
 
 //通用的字典下拉框控件
 func GetDictTypeData(dictType string) string {
+	startT := time.Now() //计算当前时间
 	result := make([]dictDataModel.Entity, 0)
 	rs, err := SelectDictDataByType(dictType)
 	if err == nil || len(rs) > 0 {
@@ -93,7 +99,8 @@ func GetDictTypeData(dictType string) string {
 	if err == nil {
 		jsonstr = string(jsonbyte)
 	}
-
+	tc := time.Since(startT) //计算耗时
+	fmt.Printf("time cost = %v\n", tc)
 	return jsonstr
 }
 

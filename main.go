@@ -13,10 +13,20 @@ import (
 // @host localhost
 // @BasePath /api
 func main() {
-	g.Server().Start()
 
-	api := g.Server("api")
-	api.SetPort(8080)
-	api.Start()
+	serverSwitch := g.Cfg().GetBool("switch.server")
+	apiSwitch := g.Cfg().GetBool("switch.api")
+
+	if serverSwitch {
+		g.Server().Start()
+	}
+
+	if apiSwitch {
+		address := g.Cfg().GetString("api.Address")
+		api := g.Server("api")
+		api.SetAddr(address)
+		api.Start()
+	}
+
 	g.Wait()
 }

@@ -116,7 +116,7 @@
             var options = {
                 title: '部门选择',
                 width: "380",
-                url: prefix + "/selectDeptTree/" + $("#treeId").val(),
+                url: prefix + "/selectDeptTree?treeId=" + $("#treeId").val(),
                 callBack: doSubmit
             };
             $.modal.openOptions(options);
