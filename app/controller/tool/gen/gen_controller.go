@@ -410,7 +410,7 @@ func DataList(r *ghttp.Request) {
 	var req *tableModel.SelectPageReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
-		response.ErrorResp(r).SetMsg(err.Error()).Log("生成代码", req)
+		response.ErrorResp(r).SetMsg(err.Error()).Log("生成代码", req).WriteJsonExit()
 	}
 	rows := make([]tableModel.Entity, 0)
 	result, page, err := tableService.SelectDbTableList(req)
@@ -431,12 +431,12 @@ func DataList(r *ghttp.Request) {
 func ImportTableSave(r *ghttp.Request) {
 	tables := r.GetFormString("tables")
 	if tables == "" {
-		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("参数错误").Log("生成代码", g.Map{"tables": tables})
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("参数错误").Log("生成代码", g.Map{"tables": tables}).WriteJsonExit()
 	}
 
 	user := userService.GetProfile(r.Session)
 	if user == nil {
-		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("登陆超时").Log("生成代码", g.Map{"tables": tables})
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("登陆超时").Log("生成代码", g.Map{"tables": tables}).WriteJsonExit()
 	}
 
 	operName := user.LoginName
@@ -444,15 +444,15 @@ func ImportTableSave(r *ghttp.Request) {
 	tableArr := strings.Split(tables, ",")
 	tableList, err := tableService.SelectDbTableListByNames(tableArr)
 	if err != nil {
-		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("生成代码", g.Map{"tables": tables})
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg(err.Error()).Log("生成代码", g.Map{"tables": tables}).WriteJsonExit()
 	}
 
 	if tableList == nil {
-		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("请选择需要导入的表").Log("生成代码", g.Map{"tables": tables})
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("请选择需要导入的表").Log("生成代码", g.Map{"tables": tables}).WriteJsonExit()
 	}
 
 	tableService.ImportGenTable(tableList, operName)
-	response.SucessResp(r).Log("导入表结构", g.Map{"tables": tables})
+	response.SucessResp(r).Log("导入表结构", g.Map{"tables": tables}).WriteJsonExit()
 }
 
 //根据table_id查询表列数据
@@ -460,7 +460,7 @@ func ColumnList(r *ghttp.Request) {
 	tableId := r.GetQueryInt64("tableId")
 	//获取参数
 	if tableId <= 0 {
-		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("参数错误").Log("生成代码", g.Map{"tableId": tableId})
+		response.ErrorResp(r).SetBtype(model.Buniss_Add).SetMsg("参数错误").Log("生成代码", g.Map{"tableId": tableId}).WriteJsonExit()
 	}
 	rows := make([]tableColumnModel.Entity, 0)
 	result, err := tableService.SelectGenTableColumnListByTableId(tableId)
