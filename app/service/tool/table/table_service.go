@@ -311,11 +311,15 @@ func InitColumnField(column *tableColumnModel.Entity, table *tableModel.Entity) 
 	if tableColumnModel.IsStringObject(dataType) {
 		//字段为字符串类型
 		column.GoType = "string"
-		columnLength := GetColumnLength(column.ColumnType)
-		if columnLength >= 500 {
+		if strings.EqualFold(dataType, "text") || strings.EqualFold(dataType, "tinytext") || strings.EqualFold(dataType, "mediumtext") || strings.EqualFold(dataType, "longtext") {
 			column.HtmlType = "textarea"
 		} else {
-			column.HtmlType = "input"
+			columnLength := GetColumnLength(column.ColumnType)
+			if columnLength >= 500 {
+				column.HtmlType = "textarea"
+			} else {
+				column.HtmlType = "input"
+			}
 		}
 	} else if tableColumnModel.IsTimeObject(dataType) {
 		//字段为时间类型
@@ -352,24 +356,24 @@ func InitColumnField(column *tableColumnModel.Entity, table *tableModel.Entity) 
 
 	// 编辑字段
 	if tableColumnModel.IsNotEdit(columnName) {
-		if column.IsPk =="1" {
+		if column.IsPk == "1" {
 			column.IsEdit = "0"
 		} else {
 			column.IsEdit = "1"
 		}
-	}else {
+	} else {
 		column.IsEdit = "0"
 	}
 	// 列表字段
 	if tableColumnModel.IsNotList(columnName) {
 		column.IsList = "1"
-	}else {
+	} else {
 		column.IsList = "0"
 	}
 	// 查询字段
 	if tableColumnModel.IsNotQuery(columnName) {
 		column.IsQuery = "1"
-	}else {
+	} else {
 		column.IsQuery = "0"
 	}
 
