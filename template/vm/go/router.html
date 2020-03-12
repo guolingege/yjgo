@@ -1,6 +1,5 @@
 // ==========================================================================
 // 云捷GO自动生成路由代码，只生成一次，按需修改,再次生成不会覆盖.
-// 重要提示：需要在项目根目录/router/router.go 自定义路由区里绑定 {{.table.BusinessName}}.LoadRounter(s)
 // 生成日期：{{.table.CreateTime}}
 // 生成路径: app/controller/{{.table.ModuleName}}/{{.table.BusinessName}}_router.go
 // 生成人：{{.table.FunctionAuthor}}
@@ -8,12 +7,14 @@
 package {{.table.BusinessName}}
 
 import (
+	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"{{.table.PackageName}}/app/service/middleware"
+	"{{.table.PackageName}}/app/controller/{{.table.ModuleName}}/{{.table.BusinessName}}"
 )
 
 //加载路由
-func LoadRounter(s *ghttp.Server) {
+func init() {
 	// 参数路由
 	s.Group("/{{.table.ModuleName}}/{{.table.BusinessName}}", func(group *ghttp.RouterGroup) {
 		group.Middleware(middleware.Auth)
