@@ -25,7 +25,7 @@ type EditReq struct {
 	DictCode  int64  `p:"dictCode" v:"required#主键ID不能为空"`
 	DictLabel string `p:"dictLabel"  v:"required#字典标签不能为空"`
 	DictValue string `p:"dictValue"  v:"required#字典键值不能为空"`
-	DictType  string `p:"dictType"  v:"required#字典类型不能为空"`
+	DictType  string `p:"dictType"`
 	DictSort  int    `p:"dictSort"  v:"required#字典排序不能为空"`
 	CssClass  string `p:"cssClass"`
 	ListClass string `p:"listClass" v:"required#回显样式不能为空"`
