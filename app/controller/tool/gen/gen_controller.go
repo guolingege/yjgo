@@ -107,21 +107,13 @@ func EditSave(r *ghttp.Request) {
 func Preview(r *ghttp.Request) {
 	tableId := r.GetQueryInt64("tableId")
 	if tableId <= 0 {
-		r.Response.WriteJson(model.CommonRes{
-			Code:  500,
-			Btype: model.Buniss_Other,
-			Msg:   "参数错误",
-		})
+		response.ErrorResp(r).SetMsg("参数错误").WriteJsonExit()
 	}
 
 	entity, err := tableService.SelectRecordById(tableId)
 
 	if err != nil || entity == nil {
-		r.Response.WriteJson(model.CommonRes{
-			Code:  500,
-			Btype: model.Buniss_Other,
-			Msg:   "数据不存在",
-		})
+		response.ErrorResp(r).SetMsg("数据不存在").WriteJsonExit()
 	}
 
 	tableService.SetPkColumn(entity, entity.Columns)
@@ -245,21 +237,13 @@ func Preview(r *ghttp.Request) {
 func GenCode(r *ghttp.Request) {
 	tableId := r.GetQueryInt64("tableId")
 	if tableId <= 0 {
-		r.Response.WriteJson(model.CommonRes{
-			Code:  500,
-			Btype: model.Buniss_Other,
-			Msg:   "参数错误",
-		})
+		response.ErrorResp(r).SetMsg("参数错误").WriteJsonExit()
 	}
 
 	entity, err := tableService.SelectRecordById(tableId)
 
 	if err != nil || entity == nil {
-		r.Response.WriteJson(model.CommonRes{
-			Code:  500,
-			Btype: model.Buniss_Other,
-			Msg:   "数据不存在",
-		})
+		response.ErrorResp(r).SetMsg("数据不存在").WriteJsonExit()
 	}
 
 	tableService.SetPkColumn(entity, entity.Columns)
@@ -402,7 +386,7 @@ func GenCode(r *ghttp.Request) {
 			f.Close()
 		}
 	}
-	response.SucessResp(r).Log("生成代码", g.Map{"tableId": tableId})
+	response.SucessResp(r).Log("生成代码", g.Map{"tableId": tableId}).WriteJsonExit()
 }
 
 //查询数据库列表

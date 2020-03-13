@@ -15,7 +15,7 @@
 <body class="white-bg">
 <div class="wrapper wrapper-content animated fadeInRight ibox-content">
     <form class="form-horizontal m" id="form-{{.table.BusinessName}}-edit">
-        <input name="{{.table.PkColumn.GoField}}" value="{{printf "{{.%v.%v}}" .table.ClassName .table.PkColumn.GoField}}" type="hidden">
+        <input name="{{.table.PkColumn.GoField}}" value="{{printf "{{.%v.%v}}" .table.BusinessName .table.PkColumn.GoField}}" type="hidden">
         {{range $index, $column := .table.Columns}} {{if eq $column.IsEdit "1"}} {{if and (ne $treeParentCode "") (eq $column.ColumnName $treeParentCode)}}
             <div class="form-group">
                 <label class="col-sm-3 control-label">{{$column.ColumnComment}}：</label>

@@ -78,7 +78,7 @@ func Edit(r *ghttp.Request) {
 		return
 	}
 
-	response.BuildTpl(r, "system/config/edit.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "{{.table.ModuleName}}/{{.table.BusinessName}}/edit.html").WriteTplExtend(g.Map{
 		"{{.table.BusinessName}}": entity,
 	})
 }

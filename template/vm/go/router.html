@@ -15,6 +15,7 @@ import (
 
 //加载路由
 func init() {
+	s := g.Server()
 	// 参数路由
 	s.Group("/{{.table.ModuleName}}/{{.table.BusinessName}}", func(group *ghttp.RouterGroup) {
 		group.Middleware(middleware.Auth)
