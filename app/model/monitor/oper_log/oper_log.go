@@ -17,8 +17,8 @@ type SelectPageReq struct {
 	EndTime       string `p:"endTime"`       //开始时间
 	PageNum       int    `p:"pageNum"`       //当前页码
 	PageSize      int    `p:"pageSize"`      //每页数
-	SortName      string `p:"orderByColumn"` //排序字段
-	SortOrder     string `p:"isAsc"`         //排序方式
+	OrderByColumn string `p:"orderByColumn"` //排序字段
+	IsAsc         string `p:"isAsc"`         //排序方式
 }
 
 // 根据条件分页查询用户列表
@@ -66,7 +66,10 @@ func SelectPageList(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
 
 	model.Fields("oper_id, title, business_type, method, request_method, operator_type, oper_name, dept_name, oper_url, oper_ip, oper_location, oper_param, json_result, status, error_msg, oper_time")
 
-	model.Order(param.SortName + " " + param.SortOrder)
+	if param.OrderByColumn != "" {
+		model.Order(param.OrderByColumn + " " + param.IsAsc)
+	}
+
 	model.Limit(page.StartNum, page.Pagesize)
 
 	var result []Entity

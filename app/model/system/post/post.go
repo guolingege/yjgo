@@ -44,13 +44,15 @@ type EditReq struct {
 
 //分页请求参数
 type SelectPageReq struct {
-	PostCode  string `p:"postCode"`  //岗位编码
-	Status    string `p:"status"`    //状态
-	PostName  string `p:"postName"`  //岗位名称
-	BeginTime string `p:"beginTime"` //开始时间
-	EndTime   string `p:"endTime"`   //结束时间
-	PageNum   int    `p:"pageNum"`   //当前页码
-	PageSize  int    `p:"pageSize"`  //每页数
+	PostCode      string `p:"postCode"`      //岗位编码
+	Status        string `p:"status"`        //状态
+	PostName      string `p:"postName"`      //岗位名称
+	BeginTime     string `p:"beginTime"`     //开始时间
+	EndTime       string `p:"endTime"`       //结束时间
+	OrderByColumn string `p:"orderByColumn"` //排序字段
+	IsAsc         string `p:"isAsc"`         //排序方式
+	PageNum       int    `p:"pageNum"`       //当前页码
+	PageSize      int    `p:"pageSize"`      //每页数
 }
 
 //检查编码请求参数
@@ -117,6 +119,10 @@ func SelectListByPage(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
 
 	model = model.Limit(page.StartNum, page.Pagesize)
 
+	if param.OrderByColumn != "" {
+		model.Order(param.OrderByColumn + " " + param.IsAsc)
+	}
+
 	record, err := model.All()
 
 	if err != nil {
@@ -168,7 +174,7 @@ func SelectListExport(param *SelectPageReq) (gdb.Result, error) {
 }
 
 //获取所有数据
-func SelectListAll(param *SelectPageReq) (*[] EntityFlag, error) {
+func SelectListAll(param *SelectPageReq) (*[]EntityFlag, error) {
 	db, err := gdb.Instance()
 
 	if err != nil {
@@ -210,7 +216,7 @@ func SelectListAll(param *SelectPageReq) (*[] EntityFlag, error) {
 }
 
 //根据用户ID查询岗位
-func SelectPostsByUserId(userId int64) (*[] EntityFlag, error) {
+func SelectPostsByUserId(userId int64) (*[]EntityFlag, error) {
 	db, err := gdb.Instance()
 
 	if err != nil {

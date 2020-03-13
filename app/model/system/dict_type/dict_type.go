@@ -26,13 +26,15 @@ type EditReq struct {
 
 //分页请求参数
 type SelectPageReq struct {
-	DictName  string `p:"dictName"`  //字典名称
-	DictType  string `p:"dictType"`  //字典类型
-	Status    string `p:"status"`    //字典状态
-	BeginTime string `p:"beginTime"` //开始时间
-	EndTime   string `p:"endTime"`   //结束时间
-	PageNum   int    `p:"pageNum"`   //当前页码
-	PageSize  int    `p:"pageSize"`  //每页数
+	DictName      string `p:"dictName"`      //字典名称
+	DictType      string `p:"dictType"`      //字典类型
+	Status        string `p:"status"`        //字典状态
+	BeginTime     string `p:"beginTime"`     //开始时间
+	EndTime       string `p:"endTime"`       //结束时间
+	OrderByColumn string `p:"orderByColumn"` //排序字段
+	IsAsc         string `p:"isAsc"`         //排序方式
+	PageNum       int    `p:"pageNum"`       //当前页码
+	PageSize      int    `p:"pageSize"`      //每页数
 }
 
 //检查字典类型请求参数
@@ -87,6 +89,10 @@ func SelectListByPage(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
 	page := page.CreatePaging(param.PageNum, param.PageSize, total)
 
 	model = model.Limit(page.StartNum, page.Pagesize)
+
+	if param.OrderByColumn != "" {
+		model.Order(param.OrderByColumn + " " + param.IsAsc)
+	}
 
 	record, err := model.All()
 

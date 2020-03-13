@@ -57,16 +57,16 @@ type CheckRoleKeyALLReq struct {
 
 //分页请求参数
 type SelectPageReq struct {
-	RoleName  string `p:"roleName"`      //角色名称
-	Status    string `p:"status"`        //状态
-	RoleKey   string `p:"roleKey"`       //角色键
-	DataScope string `p:"dataScope"`     //数据范围
-	BeginTime string `p:"beginTime"`     //开始时间
-	EndTime   string `p:"endTime"`       //结束时间
-	PageNum   int    `p:"pageNum"`       //当前页码
-	PageSize  int    `p:"pageSize"`      //每页数
-	SortName  string `p:"orderByColumn"` //排序字段
-	SortOrder string `p:"isAsc"`         //排序方式
+	RoleName      string `p:"roleName"`      //角色名称
+	Status        string `p:"status"`        //状态
+	RoleKey       string `p:"roleKey"`       //角色键
+	DataScope     string `p:"dataScope"`     //数据范围
+	BeginTime     string `p:"beginTime"`     //开始时间
+	EndTime       string `p:"endTime"`       //结束时间
+	PageNum       int    `p:"pageNum"`       //当前页码
+	PageSize      int    `p:"pageSize"`      //每页数
+	OrderByColumn string `p:"orderByColumn"` //排序字段
+	IsAsc         string `p:"isAsc"`         //排序方式
 }
 
 //新增页面请求参数
@@ -133,7 +133,9 @@ func SelectListPage(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
 	page := page.CreatePaging(param.PageNum, param.PageSize, total)
 
 	model = model.Limit(page.StartNum, page.Pagesize)
-
+	if param.OrderByColumn != "" {
+		model.Order(param.OrderByColumn + " " + param.IsAsc)
+	}
 	var result []Entity
 
 	err = model.Structs(&result)

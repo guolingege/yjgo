@@ -42,7 +42,7 @@ type EditReq struct {
 	ExpireTime     int         `p:"expireTime" `
 }
 
-//分页请求参数 
+//分页请求参数
 type SelectPageReq struct {
 	SessionId      string      `p:"sessionId"`      //用户会话id
 	LoginName      string      `p:"loginName"`      //登录账号
@@ -59,6 +59,8 @@ type SelectPageReq struct {
 	EndTime        string      `p:"endTime"`        //结束时间
 	PageNum        int         `p:"pageNum"`        //当前页码
 	PageSize       int         `p:"pageSize"`       //每页数
+	OrderByColumn  string      `p:"orderByColumn"`  //排序字段
+	IsAsc          string      `p:"isAsc"`          //排序方式
 }
 
 //根据条件分页查询数据
@@ -123,6 +125,10 @@ func SelectListByPage(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
 	page := page.CreatePaging(param.PageNum, param.PageSize, total)
 
 	model = model.Limit(page.StartNum, page.Pagesize)
+
+	if param.OrderByColumn != "" {
+		model.Order(param.OrderByColumn + " " + param.IsAsc)
+	}
 
 	record, err := model.All()
 

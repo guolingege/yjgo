@@ -9,15 +9,15 @@ import (
 // Fill with you ideas below.
 //查询列表请求参数
 type SelectPageReq struct {
-	LoginName string `p:"loginName"` //登陆名
-	Status    string `p:"status"`    //状态
-	Ipaddr    string `p:"ipaddr"`    //登录地址
-	BeginTime string `p:"beginTime"` //数据范围
-	EndTime   string `p:"endTime"`   //开始时间
-	PageNum   int    `p:"pageNum"`   //当前页码
-	PageSize  int    `p:"pageSize"`  //每页数
-	SortName  string `p:"orderByColumn"`  //排序字段
-	SortOrder string `p:"isAsc"` //排序方式
+	LoginName     string `p:"loginName"`     //登陆名
+	Status        string `p:"status"`        //状态
+	Ipaddr        string `p:"ipaddr"`        //登录地址
+	BeginTime     string `p:"beginTime"`     //数据范围
+	EndTime       string `p:"endTime"`       //开始时间
+	PageNum       int    `p:"pageNum"`       //当前页码
+	PageSize      int    `p:"pageSize"`      //每页数
+	OrderByColumn string `p:"orderByColumn"` //排序字段
+	IsAsc         string `p:"isAsc"`         //排序方式
 }
 
 // 根据条件分页查询用户列表
@@ -61,7 +61,10 @@ func SelectPageList(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
 
 	model.Fields("info_id,login_name,ipaddr,login_location,browser,os,status,msg,login_time")
 
-	model.Order(param.SortName+" "+param.SortOrder)
+	if param.OrderByColumn != "" {
+		model.Order(param.OrderByColumn + " " + param.IsAsc)
+	}
+
 	model.Limit(page.StartNum, page.Pagesize)
 
 	var result []Entity

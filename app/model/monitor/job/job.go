@@ -53,6 +53,8 @@ type SelectPageReq struct {
 	EndTime        string `p:"endTime"`        //结束时间
 	PageNum        int    `p:"pageNum"`        //当前页码
 	PageSize       int    `p:"pageSize"`       //每页数
+	OrderByColumn  string `p:"orderByColumn"`  //排序字段
+	IsAsc          string `p:"isAsc"`          //排序方式
 }
 
 //根据条件分页查询数据
@@ -112,6 +114,10 @@ func SelectListByPage(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
 	page := page.CreatePaging(param.PageNum, param.PageSize, total)
 
 	model = model.Limit(page.StartNum, page.Pagesize)
+
+	if param.OrderByColumn != "" {
+		model.Order(param.OrderByColumn + " " + param.IsAsc)
+	}
 
 	record, err := model.All()
 
