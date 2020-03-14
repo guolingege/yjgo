@@ -43,6 +43,18 @@ func DeleteRecordByIds(ids string) int64 {
 	return nums
 }
 
+//批量删除数据
+func DeleteRecordNotInIds(ids []string) int64 {
+	result, err := onlineModel.Delete("sessionId not in (?)", ids)
+	if err != nil {
+		return 0
+	}
+
+	nums, _ := result.RowsAffected()
+
+	return nums
+}
+
 //添加数据
 func AddSave(entity onlineModel.Entity) (int64, error) {
 	result, err := entity.Insert()

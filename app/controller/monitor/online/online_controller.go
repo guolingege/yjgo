@@ -12,6 +12,19 @@ import (
 
 //列表页
 func List(r *ghttp.Request) {
+	var sessinIdArr = make([]string, 0)
+	if userService.SessionList != nil {
+		for k, v := range userService.SessionList.Map() {
+			tmp := v.(*ghttp.Session)
+			if tmp.Get("uid").(int64) > 0 {
+				sessinIdArr = append(sessinIdArr, k.(string))
+			}
+		}
+	}
+	if len(sessinIdArr) > 0 {
+		onlineService.DeleteRecordNotInIds(sessinIdArr)
+	}
+
 	response.BuildTpl(r, "monitor/online/list.html").WriteTplExtend()
 }
 
