@@ -42,5 +42,6 @@ func Login(r *ghttp.Request) {
 // @Success 200 {object} model.CommonRes
 // @Router /api/v1/loginOut [get]
 func Index(r *ghttp.Request) {
-	response.SucessResp(r).WriteJsonExit()
+	token := r.GetParam("token").(token.TokenContent)
+	response.SucessResp(r).SetData(token).WriteJsonExit()
 }
