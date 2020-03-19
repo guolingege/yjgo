@@ -16,13 +16,9 @@
 	LogPath     = "/tmp/log/yj-app/api"
 	#jwt配置
 	[api.jwt]
-	    #1 gcache 2 redis
-	    CacheMode = 1
-	    CacheKey = "GToken:"
-	    Timeout = 3600000
+	    Timeout = 3600
 	    TokenDelimiter = "_"
 	    EncryptKey = "yjgoyjgoyjgoyjgo"
-	    MultiLogin = false
 
 # Logger.
 [logger]
@@ -64,5 +60,5 @@
     extra    = "-ldflags \"-s -w\""
     # 自定义编译时内置变量
     [compiler.VarMap]
-        author = "john"
-        email  = "john@goframe.org"
+        author = "yjgo"
+        email  = "yjgo@163.org"

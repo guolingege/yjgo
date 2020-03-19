@@ -16,6 +16,6 @@ func init() {
 	// 需要鉴权
 	s.Group("/api/v1", func(group *ghttp.RouterGroup) {
 		group.Middleware(middleware.JWT)
-		group.GET("/loginOut", login.LoginOut)
+		group.GET("/index", login.Index)
 	})
 }

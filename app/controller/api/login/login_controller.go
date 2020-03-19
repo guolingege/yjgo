@@ -1,10 +1,11 @@
 package login
 
 import (
+	"encoding/json"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
-	"yj-app/app/service/gtoken"
 	"yj-app/app/service/utils/response"
+	"yj-app/app/service/utils/token"
 )
 
 // @Summary 登陆
@@ -14,11 +15,20 @@ import (
 // @Success 200 {object} model.CommonRes
 // @Router /api/v1/login [get]
 func Login(r *ghttp.Request) {
-	gt := gtoken.Instance()
-	token := gt.Login("18888888888", g.Map{
+	gt := token.Instance()
+
+	user := g.Map{
 		"userId": "1000",
 		"phone":  "18888888888",
-	})
+	}
+
+	userStr := ""
+
+	if arr, err := json.Marshal(user); err == nil {
+		userStr = string(arr)
+	}
+
+	token := gt.Login("18888888888", userStr)
 	if token == nil {
 		response.ErrorResp(r).SetMsg("生成token失败").WriteJsonExit()
 	}
@@ -31,6 +41,6 @@ func Login(r *ghttp.Request) {
 // @Produce  json
 // @Success 200 {object} model.CommonRes
 // @Router /api/v1/loginOut [get]
-func LoginOut(r *ghttp.Request) {
+func Index(r *ghttp.Request) {
 	response.SucessResp(r).WriteJsonExit()
 }
