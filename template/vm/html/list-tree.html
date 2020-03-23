@@ -33,7 +33,7 @@
                                 </select>
                             </li>{{end}} {{else if eq $column.HtmlType "datetime"}}
                             <li class="select-time">
-                                <p>${comment}：</p>
+                                <p>{{$column.ColumnComment}}：</p>
                                 <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="beginTime"/>
                                 <span>-</span>
                                 <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="endTime"/>
@@ -64,7 +64,7 @@
     var addFlag = '{{printf `{{hasPermi .Session.uid "%v:%v:add"}}` .table.ModuleName .table.BusinessName}}';
     var editFlag =' {{printf `{{hasPermi .Session.uid "%v:%v:edit"}}` .table.ModuleName .table.BusinessName}}';
     var removeFlag = '{{printf `{{hasPermi .Session.uid "%v:%v:remove"}}` .table.ModuleName .table.BusinessName}}';
-    {{range $index, $column := .table.Columns}} {{if ne $column.DictType ""}}var ${column.HtmlField}Datas = {{printf `{{getDictTypeData "%v"}}` $column.DictType}}; {{end}} {{end}}
+    {{range $index, $column := .table.Columns}} {{if ne $column.DictType ""}}var {{$column.HtmlField}}Datas = {{printf `{{getDictTypeData "%v"}}` $column.DictType}}; {{end}} {{end}}
     var prefix = ctx + "{{.table.ModuleName}}/{{.table.BusinessName}}";
 
     $(function () {
