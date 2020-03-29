@@ -1,30 +1,26 @@
 package tool
 
 import (
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"yj-app/app/controller/tool/gen"
-	"yj-app/app/service/middleware"
+	"yj-app/app/service/middleware/auth"
+	"yj-app/app/service/middleware/router"
 )
 
 //加载路由
 func init() {
-	s := g.Server()
 	// 服务监控
-	s.Group("/tool", func(group *ghttp.RouterGroup) {
-		group.Middleware(middleware.Auth)
-		group.GET("/build", Build)
-		group.GET("/swagger", Swagger)
-		group.GET("/gen", gen.Gen)
-		group.POST("/gen/list", gen.GenList)
-		group.ALL("/gen/remove", gen.Remove)
-		group.GET("/gen/importTable", gen.ImportTable)
-		group.POST("/gen/db/list", gen.DataList)
-		group.POST("/gen/importTable", gen.ImportTableSave)
-		group.GET("/gen/edit", gen.Edit)
-		group.POST("/gen/edit", gen.EditSave)
-		group.POST("/gen/column/list", gen.ColumnList)
-		group.GET("/gen/preview", gen.Preview)
-		group.GET("/gen/genCode", gen.GenCode)
-	})
+	g1 := router.New("admin", "/tool", auth.Auth)
+	g1.GET("/build", "tool:build:view", Build)
+	g1.GET("/swagger", "tool:swagger:view", Swagger)
+	g1.GET("/gen", "tool:gen:view", gen.Gen)
+	g1.POST("/gen/list", "tool:gen:list", gen.GenList)
+	g1.POST("/gen/remove", "tool:gen:remove", gen.Remove)
+	g1.GET("/gen/importTable", "tool:gen:list", gen.ImportTable)
+	g1.POST("/gen/db/list", "tool:gen:list", gen.DataList)
+	g1.POST("/gen/importTable", "tool:gen:list", gen.ImportTableSave)
+	g1.GET("/gen/edit", "tool:gen:edit", gen.Edit)
+	g1.POST("/gen/edit", "tool:gen:edit", gen.EditSave)
+	g1.POST("/gen/column/list", "tool:gen:list", gen.ColumnList)
+	g1.GET("/gen/preview", "tool:gen:preview", gen.Preview)
+	g1.GET("/gen/genCode", "tool:gen:code", gen.GenCode)
 }

@@ -4,7 +4,7 @@ import (
 	"github.com/gogf/gf/database/gdb"
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/os/gtime"
-	"yj-app/app/service/utils/page"
+	"yj-app/app/utils/page"
 )
 
 // Entity is the golang structure for table sys_menu.
@@ -99,7 +99,7 @@ func SelectRecordById(id int64) (*EntityExtend, error) {
 }
 
 //根据条件分页查询数据
-func SelectListPage(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
+func SelectListPage(param *SelectPageReq) ([]Entity, *page.Paging, error) {
 	db, err := gdb.Instance()
 
 	if err != nil {
@@ -118,11 +118,11 @@ func SelectListPage(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
 		}
 
 		if param.BeginTime != "" {
-			model = model.Where("date_format(m.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)
+			model.Where("date_format(m.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)
 		}
 
 		if param.EndTime != "" {
-			model = model.Where("date_format(m.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
+			model.Where("date_format(m.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
 		}
 	}
 
@@ -134,7 +134,7 @@ func SelectListPage(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
 
 	page := page.CreatePaging(param.PageNum, param.PageSize, total)
 
-	model = model.Limit(page.StartNum, page.Pagesize)
+	model.Limit(page.StartNum, page.Pagesize)
 
 	var result []Entity
 
@@ -143,12 +143,12 @@ func SelectListPage(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
 	if err != nil {
 		return nil, nil, gerror.New("读取数据失败")
 	} else {
-		return &result, page, nil
+		return result, page, nil
 	}
 }
 
 //获取所有数据
-func SelectListAll(param *SelectPageReq) (*[]Entity, error) {
+func SelectListAll(param *SelectPageReq) ([]Entity, error) {
 	db, err := gdb.Instance()
 
 	if err != nil {
@@ -166,22 +166,16 @@ func SelectListAll(param *SelectPageReq) (*[]Entity, error) {
 	}
 
 	if param.BeginTime != "" {
-		model = model.Where("date_format(m.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)
+		model.Where("date_format(m.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)
 	}
 
 	if param.EndTime != "" {
-		model = model.Where("date_format(m.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
+		model.Where("date_format(m.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
 	}
-
 	var result []Entity
 
 	err = model.Structs(&result)
-
-	if err != nil {
-		return nil, gerror.New("读取数据失败")
-	} else {
-		return &result, nil
-	}
+	return result, err
 }
 
 // 获取管理员菜单数据

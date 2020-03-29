@@ -6,12 +6,12 @@ import (
 	"yj-app/app/model"
 	configModel "yj-app/app/model/system/config"
 	configService "yj-app/app/service/system/config"
-	"yj-app/app/service/utils/response"
+	"yj-app/app/utils/response"
 )
 
 //列表页
 func List(r *ghttp.Request) {
-	response.BuildTpl(r, "system/config/list.html").WriteTplExtend()
+	response.BuildTpl(r, "system/config/list.html").WriteTpl()
 }
 
 //列表分页数据
@@ -24,15 +24,15 @@ func ListAjax(r *ghttp.Request) {
 	rows := make([]configModel.Entity, 0)
 	result, page, err := configService.SelectListByPage(req)
 
-	if err == nil && result != nil {
-		rows = *result
+	if err == nil && len(result) > 0 {
+		rows = result
 	}
 	response.BuildTable(r, page.Total, rows).WriteJsonExit()
 }
 
 //新增页面
 func Add(r *ghttp.Request) {
-	response.BuildTpl(r, "system/config/add.html").WriteTplExtend()
+	response.BuildTpl(r, "system/config/add.html").WriteTpl()
 }
 
 //新增页面保存
@@ -75,14 +75,14 @@ func Edit(r *ghttp.Request) {
 		return
 	}
 
-	response.BuildTpl(r, "system/config/edit.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "system/config/edit.html").WriteTpl(g.Map{
 		"config": entity,
 	})
 }
 
 //修改页面保存
 func EditSave(r *ghttp.Request) {
-	var req configModel.EditReq
+	var req *configModel.EditReq
 	//获取参数
 	if err := r.Parse(&req); err != nil {
 		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg(err.Error()).Log("参数管理", req).WriteJsonExit()
@@ -92,7 +92,7 @@ func EditSave(r *ghttp.Request) {
 		response.ErrorResp(r).SetBtype(model.Buniss_Edit).SetMsg("参数键名已存在").Log("参数管理", req).WriteJsonExit()
 	}
 
-	rs, err := configService.EditSave(&req, r.Session)
+	rs, err := configService.EditSave(req, r.Session)
 
 	if err != nil || rs <= 0 {
 		response.ErrorResp(r).SetBtype(model.Buniss_Edit).Log("参数管理", req).WriteJsonExit()

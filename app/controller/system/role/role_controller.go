@@ -8,12 +8,12 @@ import (
 	userModel "yj-app/app/model/system/user"
 	roleService "yj-app/app/service/system/role"
 	userService "yj-app/app/service/system/user"
-	"yj-app/app/service/utils/response"
+	"yj-app/app/utils/response"
 )
 
 //列表页
 func List(r *ghttp.Request) {
-	response.BuildTpl(r, "system/role/list.html").WriteTplExtend()
+	response.BuildTpl(r, "system/role/list.html").WriteTpl()
 }
 
 //列表分页数据
@@ -26,15 +26,15 @@ func ListAjax(r *ghttp.Request) {
 	rows := make([]roleModel.Entity, 0)
 	result, page, err := roleService.SelectRecordPage(req)
 
-	if err == nil && result != nil {
-		rows = *result
+	if err == nil && len(result) > 0 {
+		rows = result
 	}
 	response.BuildTable(r, page.Total, rows).WriteJsonExit()
 }
 
 //新增页面
 func Add(r *ghttp.Request) {
-	response.BuildTpl(r, "system/role/add.html").WriteTplExtend()
+	response.BuildTpl(r, "system/role/add.html").WriteTpl()
 }
 
 //新增页面保存
@@ -66,7 +66,7 @@ func Edit(r *ghttp.Request) {
 	id := r.GetQueryInt64("id")
 
 	if id <= 0 {
-		response.ErrorTpl(r).WriteTplExtend(g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "参数错误",
 		})
 		return
@@ -75,13 +75,13 @@ func Edit(r *ghttp.Request) {
 	role, err := roleService.SelectRecordById(id)
 
 	if err != nil || role == nil {
-		response.ErrorTpl(r).WriteTplExtend(g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "角色不存在",
 		})
 		return
 	}
 
-	response.BuildTpl(r, "system/role/edit.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "system/role/edit.html").WriteTpl(g.Map{
 		"role": role,
 	})
 }
@@ -115,7 +115,7 @@ func SelectUser(r *ghttp.Request) {
 	id := r.GetQueryInt64("id")
 
 	if id <= 0 {
-		response.ErrorTpl(r).WriteTplExtend(g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "参数错误",
 		})
 		return
@@ -124,11 +124,11 @@ func SelectUser(r *ghttp.Request) {
 	role, err := roleService.SelectRecordById(id)
 
 	if err != nil {
-		response.ErrorTpl(r).WriteTplExtend(g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "角色不存在",
 		})
 	} else {
-		response.BuildTpl(r, "system/role/selectUser.html").WriteTplExtend(g.Map{
+		response.BuildTpl(r, "system/role/selectUser.html").WriteTpl(g.Map{
 			"role": role,
 		})
 	}
@@ -142,8 +142,8 @@ func UnallocatedList(r *ghttp.Request) {
 	var rows []userModel.Entity
 	userList, err := userService.SelectUnallocatedList(roleId, loginName, phonenumber)
 
-	if err == nil && userList != nil {
-		rows = *userList
+	if err == nil && len(userList) > 0 {
+		rows = userList
 	}
 
 	r.Response.WriteJsonExit(model.TableDataInfo{
@@ -191,11 +191,11 @@ func AuthDataScope(r *ghttp.Request) {
 	roleId := r.GetQueryInt64("id")
 	role, err := roleService.SelectRecordById(roleId)
 	if err != nil {
-		response.ErrorTpl(r).WriteTplExtend(g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "角色不存在",
 		})
 	} else {
-		response.BuildTpl(r, "system/role/dataScope.html").WriteTplExtend(g.Map{
+		response.BuildTpl(r, "system/role/dataScope.html").WriteTpl(g.Map{
 			"role": role,
 		})
 	}
@@ -225,11 +225,11 @@ func AuthUser(r *ghttp.Request) {
 	roleId := r.GetQueryInt64("id")
 	role, err := roleService.SelectRecordById(roleId)
 	if err != nil {
-		response.ErrorTpl(r).WriteTplExtend(g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "角色不存在",
 		})
 	} else {
-		response.BuildTpl(r, "system/role/authUser.html").WriteTplExtend(g.Map{
+		response.BuildTpl(r, "system/role/authUser.html").WriteTpl(g.Map{
 			"role": role,
 		})
 	}
@@ -243,8 +243,8 @@ func AllocatedList(r *ghttp.Request) {
 	var rows []userModel.Entity
 	userList, err := userService.SelectAllocatedList(roleId, loginName, phonenumber)
 
-	if err == nil && userList != nil {
-		rows = *userList
+	if err == nil && len(userList) > 0 {
+		rows = userList
 	}
 
 	r.Response.WriteJsonExit(model.TableDataInfo{

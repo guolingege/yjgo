@@ -8,8 +8,8 @@ package online
 
 import (
 	onlineModel "yj-app/app/model/monitor/online"
-	"yj-app/app/service/utils/convert"
-	"yj-app/app/service/utils/page"
+	"yj-app/app/utils/convert"
+	"yj-app/app/utils/page"
 )
 
 //根据主键查询数据
@@ -71,11 +71,11 @@ func AddSave(entity onlineModel.Entity) (int64, error) {
 }
 
 //根据条件查询数据
-func SelectListAll(params *onlineModel.SelectPageReq) (*[]onlineModel.Entity, error) {
+func SelectListAll(params *onlineModel.SelectPageReq) ([]onlineModel.Entity, error) {
 	return onlineModel.SelectListAll(params)
 }
 
 //根据条件分页查询数据
-func SelectListByPage(params *onlineModel.SelectPageReq) (*[]onlineModel.Entity, *page.Paging, error) {
+func SelectListByPage(params *onlineModel.SelectPageReq) ([]onlineModel.Entity, *page.Paging, error) {
 	return onlineModel.SelectListByPage(params)
 }

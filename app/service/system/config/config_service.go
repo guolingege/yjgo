@@ -7,9 +7,9 @@ import (
 	"github.com/gogf/gf/os/gtime"
 	configModel "yj-app/app/model/system/config"
 	userService "yj-app/app/service/system/user"
-	"yj-app/app/service/utils/convert"
-	"yj-app/app/service/utils/excel"
-	"yj-app/app/service/utils/page"
+	"yj-app/app/utils/convert"
+	"yj-app/app/utils/excel"
+	"yj-app/app/utils/page"
 )
 
 //根据键获取值
@@ -29,6 +29,10 @@ func GetValueByKey(key string) string {
 	}
 
 	return resultStr
+}
+
+func GetOssUrl() string {
+	return GetValueByKey("sys.resource.url")
 }
 
 //根据主键查询数据
@@ -147,12 +151,12 @@ func EditSave(req *configModel.EditReq, session *ghttp.Session) (int64, error) {
 }
 
 //根据条件分页查询角色数据
-func SelectListAll(params *configModel.SelectPageReq) (*[]configModel.Entity, error) {
+func SelectListAll(params *configModel.SelectPageReq) ([]configModel.Entity, error) {
 	return configModel.SelectListAll(params)
 }
 
 //根据条件分页查询角色数据
-func SelectListByPage(params *configModel.SelectPageReq) (*[]configModel.Entity, *page.Paging, error) {
+func SelectListByPage(params *configModel.SelectPageReq) ([]configModel.Entity, *page.Paging, error) {
 	return configModel.SelectListByPage(params)
 }
 

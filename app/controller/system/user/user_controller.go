@@ -11,12 +11,12 @@ import (
 	postService "yj-app/app/service/system/post"
 	roleService "yj-app/app/service/system/role"
 	userService "yj-app/app/service/system/user"
-	"yj-app/app/service/utils/response"
+	"yj-app/app/utils/response"
 )
 
 //用户列表页
 func List(r *ghttp.Request) {
-	response.BuildTpl(r, "system/user/list.html").WriteTplExtend()
+	response.BuildTpl(r, "system/user/list.html").WriteTpl()
 }
 
 //用户列表分页数据
@@ -29,8 +29,8 @@ func ListAjax(r *ghttp.Request) {
 	rows := make([]userModel.UserListEntity, 0)
 	result, page, err := userService.SelectRecordList(req)
 
-	if err == nil && result != nil {
-		rows = *result
+	if err == nil && len(result) > 0 {
+		rows = result
 	}
 	response.BuildTable(r, page.Total, rows).WriteJsonExit()
 }
@@ -45,16 +45,16 @@ func Add(r *ghttp.Request) {
 
 	rolesP, _ := roleService.SelectRecordAll(paramsRole)
 
-	if rolesP != nil {
-		roles = *rolesP
+	if len(rolesP) > 0 {
+		roles = rolesP
 	}
 
 	postP, _ := postService.SelectListAll(paramsPost)
 
-	if postP != nil {
-		posts = *postP
+	if len(postP) > 0 {
+		posts = postP
 	}
-	response.BuildTpl(r, "system/user/add.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "system/user/add.html").WriteTpl(g.Map{
 		"roles": roles,
 		"posts": posts,
 	})
@@ -128,17 +128,17 @@ func Edit(r *ghttp.Request) {
 
 	rolesP, _ := roleService.SelectRoleContactVo(id)
 
-	if rolesP != nil {
-		roles = *rolesP
+	if len(rolesP) > 0 {
+		roles = rolesP
 	}
 
 	postP, _ := postService.SelectPostsByUserId(id)
 
-	if postP != nil {
-		posts = *postP
+	if len(postP) > 0 {
+		posts = postP
 	}
 
-	response.BuildTpl(r, "system/user/edit.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "system/user/edit.html").WriteTpl(g.Map{
 		"user":     user,
 		"deptName": deptName,
 		"roles":    roles,
@@ -165,7 +165,7 @@ func ResetPwd(r *ghttp.Request) {
 		})
 		return
 	}
-	response.BuildTpl(r, "system/user/resetPwd.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "system/user/resetPwd.html").WriteTpl(g.Map{
 		"user": user,
 	})
 }

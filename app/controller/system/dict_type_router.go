@@ -1,30 +1,27 @@
 package system
 
 import (
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"yj-app/app/controller/system/dict_type"
-	"yj-app/app/service/middleware"
+	"yj-app/app/service/middleware/auth"
+	"yj-app/app/service/middleware/router"
 )
 
 //加载路由
 func init() {
-	s := g.Server()
 	// 参数路由
-	s.Group("/system/dict", func(group *ghttp.RouterGroup) {
-		group.Middleware(middleware.Auth)
-		group.GET("/", dict_type.List)
-		group.POST("/list", dict_type.ListAjax)
-		group.GET("/add", dict_type.Add)
-		group.POST("/add", dict_type.AddSave)
-		group.POST("/remove", dict_type.Remove)
-		group.GET("/edit", dict_type.Edit)
-		group.POST("/edit", dict_type.EditSave)
-		group.GET("/detail", dict_type.Detail)
-		group.ALL("/export", dict_type.Export)
-		group.POST("/checkDictTypeUniqueAll", dict_type.CheckDictTypeUniqueAll)
-		group.POST("/checkDictTypeUnique", dict_type.CheckDictTypeUnique)
-		group.GET("/selectDictTree", dict_type.SelectDictTree)
-		group.ALL("/treeData", dict_type.TreeData)
-	})
+	g1 := router.New("admin", "/system/dict", auth.Auth)
+	g1.GET("/", "system:dict:view", dict_type.List)
+	g1.POST("/list", "system:dict:list", dict_type.ListAjax)
+	g1.GET("/add", "system:dict:add", dict_type.Add)
+	g1.POST("/add", "system:dict:add", dict_type.AddSave)
+	g1.POST("/remove", "system:dict:remove", dict_type.Remove)
+	g1.GET("/remove", "system:dict:remove", dict_type.Remove)
+	g1.GET("/edit", "system:dict:edit", dict_type.Edit)
+	g1.POST("/edit", "system:dict:edit", dict_type.EditSave)
+	g1.GET("/detail", "system:dict:detail", dict_type.Detail)
+	g1.POST("/export", "system:dict:export", dict_type.Export)
+	g1.POST("/checkDictTypeUniqueAll", "system:dict:view", dict_type.CheckDictTypeUniqueAll)
+	g1.POST("/checkDictTypeUnique", "system:dict:view", dict_type.CheckDictTypeUnique)
+	g1.GET("/selectDictTree", "system:dict:view", dict_type.SelectDictTree)
+	g1.GET("/treeData", "system:dict:view", dict_type.TreeData)
 }

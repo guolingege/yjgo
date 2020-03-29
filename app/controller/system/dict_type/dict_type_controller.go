@@ -6,12 +6,12 @@ import (
 	"yj-app/app/model"
 	dictTypeModel "yj-app/app/model/system/dict_type"
 	dictTypeService "yj-app/app/service/system/dict_type"
-	"yj-app/app/service/utils/response"
+	"yj-app/app/utils/response"
 )
 
 //列表页
 func List(r *ghttp.Request) {
-	response.BuildTpl(r, "system/dict/type/list.html").WriteTplExtend()
+	response.BuildTpl(r, "system/dict/type/list.html").WriteTpl()
 }
 
 //列表分页数据
@@ -24,8 +24,8 @@ func ListAjax(r *ghttp.Request) {
 	rows := make([]dictTypeModel.Entity, 0)
 	result, page, err := dictTypeService.SelectListByPage(req)
 
-	if err == nil && result != nil {
-		rows = *result
+	if err == nil && len(result) > 0 {
+		rows = result
 	}
 
 	response.BuildTable(r, page.Total, rows).WriteJsonExit()
@@ -33,7 +33,7 @@ func ListAjax(r *ghttp.Request) {
 
 //新增页面
 func Add(r *ghttp.Request) {
-	response.BuildTpl(r, "system/dict/type/add.html").WriteTplExtend()
+	response.BuildTpl(r, "system/dict/type/add.html").WriteTpl()
 }
 
 //新增页面保存
@@ -76,7 +76,7 @@ func Edit(r *ghttp.Request) {
 		return
 	}
 
-	response.BuildTpl(r, "system/dict/type/edit.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "system/dict/type/edit.html").WriteTpl(g.Map{
 		"dict": entity,
 	})
 }
@@ -144,7 +144,7 @@ func Detail(r *ghttp.Request) {
 		return
 	}
 
-	response.BuildTpl(r, "system/dict/data/list.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "system/dict/data/list.html").WriteTpl(g.Map{
 		"dict":     dict,
 		"dictList": dictList,
 	})
@@ -172,7 +172,7 @@ func SelectDictTree(r *ghttp.Request) {
 		dict = *rs
 	}
 
-	response.BuildTpl(r, "system/dict/type/tree.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "system/dict/type/tree.html").WriteTpl(g.Map{
 		"columnId": columnId,
 		"dict":     dict,
 	})

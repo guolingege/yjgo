@@ -2,6 +2,7 @@ package boot
 
 import (
 	"github.com/gogf/gf/os/gview"
+	"yj-app/app/service/system/config"
 	"yj-app/app/service/system/dict"
 	"yj-app/app/service/system/permission"
 )
@@ -14,5 +15,6 @@ func init() {
 		"getDictTypeSelect": dict.GetDictTypeSelect,
 		"getDictTypeRadio":  dict.GetDictTypeRadio,
 		"getDictTypeData":   dict.GetDictTypeData,
+		"ossUrl":            config.GetOssUrl,
 	})
 }

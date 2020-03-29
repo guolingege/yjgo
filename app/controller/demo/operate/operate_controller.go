@@ -4,11 +4,11 @@ import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"yj-app/app/model"
-	"yj-app/app/service/utils/response"
+	"yj-app/app/utils/response"
 )
 
 func Add(r *ghttp.Request) {
-	response.BuildTpl(r, "demo/operate/add.html").WriteTplExtend()
+	response.BuildTpl(r, "demo/operate/add.html").WriteTpl()
 }
 
 func Detail(r *ghttp.Request) {
@@ -22,7 +22,7 @@ func Detail(r *ghttp.Request) {
 	tmp.UserSex = "0"
 	tmp.UserPhone = "15888888888"
 	tmp.UserEmail = "111@qq.com"
-	response.BuildTpl(r, "demo/operate/detail.html").WriteTplExtend(g.Map{"user": tmp})
+	response.BuildTpl(r, "demo/operate/detail.html").WriteTpl(g.Map{"user": tmp})
 }
 
 type us struct {
@@ -62,15 +62,15 @@ func Edit(r *ghttp.Request) {
 	tmp.UserSex = "0"
 	tmp.UserPhone = "15888888888"
 	tmp.UserEmail = "111@qq.com"
-	response.BuildTpl(r, "demo/operate/edit.html").WriteTplExtend(g.Map{"user": tmp})
+	response.BuildTpl(r, "demo/operate/edit.html").WriteTpl(g.Map{"user": tmp})
 }
 
 func Other(r *ghttp.Request) {
-	response.BuildTpl(r, "demo/operate/other.html").WriteTplExtend()
+	response.BuildTpl(r, "demo/operate/other.html").WriteTpl()
 }
 
 func Table(r *ghttp.Request) {
-	response.BuildTpl(r, "demo/operate/table.html").WriteTplExtend()
+	response.BuildTpl(r, "demo/operate/table.html").WriteTpl()
 }
 
 func List(r *ghttp.Request) {

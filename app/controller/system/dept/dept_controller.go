@@ -6,12 +6,12 @@ import (
 	"yj-app/app/model"
 	deptModel "yj-app/app/model/system/dept"
 	deptService "yj-app/app/service/system/dept"
-	"yj-app/app/service/utils/response"
+	"yj-app/app/utils/response"
 )
 
 //列表页
 func List(r *ghttp.Request) {
-	response.BuildTpl(r, "system/dept/list.html").WriteTplExtend()
+	response.BuildTpl(r, "system/dept/list.html").WriteTpl()
 }
 
 //列表分页数据
@@ -24,8 +24,8 @@ func ListAjax(r *ghttp.Request) {
 	rows := make([]deptModel.Entity, 0)
 	result, err := deptService.SelectListAll(req)
 
-	if err == nil && result != nil {
-		rows = *result
+	if err == nil && len(result) > 0 {
+		rows = result
 	}
 
 	r.Response.WriteJsonExit(rows)
@@ -41,7 +41,7 @@ func Add(r *ghttp.Request) {
 
 	tmp := deptService.SelectDeptById(pid)
 
-	response.BuildTpl(r, "system/dept/add.html").WriteTplExtend(g.Map{"dept": tmp})
+	response.BuildTpl(r, "system/dept/add.html").WriteTpl(g.Map{"dept": tmp})
 }
 
 //新增页面保存
@@ -84,7 +84,7 @@ func Edit(r *ghttp.Request) {
 		return
 	}
 
-	response.BuildTpl(r, "system/dept/edit.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "system/dept/edit.html").WriteTpl(g.Map{
 		"dept": dept,
 	})
 }
@@ -138,7 +138,7 @@ func SelectDeptTree(r *ghttp.Request) {
 			"dept": *deptPoint,
 		})
 	} else {
-		response.BuildTpl(r, "system/dept/tree.html").WriteTplExtend()
+		response.BuildTpl(r, "system/dept/tree.html").WriteTpl()
 	}
 }
 

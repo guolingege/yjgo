@@ -14,10 +14,10 @@ import (
 	"strings"
 	jobModel "yj-app/app/model/monitor/job"
 	userService "yj-app/app/service/system/user"
-	"yj-app/app/service/utils/convert"
-	"yj-app/app/service/utils/excel"
-	"yj-app/app/service/utils/page"
 	"yj-app/app/task"
+	"yj-app/app/utils/convert"
+	"yj-app/app/utils/excel"
+	"yj-app/app/utils/page"
 )
 
 //根据主键查询数据
@@ -212,12 +212,12 @@ func Stop(entity *jobModel.Entity) error {
 }
 
 //根据条件查询数据
-func SelectListAll(params *jobModel.SelectPageReq) (*[]jobModel.Entity, error) {
+func SelectListAll(params *jobModel.SelectPageReq) ([]jobModel.Entity, error) {
 	return jobModel.SelectListAll(params)
 }
 
 //根据条件分页查询数据
-func SelectListByPage(params *jobModel.SelectPageReq) (*[]jobModel.Entity, *page.Paging, error) {
+func SelectListByPage(params *jobModel.SelectPageReq) ([]jobModel.Entity, *page.Paging, error) {
 	return jobModel.SelectListByPage(params)
 }
 

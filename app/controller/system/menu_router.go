@@ -1,30 +1,27 @@
 package system
 
 import (
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"yj-app/app/controller/system/menu"
-	"yj-app/app/service/middleware"
+	"yj-app/app/service/middleware/auth"
+	"yj-app/app/service/middleware/router"
 )
 
 //加载路由
 func init() {
-	s := g.Server()
 	// 角色路由
-	s.Group("/system/menu", func(group *ghttp.RouterGroup) {
-		group.Middleware(middleware.Auth)
-		group.GET("/", menu.List)
-		group.POST("/list", menu.ListAjax)
-		group.GET("/add", menu.Add)
-		group.POST("/add", menu.AddSave)
-		group.ALL("/remove", menu.Remove)
-		group.GET("/edit", menu.Edit)
-		group.POST("/edit", menu.EditSave)
-		group.GET("/icon", menu.Icon)
-		group.GET("/selectMenuTree", menu.SelectMenuTree)
-		group.ALL("/roleMenuTreeData", menu.RoleMenuTreeData)
-		group.ALL("/menuTreeData", menu.MenuTreeData)
-		group.POST("/checkMenuNameUnique", menu.CheckMenuNameUnique)
-		group.POST("/checkMenuNameUniqueAll", menu.CheckMenuNameUniqueAll)
-	})
+	g1 := router.New("admin", "/system/menu", auth.Auth)
+	g1.GET("/", "system:menu:view", menu.List)
+	g1.POST("/list", "system:menu:list", menu.ListAjax)
+	g1.GET("/add", "system:menu:add", menu.Add)
+	g1.POST("/add", "system:menu:add", menu.AddSave)
+	g1.GET("/remove", "system:menu:remove", menu.Remove)
+	g1.POST("/remove", "system:menu:remove", menu.Remove)
+	g1.GET("/edit", "system:menu:edit", menu.Edit)
+	g1.POST("/edit", "system:menu:edit", menu.EditSave)
+	g1.GET("/icon", "system:menu:view", menu.Icon)
+	g1.GET("/selectMenuTree", "system:menu:view", menu.SelectMenuTree)
+	g1.GET("/roleMenuTreeData", "system:menu:view", menu.RoleMenuTreeData)
+	g1.GET("/menuTreeData", "system:menu:view", menu.MenuTreeData)
+	g1.POST("/checkMenuNameUnique", "system:menu:view", menu.CheckMenuNameUnique)
+	g1.POST("/checkMenuNameUniqueAll", "system:menu:view", menu.CheckMenuNameUniqueAll)
 }

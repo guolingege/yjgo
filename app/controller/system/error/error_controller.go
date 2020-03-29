@@ -2,7 +2,7 @@ package error
 
 import (
 	"github.com/gogf/gf/net/ghttp"
-	"yj-app/app/service/utils/response"
+	"yj-app/app/utils/response"
 )
 
 func Unauth(r *ghttp.Request) {

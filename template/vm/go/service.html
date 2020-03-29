@@ -114,12 +114,12 @@ func EditSave(req *{{.table.BusinessName}}Model.EditReq, session *ghttp.Session)
 }
 
 //根据条件查询数据
-func SelectListAll(params *{{.table.BusinessName}}Model.SelectPageReq) (*[]{{.table.BusinessName}}Model.Entity, error) {
+func SelectListAll(params *{{.table.BusinessName}}Model.SelectPageReq) ([]{{.table.BusinessName}}Model.Entity, error) {
 	return {{.table.BusinessName}}Model.SelectListAll(params)
 }
 
 //根据条件分页查询数据
-func SelectListByPage(params *{{.table.BusinessName}}Model.SelectPageReq) (*[]{{.table.BusinessName}}Model.Entity, *page.Paging, error) {
+func SelectListByPage(params *{{.table.BusinessName}}Model.SelectPageReq) ([]{{.table.BusinessName}}Model.Entity, *page.Paging, error) {
 	return {{.table.BusinessName}}Model.SelectListByPage(params)
 }
 

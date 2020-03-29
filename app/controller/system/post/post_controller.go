@@ -6,12 +6,12 @@ import (
 	"yj-app/app/model"
 	postModel "yj-app/app/model/system/post"
 	postService "yj-app/app/service/system/post"
-	"yj-app/app/service/utils/response"
+	"yj-app/app/utils/response"
 )
 
 //列表页
 func List(r *ghttp.Request) {
-	response.BuildTpl(r, "system/post/list.html").WriteTplExtend()
+	response.BuildTpl(r, "system/post/list.html").WriteTpl()
 }
 
 //列表分页数据
@@ -24,8 +24,8 @@ func ListAjax(r *ghttp.Request) {
 	rows := make([]postModel.Entity, 0)
 	result, page, err := postService.SelectListByPage(req)
 
-	if err == nil && result != nil {
-		rows = *result
+	if err == nil && len(result) > 0 {
+		rows = result
 	}
 
 	response.BuildTable(r, page.Total, rows).WriteJsonExit()
@@ -33,7 +33,7 @@ func ListAjax(r *ghttp.Request) {
 
 //新增页面
 func Add(r *ghttp.Request) {
-	response.BuildTpl(r, "system/post/add.html").WriteTplExtend()
+	response.BuildTpl(r, "system/post/add.html").WriteTpl()
 }
 
 //新增页面保存
@@ -65,7 +65,7 @@ func Edit(r *ghttp.Request) {
 	id := r.GetQueryInt64("id")
 
 	if id <= 0 {
-		response.ErrorTpl(r).WriteTplExtend(g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "参数错误",
 		})
 		return
@@ -74,13 +74,13 @@ func Edit(r *ghttp.Request) {
 	post, err := postService.SelectRecordById(id)
 
 	if err != nil || post == nil {
-		response.ErrorTpl(r).WriteTplExtend(g.Map{
+		response.ErrorTpl(r).WriteTpl(g.Map{
 			"desc": "岗位不存在",
 		})
 		return
 	}
 
-	response.BuildTpl(r, "system/post/edit.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "system/post/edit.html").WriteTpl(g.Map{
 		"post": post,
 	})
 }

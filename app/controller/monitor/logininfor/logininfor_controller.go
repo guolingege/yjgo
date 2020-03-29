@@ -5,12 +5,12 @@ import (
 	"yj-app/app/model"
 	logininforModel "yj-app/app/model/monitor/logininfor"
 	logininforService "yj-app/app/service/monitor/logininfor"
-	"yj-app/app/service/utils/response"
+	"yj-app/app/utils/response"
 )
 
 //用户列表页
 func List(r *ghttp.Request) {
-	response.BuildTpl(r, "monitor/logininfor/list.html").WriteTplExtend()
+	response.BuildTpl(r, "monitor/logininfor/list.html").WriteTpl()
 }
 
 //用户列表分页数据
@@ -25,8 +25,8 @@ func ListAjax(r *ghttp.Request) {
 
 	result, page, err := logininforService.SelectPageList(req)
 
-	if err == nil && result != nil {
-		rows = *result
+	if err == nil && len(result) > 0 {
+		rows = result
 	}
 	response.BuildTable(r, page.Total, rows).WriteJsonExit()
 }

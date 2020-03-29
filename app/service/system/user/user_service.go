@@ -16,13 +16,13 @@ import (
 	"yj-app/app/model/system/user_online"
 	"yj-app/app/model/system/user_post"
 	"yj-app/app/model/system/user_role"
-	"yj-app/app/service/utils/convert"
-	"yj-app/app/service/utils/excel"
-	"yj-app/app/service/utils/page"
-	"yj-app/app/service/utils/random"
+	"yj-app/app/utils/convert"
+	"yj-app/app/utils/excel"
+	"yj-app/app/utils/page"
+	"yj-app/app/utils/random"
 )
 
-var SessionList = gmap.New()
+var SessionList = gmap.New(true)
 
 //根据主键查询用户信息
 func SelectRecordById(id int64) (*userModel.Entity, error) {
@@ -30,7 +30,7 @@ func SelectRecordById(id int64) (*userModel.Entity, error) {
 }
 
 // 根据条件分页查询用户列表
-func SelectRecordList(param *userModel.SelectPageReq) (*[]userModel.UserListEntity, *page.Paging, error) {
+func SelectRecordList(param *userModel.SelectPageReq) ([]userModel.UserListEntity, *page.Paging, error) {
 	return userModel.SelectPageList(param)
 }
 
@@ -535,11 +535,11 @@ func SelectUserByPhoneNumber(phonenumber string) (*userModel.Entity, error) {
 }
 
 // 查询已分配用户角色列表
-func SelectAllocatedList(roleId int64, loginName, phonenumber string) (*[]userModel.Entity, error) {
+func SelectAllocatedList(roleId int64, loginName, phonenumber string) ([]userModel.Entity, error) {
 	return userModel.SelectAllocatedList(roleId, loginName, phonenumber)
 }
 
 // 查询未分配用户角色列表
-func SelectUnallocatedList(roleId int64, loginName, phonenumber string) (*[]userModel.Entity, error) {
+func SelectUnallocatedList(roleId int64, loginName, phonenumber string) ([]userModel.Entity, error) {
 	return userModel.SelectUnallocatedList(roleId, loginName, phonenumber)
 }

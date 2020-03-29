@@ -14,9 +14,9 @@ import (
 	"runtime"
 	"strconv"
 	"time"
-	ip2 "yj-app/app/service/utils/ip"
-	"yj-app/app/service/utils/response"
-	time2 "yj-app/app/service/utils/time"
+	ip2 "yj-app/app/utils/ip"
+	"yj-app/app/utils/response"
+	time2 "yj-app/app/utils/time"
 )
 
 var StartTime = gtime.Datetime()
@@ -111,7 +111,7 @@ func Server(r *ghttp.Request) {
 		}
 	}
 
-	response.BuildTpl(r, "monitor/server/server.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "monitor/server/server.html").WriteTpl(g.Map{
 		"cpuNum":          cpuNum,
 		"cpuUsed":         cpuUsed,
 		"cpuAvg5":         cpuAvg5,

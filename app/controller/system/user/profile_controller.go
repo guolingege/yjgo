@@ -11,13 +11,13 @@ import (
 	"yj-app/app/model"
 	userModel "yj-app/app/model/system/user"
 	userService "yj-app/app/service/system/user"
-	"yj-app/app/service/utils/response"
+	"yj-app/app/utils/response"
 )
 
 //用户资料页面
 func Profile(r *ghttp.Request) {
 	user := userService.GetProfile(r.Session)
-	response.BuildTpl(r, "system/user/profile/profile.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "system/user/profile/profile.html").WriteTpl(g.Map{
 		"user": user,
 	})
 }
@@ -58,7 +58,7 @@ func UpdatePassword(r *ghttp.Request) {
 //修改头像页面
 func Avatar(r *ghttp.Request) {
 	user := userService.GetProfile(r.Session)
-	response.BuildTpl(r, "system/user/profile/avatar.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "system/user/profile/avatar.html").WriteTpl(g.Map{
 		"user": user,
 	})
 }
@@ -66,7 +66,7 @@ func Avatar(r *ghttp.Request) {
 //修改密码页面
 func EditPwd(r *ghttp.Request) {
 	user := userService.GetProfile(r.Session)
-	response.BuildTpl(r, "system/user/profile/resetPwd.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "system/user/profile/resetPwd.html").WriteTpl(g.Map{
 		"user": user,
 	})
 }

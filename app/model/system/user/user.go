@@ -4,7 +4,7 @@ import (
 	"github.com/gogf/gf/database/gdb"
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/os/gtime"
-	"yj-app/app/service/utils/page"
+	"yj-app/app/utils/page"
 )
 
 // Fill with you ideas below.
@@ -129,7 +129,7 @@ type EditReq struct {
 }
 
 // 根据条件分页查询用户列表
-func SelectPageList(param *SelectPageReq) (*[]UserListEntity, *page.Paging, error) {
+func SelectPageList(param *SelectPageReq) ([]UserListEntity, *page.Paging, error) {
 	db, err := gdb.Instance()
 	if err != nil {
 		return nil, nil, gerror.New("获取数据库连接失败")
@@ -181,7 +181,7 @@ func SelectPageList(param *SelectPageReq) (*[]UserListEntity, *page.Paging, erro
 	var result []UserListEntity
 
 	err = model.Structs(&result)
-	return &result, page, err
+	return result, page, err
 }
 
 // 导出excel
@@ -193,43 +193,43 @@ func SelectExportList(param *SelectPageReq) (gdb.Result, error) {
 
 	model := db.Table("sys_user u").LeftJoin("sys_dept d", "u.dept_id = d.dept_id")
 
-	model = model.Where(" u.del_flag = '0' ")
+	model.Where(" u.del_flag = '0' ")
 
 	if param != nil {
 		if param.LoginName != "" {
-			model = model.Where("u.login_name like ?", "%"+param.LoginName+"%")
+			model.Where("u.login_name like ?", "%"+param.LoginName+"%")
 		}
 
 		if param.Phonenumber != "" {
-			model = model.Where("u.phonenumber like ?", "%"+param.Phonenumber+"%")
+			model.Where("u.phonenumber like ?", "%"+param.Phonenumber+"%")
 		}
 
 		if param.Status != "" {
-			model = model.Where("u.status = ?", param.Status)
+			model.Where("u.status = ?", param.Status)
 		}
 
 		if param.BeginTime != "" {
-			model = model.Where("date_format(u.create_time,'%y%m%d') >= date_format(?,'%y%m%d')", param.BeginTime)
+			model.Where("date_format(u.create_time,'%y%m%d') >= date_format(?,'%y%m%d')", param.BeginTime)
 		}
 
 		if param.EndTime != "" {
-			model = model.Where("date_format(u.create_time,'%y%m%d') <= date_format(?,'%y%m%d')", param.EndTime)
+			model.Where("date_format(u.create_time,'%y%m%d') <= date_format(?,'%y%m%d')", param.EndTime)
 		}
 
 		if param.DeptId != 0 {
-			model = model.Where("(u.dept_id = ? OR u.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE FIND_IN_SET (?,ancestors) ))", param.DeptId)
+			model.Where("(u.dept_id = ? OR u.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE FIND_IN_SET (?,ancestors) ))", param.DeptId)
 		}
 	}
 
 	//用户名  呢称 Email 电话号码 性别 部门 领导  状态 删除标记 创建人 创建时间 备注
-	model = model.Fields("u.login_name, u.user_name, u.email, u.phonenumber, u.sex,d.dept_name, d.leader,  u.status, u.del_flag, u.create_by, u.create_time, u.remark")
+	model.Fields("u.login_name, u.user_name, u.email, u.phonenumber, u.sex,d.dept_name, d.leader,  u.status, u.del_flag, u.create_by, u.create_time, u.remark")
 
 	result, err := model.All()
 	return result, err
 }
 
 // 根据条件分页查询已分配用户角色列表
-func SelectAllocatedList(roleId int64, loginName, phonenumber string) (*[]Entity, error) {
+func SelectAllocatedList(roleId int64, loginName, phonenumber string) ([]Entity, error) {
 	db, err := gdb.Instance()
 
 	if err != nil {
@@ -253,15 +253,12 @@ func SelectAllocatedList(roleId int64, loginName, phonenumber string) (*[]Entity
 	}
 
 	var result []Entity
-
-	model.Fields("distinct u.user_id, u.dept_id, u.login_name, u.user_name, u.email, u.avatar, u.phonenumber,u.status, u.create_time")
-
-	err = model.Structs(&result)
-	return &result, err
+	model.Structs(&result)
+	return result, nil
 }
 
 // 根据条件分页查询未分配用户角色列表
-func SelectUnallocatedList(roleId int64, loginName, phonenumber string) (*[]Entity, error) {
+func SelectUnallocatedList(roleId int64, loginName, phonenumber string) ([]Entity, error) {
 	db, err := gdb.Instance()
 	if err != nil {
 		return nil, gerror.New("获取数据库连接失败")
@@ -286,7 +283,7 @@ func SelectUnallocatedList(roleId int64, loginName, phonenumber string) (*[]Enti
 
 	var result []Entity
 	err = model.Structs(&result)
-	return &result, err
+	return result, err
 }
 
 //检查邮箱是否已使用

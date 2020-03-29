@@ -6,7 +6,7 @@ import (
 	"yj-app/app/model"
 	dictModel "yj-app/app/model/system/dict_data"
 	dictService "yj-app/app/service/system/dict_data"
-	"yj-app/app/service/utils/response"
+	"yj-app/app/utils/response"
 )
 
 //列表分页数据
@@ -19,8 +19,8 @@ func ListAjax(r *ghttp.Request) {
 	rows := make([]dictModel.Entity, 0)
 	result, page, err := dictService.SelectListByPage(req)
 
-	if err == nil && result != nil {
-		rows = *result
+	if err == nil && len(result) > 0 {
+		rows = result
 	}
 
 	response.BuildTable(r, page.Total, rows).WriteJsonExit()
@@ -29,7 +29,7 @@ func ListAjax(r *ghttp.Request) {
 //新增页面
 func Add(r *ghttp.Request) {
 	dictType := r.GetQueryString("dictType")
-	response.BuildTpl(r, "system/dict/data/add.html").WriteTplExtend(g.Map{"dictType": dictType})
+	response.BuildTpl(r, "system/dict/data/add.html").WriteTpl(g.Map{"dictType": dictType})
 }
 
 //新增页面保存
@@ -68,7 +68,7 @@ func Edit(r *ghttp.Request) {
 		return
 	}
 
-	response.BuildTpl(r, "system/dict/data/edit.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "system/dict/data/edit.html").WriteTpl(g.Map{
 		"dict": entity,
 	})
 }

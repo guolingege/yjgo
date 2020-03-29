@@ -8,14 +8,14 @@ import (
 
 // @title 云捷GO 自动生成API文档
 // @version 1.0
-// @description <a href="/tool/swagger?a=r">重新生成文档</a>
+// @description 生成文档请在调试模式下进行<a href="/tool/swagger?a=r">重新生成文档</a>
 
 // @host localhost
 // @BasePath /api
 func main() {
 
-	serverSwitch := g.Cfg().GetBool("switch.server")
-	apiSwitch := g.Cfg().GetBool("switch.api")
+	serverSwitch := g.Cfg().GetBool("status.admin")
+	apiSwitch := g.Cfg().GetBool("status.api")
 
 	if serverSwitch {
 		g.Server().Start()

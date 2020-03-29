@@ -3,7 +3,7 @@ package oper_log
 import (
 	"github.com/gogf/gf/database/gdb"
 	"github.com/gogf/gf/errors/gerror"
-	"yj-app/app/service/utils/page"
+	"yj-app/app/utils/page"
 )
 
 //
@@ -22,7 +22,7 @@ type SelectPageReq struct {
 }
 
 // 根据条件分页查询用户列表
-func SelectPageList(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
+func SelectPageList(param *SelectPageReq) ([]Entity, *page.Paging, error) {
 	db, err := gdb.Instance()
 	if err != nil {
 		return nil, nil, gerror.New("获取数据库连接失败")
@@ -75,7 +75,7 @@ func SelectPageList(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
 	var result []Entity
 
 	err = model.Structs(&result)
-	return &result, page, nil
+	return result, page, nil
 }
 
 // 导出excel
@@ -114,7 +114,7 @@ func SelectExportList(param *SelectPageReq) (gdb.Result, error) {
 	}
 
 	//"日志主键", "模块标题", "业务类型", "方法名称", "请求方式", "操作类别", "操作人员", "部门名称", "请求URL", "主机地址", "操作地点", "请求参数", "返回参数", "操作状态","操作时间"
-	model = model.Fields("oper_id, title, business_type, method, request_method, operator_type, oper_name, dept_name, oper_url, oper_ip, oper_location, oper_param, json_result, status, error_msg, oper_time")
+	model.Fields("oper_id, title, business_type, method, request_method, operator_type, oper_name, dept_name, oper_url, oper_ip, oper_location, oper_param, json_result, status, error_msg, oper_time")
 
 	result, err := model.All()
 	if err != nil {

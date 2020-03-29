@@ -5,16 +5,16 @@ import (
 	"github.com/gogf/gf/util/gconv"
 	"time"
 	"yj-app/app/model/monitor/logininfor"
-	"yj-app/app/service/utils/convert"
-	"yj-app/app/service/utils/excel"
-	"yj-app/app/service/utils/page"
+	"yj-app/app/utils/convert"
+	"yj-app/app/utils/excel"
+	"yj-app/app/utils/page"
 )
 
 const USER_NOPASS_TIME string = "user_nopass_"
 const USER_LOCK string = "user_lock_"
 
 // 根据条件分页查询用户列表
-func SelectPageList(param *logininfor.SelectPageReq) (*[]logininfor.Entity, *page.Paging, error) {
+func SelectPageList(param *logininfor.SelectPageReq) ([]logininfor.Entity, *page.Paging, error) {
 	return logininfor.SelectPageList(param)
 }
 

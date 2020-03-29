@@ -10,13 +10,13 @@ import (
 	jobService "yj-app/app/service/monitor/job"
 	jobLogService "yj-app/app/service/monitor/job_log"
 	userService "yj-app/app/service/system/user"
-	"yj-app/app/service/utils/convert"
-	"yj-app/app/service/utils/response"
+	"yj-app/app/utils/convert"
+	"yj-app/app/utils/response"
 )
 
 //列表页
 func List(r *ghttp.Request) {
-	response.BuildTpl(r, "monitor/job/list.html").WriteTplExtend()
+	response.BuildTpl(r, "monitor/job/list.html").WriteTpl()
 }
 
 //列表分页数据
@@ -29,15 +29,15 @@ func ListAjax(r *ghttp.Request) {
 	rows := make([]jobModel.Entity, 0)
 	result, page, err := jobService.SelectListByPage(req)
 
-	if err == nil && result != nil {
-		rows = *result
+	if err == nil && len(result) > 0 {
+		rows = result
 	}
 	response.BuildTable(r, page.Total, rows).WriteJsonExit()
 }
 
 //列表页
 func LogList(r *ghttp.Request) {
-	response.BuildTpl(r, "monitor/job/jobLog.html").WriteTplExtend()
+	response.BuildTpl(r, "monitor/job/jobLog.html").WriteTpl()
 }
 
 //列表分页数据
@@ -50,8 +50,8 @@ func LogListAjax(r *ghttp.Request) {
 	rows := make([]jobLogModel.Entity, 0)
 	result, page, err := jobLogService.SelectListByPage(req)
 
-	if err == nil && result != nil {
-		rows = *result
+	if err == nil && len(result) > 0 {
+		rows = result
 	}
 
 	r.Response.WriteJsonExit(model.TableDataInfo{
@@ -65,7 +65,7 @@ func LogListAjax(r *ghttp.Request) {
 //新增页面
 func Add(r *ghttp.Request) {
 	user := userService.GetProfile(r.Session)
-	response.BuildTpl(r, "monitor/job/add.html").WriteTplExtend(g.Map{"loginName": user.LoginName})
+	response.BuildTpl(r, "monitor/job/add.html").WriteTpl(g.Map{"loginName": user.LoginName})
 }
 
 //新增页面保存
@@ -106,7 +106,7 @@ func Edit(r *ghttp.Request) {
 
 	user := userService.GetProfile(r.Session)
 
-	response.BuildTpl(r, "monitor/job/edit.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "monitor/job/edit.html").WriteTpl(g.Map{
 		"job":       entity,
 		"loginName": user.LoginName,
 	})
@@ -144,7 +144,7 @@ func Detail(r *ghttp.Request) {
 		})
 		return
 	}
-	response.BuildTpl(r, "monitor/job/detail.html").WriteTplExtend(g.Map{"job": job})
+	response.BuildTpl(r, "monitor/job/detail.html").WriteTpl(g.Map{"job": job})
 }
 
 //详情页
@@ -163,7 +163,7 @@ func DetailLog(r *ghttp.Request) {
 		})
 		return
 	}
-	response.BuildTpl(r, "monitor/job/detailLog.html").WriteTplExtend(g.Map{"jobLog": jobLog})
+	response.BuildTpl(r, "monitor/job/detailLog.html").WriteTpl(g.Map{"jobLog": jobLog})
 }
 
 //删除数据

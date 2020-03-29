@@ -6,12 +6,12 @@ import (
 	"yj-app/app/model"
 	operlogModel "yj-app/app/model/monitor/oper_log"
 	operlogService "yj-app/app/service/monitor/operlog"
-	"yj-app/app/service/utils/response"
+	"yj-app/app/utils/response"
 )
 
 //用户列表页
 func List(r *ghttp.Request) {
-	response.BuildTpl(r, "monitor/operlog/list.html").WriteTplExtend()
+	response.BuildTpl(r, "monitor/operlog/list.html").WriteTpl()
 }
 
 //用户列表分页数据
@@ -29,8 +29,8 @@ func ListAjax(r *ghttp.Request) {
 
 	result, page, err := operlogService.SelectPageList(req)
 
-	if err == nil && result != nil {
-		rows = *result
+	if err == nil && len(result) > 0 {
+		rows = result
 	}
 
 	response.BuildTable(r, page.Total, rows).WriteJsonExit()
@@ -86,7 +86,7 @@ func Detail(r *ghttp.Request) {
 		return
 	}
 
-	response.BuildTpl(r, "monitor/operlog/detail.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "monitor/operlog/detail.html").WriteTpl(g.Map{
 		"operLog": operLog,
 	})
 }

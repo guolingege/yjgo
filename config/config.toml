@@ -1,6 +1,6 @@
 # HTTP Server
-[switch]
-    server = true
+[status]
+    admin = true
     api = true
 
 [server]
@@ -16,9 +16,12 @@
 	LogPath     = "/tmp/log/yj-app/api"
 	#jwt配置
 	[api.jwt]
-	    Timeout = 3600
-	    TokenDelimiter = "_"
-	    EncryptKey = "yjgoyjgoyjgoyjgo"
+	    #过期时间
+        timeout = 3600
+        #token分割符
+        refresh = 1800
+        #安全密钥
+        encryptKey = "yjgoyjgoyjgoyjgo"
 
 # Logger.
 [logger]

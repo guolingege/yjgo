@@ -7,9 +7,9 @@ import (
 	"yj-app/app/model"
 	dictTypeModel "yj-app/app/model/system/dict_type"
 	userService "yj-app/app/service/system/user"
-	"yj-app/app/service/utils/convert"
-	"yj-app/app/service/utils/excel"
-	"yj-app/app/service/utils/page"
+	"yj-app/app/utils/convert"
+	"yj-app/app/utils/excel"
+	"yj-app/app/utils/page"
 )
 
 //根据主键查询数据
@@ -114,12 +114,12 @@ func EditSave(req *dictTypeModel.EditReq, session *ghttp.Session) (int64, error)
 }
 
 //根据条件分页查询角色数据
-func SelectListAll(params *dictTypeModel.SelectPageReq) (*[]dictTypeModel.Entity, error) {
+func SelectListAll(params *dictTypeModel.SelectPageReq) ([]dictTypeModel.Entity, error) {
 	return dictTypeModel.SelectListAll(params)
 }
 
 //根据条件分页查询角色数据
-func SelectListByPage(params *dictTypeModel.SelectPageReq) (*[]dictTypeModel.Entity, *page.Paging, error) {
+func SelectListByPage(params *dictTypeModel.SelectPageReq) ([]dictTypeModel.Entity, *page.Paging, error) {
 	return dictTypeModel.SelectListByPage(params)
 }
 
@@ -179,7 +179,7 @@ func SelectDictTree(params *dictTypeModel.SelectPageReq) *[]model.Ztree {
 	var result []model.Ztree
 	dictList, err := dictTypeModel.SelectListAll(params)
 	if err == nil && dictList != nil {
-		for _, item := range *dictList {
+		for _, item := range dictList {
 			var tmp model.Ztree
 			tmp.Id = item.DictId
 			tmp.Name = transDictName(item)

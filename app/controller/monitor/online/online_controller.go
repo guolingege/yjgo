@@ -7,7 +7,7 @@ import (
 	onlineModel "yj-app/app/model/monitor/online"
 	onlineService "yj-app/app/service/monitor/online"
 	userService "yj-app/app/service/system/user"
-	"yj-app/app/service/utils/response"
+	"yj-app/app/utils/response"
 )
 
 //列表页
@@ -25,7 +25,7 @@ func List(r *ghttp.Request) {
 		onlineService.DeleteRecordNotInIds(sessinIdArr)
 	}
 
-	response.BuildTpl(r, "monitor/online/list.html").WriteTplExtend()
+	response.BuildTpl(r, "monitor/online/list.html").WriteTpl()
 }
 
 //列表分页数据
@@ -38,8 +38,8 @@ func ListAjax(r *ghttp.Request) {
 	rows := make([]onlineModel.Entity, 0)
 	result, page, err := onlineService.SelectListByPage(req)
 
-	if err == nil && result != nil {
-		rows = *result
+	if err == nil && len(result) > 0 {
+		rows = result
 	}
 
 	response.BuildTable(r, page.Total, rows).WriteJsonExit()

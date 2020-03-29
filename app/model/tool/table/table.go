@@ -5,7 +5,7 @@ import (
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/os/gtime"
 	"yj-app/app/model/tool/table_column"
-	"yj-app/app/service/utils/page"
+	"yj-app/app/utils/page"
 )
 
 // Fill with you ideas below.
@@ -93,7 +93,7 @@ func SelectRecordById(id int64) (*EntityExtend, error) {
 }
 
 //根据条件分页查询数据
-func SelectListByPage(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
+func SelectListByPage(param *SelectPageReq) ([]Entity, *page.Paging, error) {
 	db, err := gdb.Instance()
 
 	if err != nil {
@@ -112,11 +112,11 @@ func SelectListByPage(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
 		}
 
 		if param.BeginTime != "" {
-			model = model.Where("date_format(t.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)
+			model.Where("date_format(t.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)
 		}
 
 		if param.EndTime != "" {
-			model = model.Where("date_format(t.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
+			model.Where("date_format(t.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
 		}
 	}
 
@@ -128,21 +128,15 @@ func SelectListByPage(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
 
 	page := page.CreatePaging(param.PageNum, param.PageSize, total)
 
-	model = model.Limit(page.StartNum, page.Pagesize)
-
-	record, err := model.All()
-
-	if err != nil {
-		return nil, nil, gerror.New("读取数据失败")
-	}
+	model.Limit(page.StartNum, page.Pagesize)
 
 	var result []Entity
-	record.Structs(&result)
-	return &result, page, nil
+	model.Structs(&result)
+	return result, page, nil
 }
 
 //查询据库列表
-func SelectDbTableList(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
+func SelectDbTableList(param *SelectPageReq) ([]Entity, *page.Paging, error) {
 	db, err := gdb.Instance()
 
 	if err != nil {
@@ -182,19 +176,13 @@ func SelectDbTableList(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
 	model.Fields("table_name, table_comment, create_time, update_time")
 	model.Limit(page.StartNum, page.Pagesize)
 
-	record, err := model.All()
-
-	if err != nil {
-		return nil, nil, gerror.New("读取数据失败")
-	}
-
 	var result []Entity
-	record.Structs(&result)
-	return &result, page, nil
+	model.Structs(&result)
+	return result, page, nil
 }
 
 //查询据库列表
-func SelectDbTableListByNames(tableNames []string) (*[]Entity, error) {
+func SelectDbTableListByNames(tableNames []string) ([]Entity, error) {
 	db, err := gdb.Instance()
 
 	if err != nil {
@@ -225,7 +213,7 @@ func SelectDbTableListByNames(tableNames []string) (*[]Entity, error) {
 
 	var result []Entity
 	err = model.Structs(&result)
-	return &result, err
+	return result, err
 }
 
 //查询据库列表

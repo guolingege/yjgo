@@ -12,8 +12,8 @@ import (
 	"yj-app/app/model"
 	menuModel "yj-app/app/model/system/menu"
 	userService "yj-app/app/service/system/user"
-	"yj-app/app/service/utils/convert"
-	"yj-app/app/service/utils/page"
+	"yj-app/app/utils/convert"
+	"yj-app/app/utils/page"
 )
 
 //根据主键查询数据
@@ -22,12 +22,12 @@ func SelectRecordById(id int64) (*menuModel.EntityExtend, error) {
 }
 
 //根据条件查询数据
-func SelectListAll(params *menuModel.SelectPageReq) (*[]menuModel.Entity, error) {
+func SelectListAll(params *menuModel.SelectPageReq) ([]menuModel.Entity, error) {
 	return menuModel.SelectListAll(params)
 }
 
 //根据条件分页查询数据
-func SelectListPage(params *menuModel.SelectPageReq) (*[]menuModel.Entity, *page.Paging, error) {
+func SelectListPage(params *menuModel.SelectPageReq) ([]menuModel.Entity, *page.Paging, error) {
 	return menuModel.SelectListPage(params)
 }
 

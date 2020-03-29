@@ -8,9 +8,9 @@ package job_log
 
 import (
 	logModel "yj-app/app/model/monitor/job_log"
-	"yj-app/app/service/utils/convert"
-	"yj-app/app/service/utils/excel"
-	"yj-app/app/service/utils/page"
+	"yj-app/app/utils/convert"
+	"yj-app/app/utils/excel"
+	"yj-app/app/utils/page"
 )
 
 //根据主键查询数据
@@ -45,12 +45,12 @@ func DeleteRecordByIds(ids string) int64 {
 }
 
 //根据条件查询数据
-func SelectListAll(params *logModel.SelectPageReq) (*[]logModel.Entity, error) {
+func SelectListAll(params *logModel.SelectPageReq) ([]logModel.Entity, error) {
 	return logModel.SelectListAll(params)
 }
 
 //根据条件分页查询数据
-func SelectListByPage(params *logModel.SelectPageReq) (*[]logModel.Entity, *page.Paging, error) {
+func SelectListByPage(params *logModel.SelectPageReq) ([]logModel.Entity, *page.Paging, error) {
 	return logModel.SelectListByPage(params)
 }
 

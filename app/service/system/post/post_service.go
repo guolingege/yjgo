@@ -6,9 +6,9 @@ import (
 	"github.com/gogf/gf/os/gtime"
 	postModel "yj-app/app/model/system/post"
 	userService "yj-app/app/service/system/user"
-	"yj-app/app/service/utils/convert"
-	"yj-app/app/service/utils/excel"
-	"yj-app/app/service/utils/page"
+	"yj-app/app/utils/convert"
+	"yj-app/app/utils/excel"
+	"yj-app/app/utils/page"
 )
 
 //根据主键查询数据
@@ -115,12 +115,12 @@ func EditSave(req *postModel.EditReq, session *ghttp.Session) (int64, error) {
 }
 
 //根据条件分页查询角色数据
-func SelectListAll(params *postModel.SelectPageReq) (*[]postModel.EntityFlag, error) {
+func SelectListAll(params *postModel.SelectPageReq) ([]postModel.EntityFlag, error) {
 	return postModel.SelectListAll(params)
 }
 
 //根据条件分页查询角色数据
-func SelectListByPage(params *postModel.SelectPageReq) (*[]postModel.Entity, *page.Paging, error) {
+func SelectListByPage(params *postModel.SelectPageReq) ([]postModel.Entity, *page.Paging, error) {
 	return postModel.SelectListByPage(params)
 }
 
@@ -143,7 +143,7 @@ func Export(param *postModel.SelectPageReq) (string, error) {
 }
 
 //根据用户ID查询岗位
-func SelectPostsByUserId(userId int64) (*[]postModel.EntityFlag, error) {
+func SelectPostsByUserId(userId int64) ([]postModel.EntityFlag, error) {
 	var paramsPost *postModel.SelectPageReq
 	postAll, err := postModel.SelectListAll(paramsPost)
 
@@ -156,10 +156,10 @@ func SelectPostsByUserId(userId int64) (*[]postModel.EntityFlag, error) {
 	if err != nil || userPost == nil {
 		return nil, gerror.New("未查询到用户岗位数据")
 	} else {
-		for i := range *postAll {
-			for j := range *userPost {
-				if (*userPost)[j].PostId == (*postAll)[i].PostId {
-					(*postAll)[i].Flag = true
+		for i := range postAll {
+			for j := range userPost {
+				if userPost[j].PostId == postAll[i].PostId {
+					postAll[i].Flag = true
 					break
 				}
 			}

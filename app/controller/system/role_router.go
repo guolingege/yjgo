@@ -1,39 +1,34 @@
 package system
 
 import (
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"yj-app/app/controller/system/role"
-	"yj-app/app/service/middleware"
+	"yj-app/app/service/middleware/auth"
+	"yj-app/app/service/middleware/router"
 )
 
 //加载路由
 func init() {
-	s := g.Server()
 	// 角色路由
-	s.Group("/system/role", func(group *ghttp.RouterGroup) {
-		group.Middleware(middleware.Auth)
-
-		group.GET("/", role.List)
-		group.POST("/list", role.ListAjax)
-		group.GET("/add", role.Add)
-		group.POST("/add", role.AddSave)
-		group.POST("/remove", role.Remove)
-		group.GET("/edit", role.Edit)
-		group.POST("/edit", role.EditSave)
-		group.ALL("/export", role.Export)
-		group.POST("/checkRoleKeyUnique", role.CheckRoleKeyUnique)
-		group.POST("/checkRoleNameUniqueAll", role.CheckRoleNameUniqueAll)
-		group.POST("/checkRoleNameUnique", role.CheckRoleNameUnique)
-		group.POST("/checkRoleKeyUniqueAll", role.CheckRoleKeyUniqueAll)
-		group.GET("/authDataScope", role.AuthDataScope)
-		group.POST("/authDataScope", role.AuthDataScopeSave)
-		group.GET("/authUser", role.AuthUser)
-		group.POST("/allocatedList", role.AllocatedList)
-		group.GET("/selectUser", role.SelectUser)
-		group.POST("/unallocatedList", role.UnallocatedList)
-		group.POST("/selectAll", role.SelectAll)
-		group.ALL("/cancel", role.Cancel)
-		group.ALL("/cancelAll", role.CancelAll)
-	})
+	g1 := router.New("admin", "/system/role", auth.Auth)
+	g1.GET("/", "system:post:view", role.List)
+	g1.POST("/list", "system:post:list", role.ListAjax)
+	g1.GET("/add", "system:post:add", role.Add)
+	g1.POST("/add", "system:post:add", role.AddSave)
+	g1.POST("/remove", "system:post:remove", role.Remove)
+	g1.GET("/edit", "system:post:edit", role.Edit)
+	g1.POST("/edit", "system:post:edit", role.EditSave)
+	g1.POST("/export", "system:post:export", role.Export)
+	g1.POST("/checkRoleKeyUnique", "system:post:view", role.CheckRoleKeyUnique)
+	g1.POST("/checkRoleNameUniqueAll", "system:post:view", role.CheckRoleNameUniqueAll)
+	g1.POST("/checkRoleNameUnique", "system:post:view", role.CheckRoleNameUnique)
+	g1.POST("/checkRoleKeyUniqueAll", "system:post:view", role.CheckRoleKeyUniqueAll)
+	g1.GET("/authDataScope", "system:post:view", role.AuthDataScope)
+	g1.POST("/authDataScope", "system:post:view", role.AuthDataScopeSave)
+	g1.GET("/authUser", "system:post:view", role.AuthUser)
+	g1.POST("/allocatedList", "system:post:view", role.AllocatedList)
+	g1.GET("/selectUser", "system:post:view", role.SelectUser)
+	g1.POST("/unallocatedList", "system:post:view", role.UnallocatedList)
+	g1.POST("/selectAll", "system:post:view", role.SelectAll)
+	g1.POST("/cancel", "system:post:view", role.Cancel)
+	g1.POST("/cancelAll", "system:post:view", role.CancelAll)
 }

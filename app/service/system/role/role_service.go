@@ -11,9 +11,9 @@ import (
 	"yj-app/app/model/system/role_menu"
 	"yj-app/app/model/system/user_role"
 	userService "yj-app/app/service/system/user"
-	"yj-app/app/service/utils/convert"
-	"yj-app/app/service/utils/excel"
-	"yj-app/app/service/utils/page"
+	"yj-app/app/utils/convert"
+	"yj-app/app/utils/excel"
+	"yj-app/app/utils/page"
 )
 
 //根据主键查询数据
@@ -22,12 +22,12 @@ func SelectRecordById(id int64) (*roleModel.Entity, error) {
 }
 
 //根据条件查询数据
-func SelectRecordAll(params *roleModel.SelectPageReq) (*[]roleModel.EntityFlag, error) {
+func SelectRecordAll(params *roleModel.SelectPageReq) ([]roleModel.EntityFlag, error) {
 	return roleModel.SelectListAll(params)
 }
 
 //根据条件分页查询数据
-func SelectRecordPage(params *roleModel.SelectPageReq) (*[]roleModel.Entity, *page.Paging, error) {
+func SelectRecordPage(params *roleModel.SelectPageReq) ([]roleModel.Entity, *page.Paging, error) {
 	return roleModel.SelectListPage(params)
 }
 
@@ -253,7 +253,7 @@ func Export(param *roleModel.SelectPageReq) (string, error) {
 }
 
 //根据用户ID查询角色
-func SelectRoleContactVo(userId int64) (*[]roleModel.EntityFlag, error) {
+func SelectRoleContactVo(userId int64) ([]roleModel.EntityFlag, error) {
 	var paramsPost *roleModel.SelectPageReq
 	roleAll, err := roleModel.SelectListAll(paramsPost)
 
@@ -266,10 +266,10 @@ func SelectRoleContactVo(userId int64) (*[]roleModel.EntityFlag, error) {
 	if err != nil || userRole == nil {
 		return nil, gerror.New("未查询到用户岗位数据")
 	} else {
-		for i := range *roleAll {
-			for j := range *userRole {
-				if (*userRole)[j].RoleId == (*roleAll)[i].RoleId {
-					(*roleAll)[i].Flag = true
+		for i := range roleAll {
+			for j := range userRole {
+				if userRole[j].RoleId == roleAll[i].RoleId {
+					roleAll[i].Flag = true
 					break
 				}
 			}

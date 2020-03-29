@@ -7,12 +7,12 @@ import (
 	menuModel "yj-app/app/model/system/menu"
 	menuService "yj-app/app/service/system/menu"
 	userService "yj-app/app/service/system/user"
-	"yj-app/app/service/utils/response"
+	"yj-app/app/utils/response"
 )
 
 //列表页
 func List(r *ghttp.Request) {
-	response.BuildTpl(r, "system/menu/list.html").WriteTplExtend()
+	response.BuildTpl(r, "system/menu/list.html").WriteTpl()
 }
 
 //列表分页数据
@@ -25,8 +25,8 @@ func ListAjax(r *ghttp.Request) {
 	rows := make([]menuModel.Entity, 0)
 	result, err := menuService.SelectListAll(req)
 
-	if err == nil && result != nil {
-		rows = *result
+	if err == nil && len(result) > 0 {
+		rows = result
 	}
 
 	r.Response.WriteJsonExit(rows)
@@ -44,7 +44,7 @@ func Add(r *ghttp.Request) {
 		pmenu.MenuId = tmp.MenuId
 		pmenu.MenuName = tmp.MenuName
 	}
-	response.BuildTpl(r, "system/menu/add.html").WriteTplExtend(g.Map{"menu": pmenu})
+	response.BuildTpl(r, "system/menu/add.html").WriteTpl(g.Map{"menu": pmenu})
 }
 
 //新增页面保存
@@ -87,7 +87,7 @@ func Edit(r *ghttp.Request) {
 		return
 	}
 
-	response.BuildTpl(r, "system/menu/edit.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "system/menu/edit.html").WriteTpl(g.Map{
 		"menu": menu,
 	})
 }
@@ -135,7 +135,7 @@ func SelectMenuTree(r *ghttp.Request) {
 		})
 		return
 	}
-	response.BuildTpl(r, "system/menu/tree.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "system/menu/tree.html").WriteTpl(g.Map{
 		"menu": menu,
 	})
 }
@@ -155,7 +155,7 @@ func MenuTreeData(r *ghttp.Request) {
 
 //选择图标
 func Icon(r *ghttp.Request) {
-	response.BuildTpl(r, "system/menu/icon.html").WriteTplExtend()
+	response.BuildTpl(r, "system/menu/icon.html").WriteTpl()
 }
 
 //加载角色菜单列表树

@@ -1,12 +1,16 @@
 package login
 
 import (
-	"encoding/json"
-	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
-	"yj-app/app/service/utils/response"
-	"yj-app/app/service/utils/token"
+	"github.com/gogf/gf/util/gconv"
+	"yj-app/app/utils/response"
+	"yj-app/app/utils/token"
 )
+
+type user struct {
+	Username string `form:"username" json:"username" binding:"required"`
+	Password string `form:"password" json:"password" binding:"required"`
+}
 
 // @Summary 登陆
 // @Description api测试
@@ -15,24 +19,30 @@ import (
 // @Success 200 {object} model.CommonRes
 // @Router /api/v1/login [get]
 func Login(r *ghttp.Request) {
-	gt := token.Instance()
-
-	user := g.Map{
-		"userId": "1000",
-		"phone":  "18888888888",
+	u := new(user)
+	if err := r.Parse(u); err != nil {
+		response.ErrorResp(r).SetData(err.Error()).WriteJsonExit()
+		return
 	}
 
-	userStr := ""
-
-	if arr, err := json.Marshal(user); err == nil {
-		userStr = string(arr)
+	//验证用户名和密码
+	if u == nil || u.Username == "" || u.Password == "" {
+		response.ErrorResp(r).SetData("用户名或密码不正确").WriteJsonExit()
+		return
 	}
 
-	token := gt.Login("18888888888", userStr)
-	if token == nil {
-		response.ErrorResp(r).SetMsg("生成token失败").WriteJsonExit()
+	//获取用户id
+	uid := 10
+
+	token, err := token.New(gconv.String(uid)).CreateToken()
+
+	if err != nil {
+		response.ErrorResp(r).SetData("Error while signing the token").WriteJsonExit()
+		return
 	}
-	response.SucessResp(r).SetMsg(token.Token).WriteJsonExit()
+
+	//返回token
+	response.SucessResp(r).SetData(token).WriteJsonExit()
 }
 
 // @Summary api测试
@@ -42,6 +52,6 @@ func Login(r *ghttp.Request) {
 // @Success 200 {object} model.CommonRes
 // @Router /api/v1/loginOut [get]
 func Index(r *ghttp.Request) {
-	token := r.GetParam("token").(token.TokenContent)
-	response.SucessResp(r).SetData(token).WriteJsonExit()
+	uid := r.GetParam("uid")
+	response.SucessResp(r).SetData(uid).WriteJsonExit()
 }

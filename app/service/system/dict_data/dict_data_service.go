@@ -6,9 +6,9 @@ import (
 	"github.com/gogf/gf/os/gtime"
 	dictDataModel "yj-app/app/model/system/dict_data"
 	userService "yj-app/app/service/system/user"
-	"yj-app/app/service/utils/convert"
-	"yj-app/app/service/utils/excel"
-	"yj-app/app/service/utils/page"
+	"yj-app/app/utils/convert"
+	"yj-app/app/utils/excel"
+	"yj-app/app/utils/page"
 )
 
 //根据主键查询数据
@@ -123,12 +123,12 @@ func EditSave(req *dictDataModel.EditReq, session *ghttp.Session) (int64, error)
 }
 
 //根据条件分页查询角色数据
-func SelectListAll(params *dictDataModel.SelectPageReq) (*[]dictDataModel.Entity, error) {
+func SelectListAll(params *dictDataModel.SelectPageReq) ([]dictDataModel.Entity, error) {
 	return dictDataModel.SelectListAll(params)
 }
 
 //根据条件分页查询角色数据
-func SelectListByPage(params *dictDataModel.SelectPageReq) (*[]dictDataModel.Entity, *page.Paging, error) {
+func SelectListByPage(params *dictDataModel.SelectPageReq) ([]dictDataModel.Entity, *page.Paging, error) {
 	return dictDataModel.SelectListByPage(params)
 }
 

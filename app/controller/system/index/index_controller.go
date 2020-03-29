@@ -10,7 +10,7 @@ import (
 	configService "yj-app/app/service/system/config"
 	menuService "yj-app/app/service/system/menu"
 	userService "yj-app/app/service/system/user"
-	"yj-app/app/service/utils/response"
+	"yj-app/app/utils/response"
 )
 
 //后台框架首页
@@ -46,7 +46,7 @@ func Index(r *ghttp.Request) {
 		sideTheme := configService.GetValueByKey("sys.index.sideTheme")
 		skinName := configService.GetValueByKey("sys.index.skinName")
 
-		response.BuildTpl(r, "index.html").WriteTplExtend(g.Map{
+		response.BuildTpl(r, "index.html").WriteTpl(g.Map{
 			"avatar":    avatar,
 			"loginname": loginname,
 			"username":  username,
@@ -61,7 +61,7 @@ func Index(r *ghttp.Request) {
 
 //后台框架欢迎页面
 func Main(r *ghttp.Request) {
-	response.BuildTpl(r, "main.html").WriteTplExtend()
+	response.BuildTpl(r, "main.html").WriteTpl()
 }
 
 //下载文件
@@ -112,7 +112,7 @@ func Download(r *ghttp.Request) {
 
 //切换皮肤
 func SwitchSkin(r *ghttp.Request) {
-	response.BuildTpl(r, "skin.html").WriteTplExtend()
+	response.BuildTpl(r, "skin.html").WriteTpl()
 }
 
 //注销

@@ -4,7 +4,7 @@ import (
 	"github.com/gogf/gf/database/gdb"
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/os/gtime"
-	"yj-app/app/service/utils/page"
+	"yj-app/app/utils/page"
 )
 
 // Entity is the golang structure for table sys_role.
@@ -91,7 +91,7 @@ type EditReq struct {
 }
 
 //根据条件分页查询角色数据
-func SelectListPage(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
+func SelectListPage(param *SelectPageReq) ([]Entity, *page.Paging, error) {
 	db, err := gdb.Instance()
 
 	if err != nil {
@@ -117,11 +117,11 @@ func SelectListPage(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
 	}
 
 	if param.BeginTime != "" {
-		model = model.Where("date_format(r.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)
+		model.Where("date_format(r.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)
 	}
 
 	if param.EndTime != "" {
-		model = model.Where("date_format(r.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
+		model.Where("date_format(r.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
 	}
 
 	total, err := model.Count()
@@ -132,14 +132,14 @@ func SelectListPage(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
 
 	page := page.CreatePaging(param.PageNum, param.PageSize, total)
 
-	model = model.Limit(page.StartNum, page.Pagesize)
+	model.Limit(page.StartNum, page.Pagesize)
 	if param.OrderByColumn != "" {
 		model.Order(param.OrderByColumn + " " + param.IsAsc)
 	}
 	var result []Entity
 
 	err = model.Structs(&result)
-	return &result, page, err
+	return result, page, err
 }
 
 // 导出excel
@@ -169,23 +169,23 @@ func SelectListExport(param *SelectPageReq) (gdb.Result, error) {
 		}
 
 		if param.BeginTime != "" {
-			model = model.Where("date_format(r.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)
+			model.Where("date_format(r.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)
 		}
 
 		if param.EndTime != "" {
-			model = model.Where("date_format(r.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
+			model.Where("date_format(r.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
 		}
 	}
 
 	//角色序号	角色名称	角色权限	角色排序	数据范围	角色状态
-	model = model.Fields("r.role_id,r.role_name,r.role_key,r.role_sort,r.data_scope,r.status")
+	model.Fields("r.role_id,r.role_name,r.role_key,r.role_sort,r.data_scope,r.status")
 
 	result, err := model.All()
 	return result, err
 }
 
 //获取所有角色数据
-func SelectListAll(param *SelectPageReq) (*[]EntityFlag, error) {
+func SelectListAll(param *SelectPageReq) ([]EntityFlag, error) {
 	db, err := gdb.Instance()
 
 	if err != nil {
@@ -211,22 +211,22 @@ func SelectListAll(param *SelectPageReq) (*[]EntityFlag, error) {
 		}
 
 		if param.BeginTime != "" {
-			model = model.Where("date_format(r.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)
+			model.Where("date_format(r.create_time,'%y%m%d') >= date_format(?,'%y%m%d') ", param.BeginTime)
 		}
 
 		if param.EndTime != "" {
-			model = model.Where("date_format(r.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
+			model.Where("date_format(r.create_time,'%y%m%d') <= date_format(?,'%y%m%d') ", param.EndTime)
 		}
 	}
 
 	var result []EntityFlag
 
 	err = model.Structs(&result)
-	return &result, err
+	return result, err
 }
 
 //根据用户ID查询角色
-func SelectRoleContactVo(userId int64) (*[]Entity, error) {
+func SelectRoleContactVo(userId int64) ([]Entity, error) {
 	db, err := gdb.Instance()
 
 	if err != nil {
@@ -244,5 +244,5 @@ func SelectRoleContactVo(userId int64) (*[]Entity, error) {
 	var result []Entity
 
 	err = model.Structs(&result)
-	return &result, err
+	return result, err
 }

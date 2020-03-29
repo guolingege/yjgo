@@ -1,97 +1,85 @@
 package demo
 
 import (
-	"github.com/gogf/gf/frame/g"
-	"github.com/gogf/gf/net/ghttp"
 	"yj-app/app/controller/demo/form"
 	"yj-app/app/controller/demo/icon"
 	"yj-app/app/controller/demo/modal"
 	"yj-app/app/controller/demo/operate"
 	"yj-app/app/controller/demo/report"
 	"yj-app/app/controller/demo/table"
+	"yj-app/app/service/middleware/router"
 )
 
 func init() {
-	s := g.Server()
-	s.Group("/demo/form", func(group *ghttp.RouterGroup) {
-		group.ALL("/autocomplete", form.Autocomplete)
-		group.ALL("/basic", form.Basic)
-		group.ALL("/button", form.Button)
-		group.ALL("/cards", form.Cards)
-		group.ALL("/datetime", form.Datetime)
-		group.ALL("/duallistbox", form.Duallistbox)
-		group.ALL("/grid", form.Grid)
+	g1 := router.New("admin", "/demo/form")
+	g1.GET("/autocomplete", "", form.Autocomplete)
+	g1.GET("/basic", "", form.Basic)
+	g1.GET("/button", "", form.Button)
+	g1.GET("/cards", "", form.Cards)
+	g1.GET("/datetime", "", form.Datetime)
+	g1.GET("/duallistbox", "", form.Duallistbox)
+	g1.GET("/grid", "", form.Grid)
 
-		group.ALL("/jasny", form.Jasny)
-		group.ALL("/select", form.Select)
-		group.ALL("/sortable", form.Sortable)
-		group.ALL("/summernote", form.Summernote)
-		group.ALL("/tabs_panels", form.Tabs_panels)
+	g1.GET("/jasny", "", form.Jasny)
+	g1.GET("/select", "", form.Select)
+	g1.GET("/sortable", "", form.Sortable)
+	g1.GET("/summernote", "", form.Summernote)
+	g1.GET("/tabs_panels", "", form.Tabs_panels)
 
-		group.ALL("/timeline", form.Timeline)
-		group.ALL("/upload", form.Upload)
-		group.ALL("/validate", form.Validate)
-		group.ALL("/wizard", form.Wizard)
-	})
+	g1.GET("/timeline", "", form.Timeline)
+	g1.GET("/upload", "", form.Upload)
+	g1.GET("/validate", "", form.Validate)
+	g1.GET("/wizard", "", form.Wizard)
 
-	s.Group("/demo/icon", func(group *ghttp.RouterGroup) {
+	g2 := router.New("admin", "/demo/icon")
+	g2.GET("/fontawesome", "", icon.Fontawesome)
+	g2.GET("/glyphicons", "", icon.Glyphicons)
 
-		group.ALL("/fontawesome", icon.Fontawesome)
-		group.ALL("/glyphicons", icon.Glyphicons)
-	})
+	g3 := router.New("admin", "/demo/modal")
+	g3.GET("/dialog", "", modal.Dialog)
+	g3.GET("/form", "", modal.Form)
+	g3.GET("/layer", "", modal.Layer)
+	g3.GET("/table", "", modal.Table)
+	g3.GET("/check", "", modal.Check)
+	g3.GET("/parent", "", modal.Parent)
+	g3.GET("/radio", "", modal.Radio)
 
-	s.Group("/demo/modal", func(group *ghttp.RouterGroup) {
+	g4 := router.New("admin", "/demo/operate")
+	g4.GET("/list", "", operate.List)
+	g4.GET("/add", "", operate.Add)
+	g4.GET("/detail", "", operate.Detail)
+	g4.GET("/edit", "", operate.Edit)
+	g4.POST("/edit", "", operate.EditSave)
+	g4.GET("/other", "", operate.Other)
+	g4.GET("/table", "", operate.Table)
 
-		group.ALL("/dialog", modal.Dialog)
-		group.ALL("/form", modal.Form)
-		group.ALL("/layer", modal.Layer)
-		group.ALL("/table", modal.Table)
-		group.ALL("/check", modal.Check)
-		group.ALL("/parent", modal.Parent)
-		group.ALL("/radio", modal.Radio)
-	})
+	g5 := router.New("admin", "/demo/report")
+	g5.GET("/echarts", "", report.Echarts)
+	g5.GET("/metrics", "", report.Metrics)
+	g5.GET("/peity", "", report.Peity)
+	g5.GET("/sparkline", "", report.Sparkline)
 
-	s.Group("/demo/operate", func(group *ghttp.RouterGroup) {
-		group.ALL("/list", operate.List)
-		group.ALL("/add", operate.Add)
-		group.ALL("/detail", operate.Detail)
-		group.GET("/edit", operate.Edit)
-		group.POST("/edit", operate.EditSave)
-		group.ALL("/other", operate.Other)
-		group.ALL("/table", operate.Table)
-	})
+	g6 := router.New("admin", "/demo/table")
+	g6.GET("/button", "", table.Button)
+	g6.GET("/child", "", table.Child)
+	g6.GET("/curd", "", table.Curd)
+	g6.GET("/detail", "", table.Detail)
+	g6.POST("list", "", table.List)
 
-	s.Group("/demo/report", func(group *ghttp.RouterGroup) {
+	g6.GET("/editable", "", table.Editable)
+	g6.GET("/event", "", table.Event)
+	g6.POST("/export", "", table.Export)
+	g6.GET("/fixedColumns", "", table.FixedColumns)
+	g6.GET("/footer", "", table.Footer)
+	g6.GET("/groupHeader", "", table.GroupHeader)
 
-		group.ALL("/echarts", report.Echarts)
-		group.ALL("/metrics", report.Metrics)
-		group.ALL("/peity", report.Peity)
-		group.ALL("/sparkline", report.Sparkline)
-	})
+	g6.GET("/image", "", table.Image)
+	g6.GET("/multi", "", table.Multi)
+	g6.GET("/other", "", table.Other)
+	g6.GET("/pageGo", "", table.PageGo)
 
-	s.Group("/demo/table", func(group *ghttp.RouterGroup) {
-
-		group.ALL("/button", table.Button)
-		group.ALL("/child", table.Child)
-		group.ALL("/curd", table.Curd)
-		group.ALL("/detail", table.Detail)
-		group.ALL("list", table.List)
-
-		group.ALL("/editable", table.Editable)
-		group.ALL("/event", table.Event)
-		group.ALL("/export", table.Export)
-		group.ALL("/fixedColumns", table.FixedColumns)
-		group.ALL("/footer", table.Footer)
-		group.ALL("/groupHeader", table.GroupHeader)
-
-		group.ALL("/image", table.Image)
-		group.ALL("/multi", table.Multi)
-		group.ALL("/other", table.Other)
-		group.ALL("/pageGo", table.PageGo)
-
-		group.ALL("/params", table.Params)
-		group.ALL("/remember", table.Remember)
-		group.ALL("/recorder", table.Recorder)
-		group.ALL("/search", table.Search)
-	})
+	g6.GET("/params", "", table.Params)
+	g6.GET("/remember", "", table.Remember)
+	g6.GET("/recorder", "", table.Recorder)
+	g6.GET("/search", "", table.Search)
 }

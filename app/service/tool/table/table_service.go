@@ -13,8 +13,8 @@ import (
 	tableModel "yj-app/app/model/tool/table"
 	tableColumnModel "yj-app/app/model/tool/table_column"
 	userService "yj-app/app/service/system/user"
-	"yj-app/app/service/utils/convert"
-	"yj-app/app/service/utils/page"
+	"yj-app/app/utils/convert"
+	"yj-app/app/utils/page"
 )
 
 //根据主键查询数据
@@ -203,22 +203,22 @@ func SetPkColumn(table *tableModel.EntityExtend, columns []tableColumnModel.Enti
 }
 
 //根据条件分页查询数据
-func SelectListByPage(param *tableModel.SelectPageReq) (*[]tableModel.Entity, *page.Paging, error) {
+func SelectListByPage(param *tableModel.SelectPageReq) ([]tableModel.Entity, *page.Paging, error) {
 	return tableModel.SelectListByPage(param)
 }
 
 //查询据库列表
-func SelectDbTableList(param *tableModel.SelectPageReq) (*[]tableModel.Entity, *page.Paging, error) {
+func SelectDbTableList(param *tableModel.SelectPageReq) ([]tableModel.Entity, *page.Paging, error) {
 	return tableModel.SelectDbTableList(param)
 }
 
 //查询据库列表
-func SelectDbTableListByNames(tableNames []string) (*[]tableModel.Entity, error) {
+func SelectDbTableListByNames(tableNames []string) ([]tableModel.Entity, error) {
 	return tableModel.SelectDbTableListByNames(tableNames)
 }
 
 //根据table_id查询表列数据
-func SelectGenTableColumnListByTableId(tableId int64) (*[]tableColumnModel.Entity, error) {
+func SelectGenTableColumnListByTableId(tableId int64) ([]tableColumnModel.Entity, error) {
 	return tableColumnModel.SelectGenTableColumnListByTableId(tableId)
 }
 
@@ -238,14 +238,14 @@ func SelectGenTableByName(tableName string) (*tableModel.Entity, error) {
 }
 
 //导入表结构
-func ImportGenTable(tableList *[]tableModel.Entity, operName string) error {
+func ImportGenTable(tableList []tableModel.Entity, operName string) error {
 	if tableList != nil && operName != "" {
 		tx, err := g.DB().Begin()
 		if err != nil {
 			return err
 		}
 
-		for _, table := range *tableList {
+		for _, table := range tableList {
 			tableName := table.TableName
 			InitTable(&table, operName)
 			result, err := tx.Table("gen_table").Insert(table)
@@ -265,12 +265,12 @@ func ImportGenTable(tableList *[]tableModel.Entity, operName string) error {
 			// 保存列信息
 			genTableColumns, err := tableColumnModel.SelectDbTableColumnsByName(tableName)
 
-			if err != nil || len(*genTableColumns) <= 0 {
+			if err != nil || len(genTableColumns) <= 0 {
 				tx.Rollback()
 				return gerror.New("获取列数据失败")
 			}
 
-			for _, column := range *genTableColumns {
+			for _, column := range genTableColumns {
 				InitColumnField(&column, &table)
 				_, err = tx.Table("gen_table_column").Insert(column)
 				if err != nil {

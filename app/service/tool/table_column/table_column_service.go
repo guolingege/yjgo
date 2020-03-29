@@ -2,7 +2,7 @@ package table_column
 
 import (
 	tableColumn "yj-app/app/model/tool/table_column"
-	"yj-app/app/service/utils/convert"
+	"yj-app/app/utils/convert"
 )
 
 //新增业务字段

@@ -8,7 +8,7 @@ import (
 	"github.com/gogf/gf/os/gfile"
 	"github.com/gogf/gf/os/gproc"
 	"os"
-	"yj-app/app/service/utils/response"
+	"yj-app/app/utils/response"
 )
 
 const (
@@ -17,7 +17,7 @@ const (
 
 //表单构建
 func Build(r *ghttp.Request) {
-	response.BuildTpl(r, "tool/build.html").WriteTplExtend()
+	response.BuildTpl(r, "tool/build.html").WriteTpl()
 }
 
 //swagger文档

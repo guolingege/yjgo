@@ -3,7 +3,7 @@ package logininfor
 import (
 	"github.com/gogf/gf/database/gdb"
 	"github.com/gogf/gf/errors/gerror"
-	"yj-app/app/service/utils/page"
+	"yj-app/app/utils/page"
 )
 
 // Fill with you ideas below.
@@ -21,7 +21,7 @@ type SelectPageReq struct {
 }
 
 // 根据条件分页查询用户列表
-func SelectPageList(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
+func SelectPageList(param *SelectPageReq) ([]Entity, *page.Paging, error) {
 	db, err := gdb.Instance()
 	if err != nil {
 		return nil, nil, gerror.New("获取数据库连接失败")
@@ -70,7 +70,7 @@ func SelectPageList(param *SelectPageReq) (*[]Entity, *page.Paging, error) {
 	var result []Entity
 
 	err = model.Structs(&result)
-	return &result, page, nil
+	return result, page, nil
 }
 
 // 导出excel
@@ -84,28 +84,28 @@ func SelectExportList(param *SelectPageReq) (gdb.Result, error) {
 
 	if param != nil {
 		if param.LoginName != "" {
-			model = model.Where("login_name like ?", "%"+param.LoginName+"%")
+			model.Where("login_name like ?", "%"+param.LoginName+"%")
 		}
 
 		if param.Ipaddr != "" {
-			model = model.Where("ipaddr like ?", "%"+param.Ipaddr+"%")
+			model.Where("ipaddr like ?", "%"+param.Ipaddr+"%")
 		}
 
 		if param.Status != "" {
-			model = model.Where("status = ?", param.Status)
+			model.Where("status = ?", param.Status)
 		}
 
 		if param.BeginTime != "" {
-			model = model.Where("date_format(login_time,'%y%m%d') >= date_format(?,'%y%m%d')", param.BeginTime)
+			model.Where("date_format(login_time,'%y%m%d') >= date_format(?,'%y%m%d')", param.BeginTime)
 		}
 
 		if param.EndTime != "" {
-			model = model.Where("date_format(login_time,'%y%m%d') <= date_format(?,'%y%m%d')", param.EndTime)
+			model.Where("date_format(login_time,'%y%m%d') <= date_format(?,'%y%m%d')", param.EndTime)
 		}
 	}
 
 	//"访问编号", "登录名称", "登录地址", "登录地点", "浏览器", "操作系统", "登录状态", "操作信息", "登录时间"
-	model = model.Fields("info_id,login_name,ipaddr,login_location,browser,os,status,msg,login_time")
+	model.Fields("info_id,login_name,ipaddr,login_location,browser,os,status,msg,login_time")
 
 	result, err := model.All()
 	if err != nil {

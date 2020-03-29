@@ -9,10 +9,10 @@ import (
 	"yj-app/app/model/monitor/oper_log"
 	deptServic "yj-app/app/service/system/dept"
 	userService "yj-app/app/service/system/user"
-	"yj-app/app/service/utils/convert"
-	"yj-app/app/service/utils/excel"
-	"yj-app/app/service/utils/ip"
-	"yj-app/app/service/utils/page"
+	"yj-app/app/utils/convert"
+	"yj-app/app/utils/excel"
+	"yj-app/app/utils/ip"
+	"yj-app/app/utils/page"
 )
 
 //新增记录
@@ -64,7 +64,7 @@ func Add(r *ghttp.Request, title, inContent string, outContent *model.CommonRes)
 }
 
 // 根据条件分页查询用户列表
-func SelectPageList(param *oper_log.SelectPageReq) (*[]oper_log.Entity, *page.Paging, error) {
+func SelectPageList(param *oper_log.SelectPageReq) ([]oper_log.Entity, *page.Paging, error) {
 	return oper_log.SelectPageList(param)
 }
 

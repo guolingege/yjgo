@@ -29,6 +29,46 @@
                     }
                 }
             }
+        },
+        "/api/v1/login": {
+            "get": {
+                "description": "api测试",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "登陆",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.CommonRes"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/loginOut": {
+            "get": {
+                "description": "api测试",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "api测试",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.CommonRes"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -36,7 +76,7 @@
             "type": "object",
             "properties": {
                 "code": {
-                    "description": "响应编码 0 成功 500 错误 403 无权限",
+                    "description": "响应编码 0 成功 500 错误 403 无权限  -1  失败",
                     "type": "integer"
                 },
                 "data": {

@@ -11,12 +11,12 @@ import (
 	tableColumnModel "yj-app/app/model/tool/table_column"
 	userService "yj-app/app/service/system/user"
 	tableService "yj-app/app/service/tool/table"
-	"yj-app/app/service/utils/response"
+	"yj-app/app/utils/response"
 )
 
 //生成代码列表页面
 func Gen(r *ghttp.Request) {
-	response.BuildTpl(r, "tool/gen/list.html").WriteTplExtend()
+	response.BuildTpl(r, "tool/gen/list.html").WriteTpl()
 }
 
 func GenList(r *ghttp.Request) {
@@ -28,8 +28,8 @@ func GenList(r *ghttp.Request) {
 	rows := make([]tableModel.Entity, 0)
 	result, page, err := tableService.SelectListByPage(req)
 
-	if err == nil && result != nil {
-		rows = *result
+	if err == nil && len(result) > 0 {
+		rows = result
 	}
 
 	response.BuildTable(r, page.Total, rows).WriteJsonExit()
@@ -37,7 +37,7 @@ func GenList(r *ghttp.Request) {
 
 //导入数据表
 func ImportTable(r *ghttp.Request) {
-	response.BuildTpl(r, "tool/gen/importTable.html").WriteTplExtend()
+	response.BuildTpl(r, "tool/gen/importTable.html").WriteTpl()
 }
 
 //删除数据
@@ -81,7 +81,7 @@ func Edit(r *ghttp.Request) {
 	queryTypeTpl := tableService.QueryTypeTpl()
 	htmlTypeTpl := tableService.HtmlTypeTpl()
 
-	response.BuildTpl(r, "tool/gen/edit.html").WriteTplExtend(g.Map{
+	response.BuildTpl(r, "tool/gen/edit.html").WriteTpl(g.Map{
 		"table":        entity,
 		"goTypeTpl":    goTypeTpl,
 		"queryTypeTpl": queryTypeTpl,
@@ -399,8 +399,8 @@ func DataList(r *ghttp.Request) {
 	rows := make([]tableModel.Entity, 0)
 	result, page, err := tableService.SelectDbTableList(req)
 
-	if err == nil && result != nil {
-		rows = *result
+	if err == nil && len(result) > 0 {
+		rows = result
 	}
 
 	r.Response.WriteJsonExit(model.TableDataInfo{
@@ -449,8 +449,8 @@ func ColumnList(r *ghttp.Request) {
 	rows := make([]tableColumnModel.Entity, 0)
 	result, err := tableService.SelectGenTableColumnListByTableId(tableId)
 
-	if err == nil && result != nil {
-		rows = *result
+	if err == nil && len(result) > 0 {
+		rows = result
 	}
 
 	r.Response.WriteJsonExit(model.TableDataInfo{

@@ -3,6 +3,7 @@ module yj-app
 require (
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-ole/go-ole v1.2.4 // indirect
 	github.com/go-openapi/spec v0.19.6 // indirect
 	github.com/go-openapi/swag v0.19.7 // indirect
@@ -19,4 +20,4 @@ require (
 	gopkg.in/yaml.v2 v2.2.8 // indirect
 )
 
-go 1.13
+go 1.14

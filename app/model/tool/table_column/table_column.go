@@ -21,11 +21,10 @@ var COLUMNNAME_NOT_EDIT = []string{"id", "create_by", "create_time", "del_flag",
 var COLUMNNAME_NOT_LIST = []string{"id", "create_by", "create_time", "del_flag", "update_by", "update_time"}
 
 //页面不需要查询字段
-var COLUMNNAME_NOT_QUERY = []string{"id", "create_by","create_time", "del_flag", "update_by", "update_time", "remark"}
-
+var COLUMNNAME_NOT_QUERY = []string{"id", "create_by", "create_time", "del_flag", "update_by", "update_time", "remark"}
 
 //查询业务字段列表
-func SelectGenTableColumnListByTableId(tableId int64) (*[]Entity, error) {
+func SelectGenTableColumnListByTableId(tableId int64) ([]Entity, error) {
 	db, err := gdb.Instance()
 
 	if err != nil {
@@ -36,11 +35,11 @@ func SelectGenTableColumnListByTableId(tableId int64) (*[]Entity, error) {
 
 	model := db.Table("gen_table_column t").Where("table_id=?", tableId).Order("sort")
 	model.Structs(&result)
-	return &result, nil
+	return result, nil
 }
 
 //根据表名称查询列信息
-func SelectDbTableColumnsByName(tableName string) (*[]Entity, error) {
+func SelectDbTableColumnsByName(tableName string) ([]Entity, error) {
 	db, err := gdb.Instance()
 
 	if err != nil {
@@ -54,7 +53,7 @@ func SelectDbTableColumnsByName(tableName string) (*[]Entity, error) {
 	model.Where("table_name=?", tableName).Order("ordinal_position")
 	model.Fields("column_name, (case when (is_nullable = 'no' && column_key != 'PRI') then '1' else null end) as is_required, (case when column_key = 'PRI' then '1' else '0' end) as is_pk, ordinal_position as sort, column_comment, (case when extra = 'auto_increment' then '1' else '0' end) as is_increment, column_type")
 	model.Structs(&result)
-	return &result, nil
+	return result, nil
 }
 
 //判断string 是否存在在数组中

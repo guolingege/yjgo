@@ -3,7 +3,6 @@ package dept
 import (
 	"github.com/gogf/gf/database/gdb"
 	"github.com/gogf/gf/errors/gerror"
-	"github.com/gogf/gf/os/gtime"
 	"github.com/gogf/gf/util/gconv"
 	"strings"
 )
@@ -12,21 +11,8 @@ import (
 
 // Entity is the golang structure for table sys_dept.
 type EntityExtend struct {
-	DeptId     int64       `orm:"dept_id,primary" json:"dept_id"`     // 部门id
-	ParentId   int64       `orm:"parent_id"       json:"parent_id"`   // 父部门id
-	Ancestors  string      `orm:"ancestors"       json:"ancestors"`   // 祖级列表
-	DeptName   string      `orm:"dept_name"       json:"dept_name"`   // 部门名称
-	OrderNum   int         `orm:"order_num"       json:"order_num"`   // 显示顺序
-	Leader     string      `orm:"leader"          json:"leader"`      // 负责人
-	Phone      string      `orm:"phone"           json:"phone"`       // 联系电话
-	Email      string      `orm:"email"           json:"email"`       // 邮箱
-	Status     string      `orm:"status"          json:"status"`      // 部门状态（0正常 1停用）
-	DelFlag    string      `orm:"del_flag"        json:"del_flag"`    // 删除标志（0代表存在 2代表删除）
-	CreateBy   string      `orm:"create_by"       json:"create_by"`   // 创建者
-	CreateTime *gtime.Time `orm:"create_time"     json:"create_time"` // 创建时间
-	UpdateBy   string      `orm:"update_by"       json:"update_by"`   // 更新者
-	UpdateTime *gtime.Time `orm:"update_time"     json:"update_time"` // 更新时间
-	ParentName string      `json:"parentName"`                        // 父菜单名称
+	Entity
+	ParentName string `json:"parentName"` // 父菜单名称
 }
 
 //分页请求参数
@@ -142,7 +128,7 @@ func UpdateDeptChildren(deptId int64, newAncestors, oldAncestors string) {
 }
 
 //查询部门管理数据
-func SelectDeptList(parentId int64, deptName, status string) (*[]Entity, error) {
+func SelectDeptList(parentId int64, deptName, status string) ([]Entity, error) {
 	var result []Entity
 	db, err := gdb.Instance()
 	if err != nil {
@@ -161,8 +147,7 @@ func SelectDeptList(parentId int64, deptName, status string) (*[]Entity, error) 
 	model.Order("d.parent_id, d.order_num")
 
 	err = model.Structs(&result)
-
-	return &result, err
+	return result, err
 }
 
 //根据角色ID查询部门

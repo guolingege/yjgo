@@ -95,7 +95,7 @@ func EditSave(req *deptModel.EditReq, session *ghttp.Session) (int64, error) {
 }
 
 //根据分页查询部门管理数据
-func SelectListAll(param *deptModel.SelectPageReq) (*[]deptModel.Entity, error) {
+func SelectListAll(param *deptModel.SelectPageReq) ([]deptModel.Entity, error) {
 	return SelectDeptList(param.ParentId, param.DeptName, param.Status)
 }
 
@@ -131,7 +131,7 @@ func SelectDeptTree(parentId int64, deptName, status string) (*[]model.Ztree, er
 }
 
 //查询部门管理数据
-func SelectDeptList(parentId int64, deptName, status string) (*[]deptModel.Entity, error) {
+func SelectDeptList(parentId int64, deptName, status string) ([]deptModel.Entity, error) {
 	return deptModel.SelectDeptList(parentId, deptName, status)
 }
 
@@ -157,22 +157,22 @@ func RoleDeptTreeData(roleId int64) (*[]model.Ztree, error) {
 }
 
 //对象转部门树
-func InitZtree(deptList *[]deptModel.Entity, roleDeptList *[]string) *[]model.Ztree {
+func InitZtree(deptList []deptModel.Entity, roleDeptList *[]string) *[]model.Ztree {
 	var result []model.Ztree
 	isCheck := false
 	if roleDeptList != nil && len(*roleDeptList) > 0 {
 		isCheck = true
 	}
 
-	for i := range *deptList {
-		if (*deptList)[i].Status == "0" {
+	for i := range deptList {
+		if deptList[i].Status == "0" {
 			var ztree model.Ztree
-			ztree.Id = (*deptList)[i].DeptId
-			ztree.Pid = (*deptList)[i].ParentId
-			ztree.Name = (*deptList)[i].DeptName
-			ztree.Title = (*deptList)[i].DeptName
+			ztree.Id = deptList[i].DeptId
+			ztree.Pid = deptList[i].ParentId
+			ztree.Name = deptList[i].DeptName
+			ztree.Title = deptList[i].DeptName
 			if isCheck {
-				tmp := gconv.String((*deptList)[i].DeptId) + (*deptList)[i].DeptName
+				tmp := gconv.String(deptList[i].DeptId) + deptList[i].DeptName
 				tmpcheck := false
 				for j := range *roleDeptList {
 					if strings.EqualFold((*roleDeptList)[j], tmp) {
