@@ -171,6 +171,7 @@ func CheckLogin(r *ghttp.Request) {
 		userOnline.LastAccessTime = gtime.Now()
 		userOnline.Status = "on_line"
 		userOnline.LoginLocation = loginLocation
+		userOnline.Delete()
 		userOnline.Insert()
 
 		//移除登陆次数记录
