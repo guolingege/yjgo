@@ -107,7 +107,6 @@ func GetDictTypeData(dictType string) string {
 //根据字典类型查询字典数据
 func SelectDictDataByType(dictType string) ([]dictDataModel.Entity, error) {
 	var result []dictDataModel.Entity
-	dictDataModel.FindAll("status = '0' and dict_type = ? order by dict_sort asc")
 	db, err := gdb.Instance()
 	if err != nil {
 		return nil, gerror.New("获取数据库连接失败")
