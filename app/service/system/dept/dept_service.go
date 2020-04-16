@@ -175,7 +175,7 @@ func InitZtree(deptList []deptModel.Entity, roleDeptList *[]string) *[]model.Ztr
 				tmp := gconv.String(deptList[i].DeptId) + deptList[i].DeptName
 				tmpcheck := false
 				for j := range *roleDeptList {
-					if strings.EqualFold((*roleDeptList)[j], tmp) {
+					if strings.Compare((*roleDeptList)[j], tmp) == 0 {
 						tmpcheck = true
 						break
 					}

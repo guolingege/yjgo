@@ -384,7 +384,7 @@ func InitZtree(menuList []menuModel.EntityExtend, roleMenuList *[]string, permsF
 			tmp := gconv.String(obj.MenuId) + obj.Perms
 			tmpcheck := false
 			for j := range *roleMenuList {
-				if strings.EqualFold((*roleMenuList)[j], tmp) {
+				if strings.Compare((*roleMenuList)[j], tmp) == 0 {
 					tmpcheck = true
 					break
 				}
