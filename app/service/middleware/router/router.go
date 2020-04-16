@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/gogf/gf/net/ghttp"
+	"strings"
 )
 
 const (
@@ -61,7 +62,11 @@ func (group *routerGroup) Handle(method, relativePath, permiss string, handler g
 	r.HandlerFunc = handler
 	group.Router = append(group.Router, &r)
 	if len(permiss) > 0 {
-		PermissionMap[group.RelativePath+relativePath+relativePath] = permiss
+		if strings.EqualFold(relativePath, "/") {
+			PermissionMap[group.RelativePath] = permiss
+		} else {
+			PermissionMap[group.RelativePath+relativePath] = permiss
+		}
 	}
 	return group
 }
