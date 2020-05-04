@@ -20,8 +20,6 @@
 >
 > 若依前端组件   RuoYi           v4.1.0
 
-> 文档地址：正在编写
->[http://www.yunjie.info](http://www.yunjie.info)
 
 ## 内置功能
 
@@ -42,13 +40,6 @@
 15.  服务监控：监视当前系统CPU、内存、磁盘、堆栈等相关信息。
 16.  在线构建器：拖动表单元素生成相应的HTML代码。
 17.  案例演示：常用的前端组件整合演示。
-
-## 在线体验
-
-> admin/yjg123456
-
-演示地址：[http://www.yunjie.info:8199/login](http://www.yunjie.info:8199/login)
-
 
 
 ## 演示图
