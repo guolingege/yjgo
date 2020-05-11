@@ -13,13 +13,12 @@ import (
 )
 
 func init() {
-	s := g.Server()
 	//注册路由
 	if len(router.GroupList) > 0 {
-		for _, g := range router.GroupList {
-			s.Group(g.RelativePath, func(group *ghttp.RouterGroup) {
-				group.Middleware(g.Handlers...)
-				for _, r := range g.Router {
+		for _, routerGroup := range router.GroupList {
+			g.Server(routerGroup.ServerName).Group(routerGroup.RelativePath, func(group *ghttp.RouterGroup) {
+				group.Middleware(routerGroup.Handlers...)
+				for _, r := range routerGroup.Router {
 					switch r.Method {
 					case "ANY":
 						group.ALL(r.RelativePath, r.HandlerFunc)
