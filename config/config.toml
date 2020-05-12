@@ -10,7 +10,7 @@
 	LogPath     = "/tmp/log/yj-app/server"
 
 [api]
-	Address     = ":8080"
+	Address     = ":8089"
 	ServerRoot  = "public"
 	ServerAgent = "yj-app"
 	LogPath     = "/tmp/log/yj-app/api"
@@ -33,7 +33,7 @@
 [viewer]
     Path        = "template"
     DefaultFile = "index.html"
-    Delimiters  =  ["${", "}"]
+    Delimiters  =  ["{{", "}}"]
 
 # Database.
 [database]

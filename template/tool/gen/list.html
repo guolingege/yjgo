@@ -47,7 +47,7 @@
         </div>
     </div>
 </div>
-{{template "footer" .Cookie.OssUrl}}
+{{template "footer" (ossUrl)}}
 <script type="text/javascript">
     var prefix = ctx + "tool/gen";
     var editFlag = '{{hasPermi .Session.uid "tool:gen:edit"}}';

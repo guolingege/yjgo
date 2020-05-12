@@ -49,7 +49,7 @@
         </div>
     </div>
 </div>
-{{template "footer" .Cookie.OssUrl}}
+{{template "footer" (ossUrl)}}
 <script type="text/javascript">
     var editFlag = '{{hasPermi .Session.uid "system:config:edit"}}';
     var removeFlag = '{{hasPermi .Session.uid "system:config:remove"}}';

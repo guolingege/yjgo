@@ -46,7 +46,7 @@
         </div>
     </div>
 </div>
-{{template "footer" .Cookie.OssUrl}}
+{{template "footer" (ossUrl)}}
 <script type="text/javascript">
     var detailFlag = '{{hasPermi .Session.uid "monitor:job:detail"}}';
     var statusDatas = '{{getDictTypeData "sys_common_status"}}';

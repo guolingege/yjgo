@@ -58,7 +58,7 @@
         </div>
     </div>
 </div>
-{{printf `{{template "footer" .Cookie.OssUrl}}`}}
+{{printf `{{template "footer" (ossUrl)}}`}}
 {{range $index, $column := .table.Columns}} {{if ne $column.DictType ""}}  var {{$column.HtmlField}}Datas = {{printf `{{getDictTypeData "%v"}}` $column.DictType}}; {{end}} {{end}}
 <script type="text/javascript">
     var editFlag = '{{printf `{{hasPermi .Session.uid "%v:%v:edit"}}` .table.ModuleName .table.BusinessName}}';

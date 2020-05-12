@@ -234,7 +234,7 @@
     </div>
 </div>
 </body>
-{{template "footer" .Cookie.OssUrl}}
+{{template "footer" (ossUrl)}}
 <script>
     $(".modal").appendTo("body"), $("[data-toggle=popover]").popover(), $(".collapse-link").click(function () {
         var div_ibox = $(this).closest("div.ibox"),

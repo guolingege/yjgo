@@ -41,7 +41,7 @@
         </div>
     </div>
 </div>
-{{template "footer" .Cookie.OssUrl}}
+{{template "footer" (ossUrl)}}
 <script type="text/javascript">
     var removeFlag ='{{hasPermi .Session.uid "system:role:remove"}}';
     var datas ={{getDictTypeData "sys_normal_disable"}};

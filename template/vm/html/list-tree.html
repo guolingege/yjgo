@@ -59,7 +59,7 @@
         </div>
     </div>
 </div>
-{{printf `{{template "footer" .Cookie.OssUrl}}`}}
+{{printf `{{template "footer" (ossUrl)}}`}}
 <script type="text/javascript">
     var addFlag = '{{printf `{{hasPermi .Session.uid "%v:%v:add"}}` .table.ModuleName .table.BusinessName}}';
     var editFlag =' {{printf `{{hasPermi .Session.uid "%v:%v:edit"}}` .table.ModuleName .table.BusinessName}}';

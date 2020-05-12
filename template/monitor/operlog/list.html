@@ -56,7 +56,7 @@
     </div>
 </div>
 
-{{template "footer" .Cookie.OssUrl}}
+{{template "footer" (ossUrl)}}
 <script src="/resource/ajax/libs/bootstrap-select/bootstrap-select.js"></script>
 <script type="text/javascript">
     var detailFlag = '{{hasPermi .Session.uid "monitor:operlog:detail"}}';

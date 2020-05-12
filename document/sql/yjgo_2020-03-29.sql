@@ -138,7 +138,7 @@ VALUES
 	(1,'主框架页-默认皮肤样式名称','sys.index.skinName','skin-blue','Y','admin','2018-03-16 11:33:00','','2020-02-12 15:32:15','蓝色 skin-blue、绿色 skin-green、紫色 skin-purple、红色 skin-red、黄色 skin-yellow'),
 	(2,'用户管理-账号初始密码','sys.user.initPassword','123456','Y','admin','2018-03-16 11:33:00','admin','2018-03-16 11:33:00','初始化密码 123456'),
 	(3,'主框架页-侧边栏主题','sys.index.sideTheme','theme-dark','Y','admin','2018-03-16 11:33:00','','2020-02-05 10:46:28','深黑主题theme-dark，浅色主题theme-light，深蓝主题theme-blue'),
-	(4,'静态资源网盘存储','sys.resource.url','http://cos.yunjie.info/yjg','Y','admin','2020-02-18 20:10:33','','2020-02-19 10:36:22','public目录下的静态资源存储到OSS/COS等网盘，如果不存储设为null，设置网址即开始');
+	(4,'静态资源网盘存储','sys.resource.url','null','Y','admin','2020-02-18 20:10:33','','2020-02-19 10:36:22','public目录下的静态资源存储到OSS/COS等网盘，如果不存储设为null，设置网址即开始');
 
 /*!40000 ALTER TABLE `sys_config` ENABLE KEYS */;
 UNLOCK TABLES;
