@@ -16,7 +16,11 @@ func init() {
 	//注册路由
 	if len(router.GroupList) > 0 {
 		for _, routerGroup := range router.GroupList {
-			g.Server(routerGroup.ServerName).Group(routerGroup.RelativePath, func(group *ghttp.RouterGroup) {
+			serverName := ""
+			if routerGroup.ServerName == "api" {
+				serverName = "api"
+			}
+			g.Server(serverName).Group(routerGroup.RelativePath, func(group *ghttp.RouterGroup) {
 				group.Middleware(routerGroup.Handlers...)
 				for _, r := range routerGroup.Router {
 					switch r.Method {
